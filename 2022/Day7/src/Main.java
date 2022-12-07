@@ -23,7 +23,7 @@ public class Main {
             Scanner myScanner = new Scanner(input);
             myScanner.nextLine(); // get into "/"
 
-            while (myScanner.hasNext()) {
+            while (myScanner.hasNextLine()) {
                 resetBooleans();
 
                 String thisLine = myScanner.nextLine();
