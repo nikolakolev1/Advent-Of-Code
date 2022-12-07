@@ -1,1 +1,0 @@
-print(*map(sum,zip(*[(b-87+3*((b-a-67)%3),1+(b-88)*3+(a+b-151)%3)for l in open('input.txt').readlines()if(a:=ord(l[0]),b:=ord(l[2]))])))
