@@ -9,7 +9,6 @@ public class Main {
     private static boolean isDirectory, isFile, moveIn, moveOut;
     private static final Directory mainDir = new Directory("/", null);
     private static Directory currentDir = mainDir;
-    private static ArrayList<Directory> fileTree = new ArrayList<>();
     private static int answerPart1 = 0;
     private static int answerPart2 = MAX_VALUE;
 
@@ -17,7 +16,7 @@ public class Main {
         mainMethod();
     }
 
-    public static void mainMethod() {
+    private static void mainMethod() {
         try {
             File input = new File("input.txt");
             Scanner myScanner = new Scanner(input);
@@ -40,8 +39,7 @@ public class Main {
                     currentDir = currentDir.getParentDir();
                 } else if (isFile) {
                     Integer fileSize = Integer.valueOf(thisLine.replaceAll("[^0-9]", ""));
-                    String fileName = thisLine.substring(fileSize.toString().length() + 1);
-                    currentDir.putFileInDir(fileName, fileSize);
+                    currentDir.putFileInDir(fileSize);
                 } else if (isDirectory) {
                     String childDirectoryName = thisLine.substring(4);
                     currentDir.putDirInDir(childDirectoryName);
@@ -61,18 +59,16 @@ public class Main {
     private static void determineAction(String thisLine) {
         if (thisLine.startsWith("$")) { // list, move out or move in
             String endOfLine = thisLine.substring(2);
-            if (endOfLine.equals("ls")) {
-            } else if (endOfLine.equals("cd ..")) moveOut = true;
-            else moveIn = true;
+            if (endOfLine.equals("cd ..")) moveOut = true;
+            else if (!endOfLine.equals("ls")) moveIn = true;
         } else { // dir or file
-            if (thisLine.substring(0, 3).equals("dir")) isDirectory = true;
+            if (thisLine.startsWith("dir")) isDirectory = true;
             else isFile = true;
         }
     }
 
     // Calculate the answers for part 1 and 2
     private static void calcAnswer(Directory dirToAdd) {
-        fileTree.add(dirToAdd);
         int dirToAddSize = dirToAdd.getSize();
 
         // part 1
@@ -90,10 +86,52 @@ public class Main {
     }
 
     // Reset the boolean vars on every turn
-    public static void resetBooleans() {
+    private static void resetBooleans() {
         isDirectory = false;
         isFile = false;
         moveIn = false;
         moveOut = false;
+    }
+}
+
+class Directory {
+    private final String dirName;
+    private final Directory parentDir;
+    private final ArrayList<Directory> directories;
+    private int filesSize;
+
+    public Directory(String thisDirName, Directory parentDir) {
+        dirName = thisDirName;
+        this.parentDir = parentDir;
+
+        directories = new ArrayList<>();
+    }
+
+    public void putFileInDir(Integer thisFileSize) {
+        filesSize += thisFileSize;
+    }
+
+    public void putDirInDir(String childDirName) {
+        directories.add(new Directory(childDirName, this));
+    }
+
+    public int getSize() {
+        int directoriesSize = 0;
+        for (Directory childDir : directories) {
+            directoriesSize += childDir.getSize();
+        }
+        return (directoriesSize + filesSize);
+    }
+
+    public String getDirName() {
+        return dirName;
+    }
+
+    public Directory getParentDir() {
+        return parentDir;
+    }
+
+    public ArrayList<Directory> getDirectories() {
+        return directories;
     }
 }
