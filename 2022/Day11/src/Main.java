@@ -10,12 +10,11 @@ public class Main {
     private static final ArrayList<Monkey> monkeys = new ArrayList<>();
 
     public static void main(String[] args) {
-        String part = "Part 2"; // "Part 1" || "Part 2"
-
+        String part = "Part 1"; // "Part 1" || "Part 2"
         createMonkeys(part);
 
-        // do 20 turns
-        for (int i = 0; i < 100; i++) {
+        // do x turns
+        for (int i = 0; i < 20; i++) {
             turn();
         }
 
@@ -82,9 +81,9 @@ public class Main {
         for (Monkey monkey : monkeys) {
             int monkeyItemCount = monkey.getQueueLength();
             for (int i = 0; i < monkeyItemCount; i++) {
-                BigInteger[] toDoThisTurn = monkey.throwItemToMonkey();
+                Integer[] toDoThisTurn = monkey.throwItemToMonkey();
                 if (toDoThisTurn != null) {
-                    monkeys.get(toDoThisTurn[1].intValue()).addItem(toDoThisTurn[0]);
+                    monkeys.get(toDoThisTurn[1]).addItem(toDoThisTurn[0]);
                 }
             }
         }
@@ -104,101 +103,62 @@ public class Main {
         }
         System.out.println(part + ": " + (mostInspectedItems1.multiply(mostInspectedItems2)));
     }
-}
 
-class Monkey {
-    private final String part;
-    private final Queue<BigInteger> items = new LinkedList<>();
-    private final String[] operation;
-    private final int testDivisibleBy;
-    private final int[] testOutcomeToMonkey;
-    private int inspectedItems = 0;
+    static class Monkey {
+        private final String part;
+        private final Queue<Integer> items = new LinkedList<>();
+        private final String[] operation;
+        private final int testDivisibleBy;
+        private final int[] testOutcomeToMonkey;
+        private int inspectedItems = 0;
 
-    public Monkey(String part, ArrayList<Integer> items, String[] operation, int testDivisibleBy, int[] testOutcomeToMonkey) {
-        this.part = part;
-        for (Integer number : items) {
-            this.items.add(BigInteger.valueOf(number));
+        public Monkey(String part, ArrayList<Integer> items, String[] operation, int testDivisibleBy, int[] testOutcomeToMonkey) {
+            this.part = part;
+            this.items.addAll(items);
+            this.operation = operation;
+            this.testDivisibleBy = testDivisibleBy;
+            this.testOutcomeToMonkey = testOutcomeToMonkey;
         }
-        this.operation = operation;
-        this.testDivisibleBy = testDivisibleBy;
-        this.testOutcomeToMonkey = testOutcomeToMonkey;
 
-        BigInteger[] primesAsBigInt = new BigInteger[10];
-        primesAsBigInt[0] = new BigInteger("23");
-        primesAsBigInt[1] = new BigInteger("29");
-        primesAsBigInt[2] = new BigInteger("31");
-        primesAsBigInt[3] = new BigInteger("37");
-        primesAsBigInt[4] = new BigInteger("41");
-        primesAsBigInt[5] = new BigInteger("43");
-        primesAsBigInt[6] = new BigInteger("47");
-        primesAsBigInt[7] = new BigInteger("53");
-        primesAsBigInt[8] = new BigInteger("59");
-        primesAsBigInt[9] = new BigInteger("61");
-    }
-
-    public void addItem(BigInteger item) {
-        items.add(item);
-    }
-
-    public BigInteger[] throwItemToMonkey() {
-        BigInteger itemWorryLevel = topItemNewWorryLevel();
-        if (itemWorryLevel != null) {
-            inspectedItems++;
-            if (part.equals("Part 1")) {
-                itemWorryLevel = itemWorryLevel.divide(BigInteger.valueOf(3));
-            }
-            if (itemWorryLevel.mod(BigInteger.valueOf(testDivisibleBy)).equals(BigInteger.valueOf(0))) {
-                return new BigInteger[]{itemWorryLevel, BigInteger.valueOf(testOutcomeToMonkey[0])};
-            } else {
-                return new BigInteger[]{itemWorryLevel, BigInteger.valueOf(testOutcomeToMonkey[1])};
-            }
+        public void addItem(int item) {
+            items.add(item);
         }
-        return null;
-    }
 
-    private BigInteger topItemNewWorryLevel() {
-        if (!items.isEmpty()) {
-            if (operation[0].equals("+")) {
-                BigInteger temp = operation[1].equals("old") ? items.peek().add(items.poll()) : items.poll().add(BigInteger.valueOf(Integer.parseInt(operation[1])));
+        public Integer[] throwItemToMonkey() {
+            Integer itemWorryLevel = topItemNewWorryLevel();
+            if (itemWorryLevel != null) {
+                if (part.equals("Part 1")) {
+                    itemWorryLevel /= 3;
+                }
+                itemWorryLevel %= 9699690;
 
-//                for (int i = 0; i < primesAsBigInt.length; i++) {
-//                    if (temp.mod(primesAsBigInt[i]).equals(BigInteger.ZERO)) {
-//                        temp = temp.divide(primesAsBigInt[i]);
-//                        break;
-//                    }
-//                }
-
-                return temp;
-
-            } else {
-//                BigInteger temp1 = items.peek();
-                BigInteger temp = operation[1].equals("old") ? items.peek().multiply(items.poll()) : items.poll().multiply(BigInteger.valueOf(Integer.parseInt(operation[1])));
-
-//                for (int i = 0; i < primesAsBigInt.length; i++) {
-//                    if (temp.mod(primesAsBigInt[i]).equals(BigInteger.ZERO)) {
-//                        temp = temp.divide(primesAsBigInt[i]);
-//                        break;
-//                    }
-//                }
-
-                return temp;
-//
-//                if (Double.MAX_VALUE < temp.doubleValue()) {
-//                    return temp1;
-//                } else {
-//                    return temp;
-//                }
-//                return operation[1].equals("old") ? items.peek().multiply(items.poll()) : items.poll().multiply(BigInteger.valueOf(Integer.parseInt(operation[1])));
+                inspectedItems++;
+                if (itemWorryLevel % testDivisibleBy == 0) {
+                    return new Integer[]{itemWorryLevel, testOutcomeToMonkey[0]};
+                } else {
+                    return new Integer[]{itemWorryLevel, testOutcomeToMonkey[1]};
+                }
             }
+            return null;
         }
-        return null;
-    }
 
-    public int getQueueLength() {
-        return items.size();
-    }
+        private Integer topItemNewWorryLevel() {
+            if (!items.isEmpty()) {
+                if (operation[0].equals("+")) {
+                    return operation[1].equals("old") ? items.peek() + items.poll() : items.poll() + Integer.parseInt(operation[1]);
+                } else {
+                    return operation[1].equals("old") ? items.peek() * items.poll() : items.poll() * Integer.parseInt(operation[1]);
+                }
+            }
+            return null;
+        }
 
-    public int getInspectedItems() {
-        return inspectedItems;
+        public int getQueueLength() {
+            return items.size();
+        }
+
+        public int getInspectedItems() {
+            return inspectedItems;
+        }
     }
 }
