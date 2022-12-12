@@ -15,14 +15,15 @@ public class Main {
         loadData();
         provideTilesWithNeighbours();
         calculateNext.add(map.get(startAndFinish[1][0]).get(startAndFinish[1][1]));
-        calcDistanceToFinal();
+        calcDistanceToStart();
 
         printStepsMap();
 
         System.out.println("Finished in " + moveCounter + " moves.");
     }
 
-    private static void printMap() {
+    // for visualization (looks cool btw)
+    private static void printHeightMap() {
         System.out.println();
         int eachRowSize = map.get(0).size();
         for (ArrayList<Tile> tiles : map) {
@@ -43,6 +44,7 @@ public class Main {
         System.out.println();
     }
 
+    // for visualization (looks cool btw)
     private static void printStepsMap() {
         System.out.println();
         int eachRowSize = map.get(0).size();
@@ -103,6 +105,7 @@ public class Main {
         }
     }
 
+    // This includes: an array for all neighbours, an AL for the ones that can go to it and an AL for the ones that it can go to
     private static void provideTilesWithNeighbours() {
         for (int i = 0; i < map.size(); i++) {
             ArrayList<Tile> currentArrL = map.get(i);
@@ -171,7 +174,8 @@ public class Main {
         }
     }
 
-    private static void calcDistanceToFinal() {
+    // Calculates the distance from the final to every tile, including the start
+    private static void calcDistanceToStart() {
         while (calculateNext.size() > calcNextCounter) {
             Tile tileToCalc = calculateNext.get(calcNextCounter++);
             addToCalcNext(tileToCalc);
@@ -194,6 +198,7 @@ public class Main {
         }
     }
 
+    // Gathers the tiles to be calculated in the next turn
     private static void addToCalcNext(Tile tileToCalc) {
         int neighboursAmount = tileToCalc.neighboursFrom.size();
         for (int i = 0; i < neighboursAmount; i++) {
