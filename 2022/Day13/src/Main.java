@@ -16,7 +16,7 @@ public class Main {
 
     private static void loadData() {
         try {
-            File input = new File("input2.txt");
+            File input = new File("input.txt");
             Scanner myScanner = new Scanner(input);
 
             while (myScanner.hasNextLine()) {
@@ -38,47 +38,28 @@ public class Main {
         Item leftCurrentItem, rightCurrentItem;
 
         for (int i = 0; i < combinedLength; i++) {
-            if (left.items.size() == i) {
-//                System.out.println("Left side ran out of items, so inputs are in the right order");
-                return true;
-            }
+            if (left.items.size() == i) return true;
             leftCurrentItem = left.items.get(i);
 
-            if (right.items.size() == i) {
-//                System.out.println("Right side ran out of items, so inputs are not in the right order");
-                return false;
-            }
+            if (right.items.size() == i) return false;
             rightCurrentItem = right.items.get(i);
 
             if (leftCurrentItem.isInteger && rightCurrentItem.isInteger) {
                 if (leftCurrentItem.intValue < rightCurrentItem.intValue) {
-//                    System.out.println("Left side is smaller, so inputs are in the right order");
                     return true;
-//                    bool = true;
                 } else if (leftCurrentItem.intValue > rightCurrentItem.intValue) {
-//                    System.out.println("Right side is smaller, so inputs are not in the right order");
                     return false;
                 }
             } else if (leftCurrentItem.isList && rightCurrentItem.isList) {
                 bool = comparePackets(new Packet(leftCurrentItem.listAsString), new Packet(rightCurrentItem.listAsString));
-//                if (!bool) {
-//                    return false;
-//                }
                 return bool;
             } else {
                 if (leftCurrentItem.isInteger) {
                     bool = comparePackets(leftCurrentItem.returnItemAsPacket(), new Packet(rightCurrentItem.listAsString));
-//                    if (!bool) {
-//                        return false;
-//                    }
-                    return bool;
                 } else {
                     bool = comparePackets(new Packet(leftCurrentItem.listAsString), rightCurrentItem.returnItemAsPacket());
-//                    if (!bool) {
-//                        return false;
-//                    }
-                    return bool;
                 }
+                return bool;
             }
         }
 
@@ -115,7 +96,7 @@ class Packet {
         packetAsString_Manipulation(packetAsString);
     }
 
-    // TODO: Fix this repetition
+    // TODO: Fix repetition (almost the same method in Item)
     void packetAsString_Manipulation(String packetAsString) {
         for (int i = 0; i < packetAsString.length(); i++) {
             char currentChar = packetAsString.charAt(i);
@@ -127,7 +108,6 @@ class Packet {
                 } else {
                     items.add(new Item(Integer.parseInt(packetAsString.substring(i, i + 1))));
                 }
-//                items.add(new Item(Integer.parseInt(packetAsString.substring(i, i + 1))));
             } else if (currentChar == 91) { // is '['
                 openingBracketsCounter++;
                 if (openingBracketsCounter > 1) {
