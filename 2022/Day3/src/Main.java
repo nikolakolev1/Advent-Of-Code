@@ -31,7 +31,7 @@ public class Main {
         System.out.println(answer);
     }
 
-    public static int part1(Scanner myReader, HashSet compareHS, int answer) {
+    public static int part1(Scanner myReader, HashSet<Character> compareHS, int answer) {
         String currentLine = myReader.nextLine(); // get current line
 
         for (int i = 0; i < currentLine.length() / 2; i++) {
@@ -49,7 +49,7 @@ public class Main {
         return answer;
     }
 
-    public static int part2(Scanner myReader, HashSet compareHS, int answer) {
+    public static int part2(Scanner myReader, HashSet<Character> compareHS, int answer) {
         String elf1 = myReader.nextLine(), elf2 = myReader.nextLine(), elf3 = myReader.nextLine(); // get next three lines
 
         for (int i = 0; i < elf1.length(); i++) {
