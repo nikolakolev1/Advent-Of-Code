@@ -10,8 +10,8 @@ public class Main {
     public static void main(String[] args) {
         loadData();
 
-        mainMethod();
-        System.out.println("debug");
+        part1();
+        part2();
     }
 
     private static void loadData() {
@@ -50,15 +50,8 @@ public class Main {
                 } else if (leftCurrentItem.intValue > rightCurrentItem.intValue) {
                     return false;
                 }
-            } else if (leftCurrentItem.isList && rightCurrentItem.isList) {
-                bool = comparePackets(new Packet(leftCurrentItem.listAsString), new Packet(rightCurrentItem.listAsString));
-                return bool;
             } else {
-                if (leftCurrentItem.isInteger) {
-                    bool = comparePackets(leftCurrentItem.returnItemAsPacket(), new Packet(rightCurrentItem.listAsString));
-                } else {
-                    bool = comparePackets(new Packet(leftCurrentItem.listAsString), rightCurrentItem.returnItemAsPacket());
-                }
+                bool = comparePackets(leftCurrentItem.returnItemAsPacket(), rightCurrentItem.returnItemAsPacket());
                 return bool;
             }
         }
@@ -67,7 +60,7 @@ public class Main {
         return true;
     }
 
-    private static void mainMethod() {
+    private static void part1() {
         int packetsSize = packets.size();
         for (int i = 0; i < packetsSize; i++) {
             if (comparePackets(packets.get(i), packets.get(i + 1))) {
@@ -80,7 +73,60 @@ public class Main {
         for (Integer pairIndex : indicesOfPairsInOrder) {
             result += pairIndex;
         }
-        System.out.println(result);
+        System.out.println("Part 1: " + result);
+    }
+
+    private static void part2() {
+        packets.add(new Packet("[[2]]"));
+        packets.add(new Packet("[[6]]"));
+
+        ArrayList<Packet> sortedPackets = mergesort(packets);
+        ArrayList<Integer> part2Answer = new ArrayList<>();
+
+        for (int i = 0; i < sortedPackets.size(); i++) {
+//            System.out.println(sortedPackets.get(i).packetAsString);
+            if (sortedPackets.get(i).packetAsString.equals("[[2]]") || sortedPackets.get(i).packetAsString.equals("[[6]]")) {
+                part2Answer.add(i);
+            }
+        }
+
+        System.out.println("(incorrect) Part 2: " + part2Answer.get(0) * part2Answer.get(1));
+    }
+
+    public static ArrayList<Packet> merge(ArrayList<Packet> a, ArrayList<Packet> b) {
+        ArrayList<Packet> merged = new ArrayList<>();
+        int mergedEndSize = a.size() + b.size();
+        int indexA = 0, indexB = 0; // indexA, indexB: next index to be checked from a & b
+
+        // put the smaller numbers into merged
+        for (int i = 0; i < mergedEndSize; i++) {
+            if (indexB >= b.size() || (indexA < a.size() && (comparePackets(a.get(indexA), b.get(indexB))))) {
+                merged.add(a.get(indexA++)); // if the packet in  a-arrL is smaller
+            } else {
+                merged.add(b.get(indexB++)); // if the packet in b-arrL is smaller
+            }
+        }
+
+        return merged;
+    }
+
+    /*
+     * mergesort method for Task 1.2
+     */
+    public static ArrayList<Packet> mergesort(ArrayList<Packet> packets) {
+        if (packets.size() < 2) return packets; // if arr is too short -> return it
+
+        ArrayList<Packet> arrL1 = new ArrayList<>(), arrL2 = new ArrayList<>();
+
+        int half = packets.size() / 2;
+        for (int i = 0; i < half; i++) {
+            arrL1.add(packets.get(i));
+        }
+        for (int i = half; i < packets.size(); i++) {
+            arrL2.add(packets.get(i));
+        }
+
+        return merge(mergesort(arrL1), mergesort(arrL2)); // merge and return
     }
 }
 
