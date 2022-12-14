@@ -5,10 +5,8 @@ import java.util.Scanner;
 public class Main {
     // Sorry for how unreadable that is
     public static void main(String[] args) {
-        mainMethod("part1"); // "part1" || whatever string
-    }
+        String partStr = "part1"; // "part1" || whatever string
 
-    public static void mainMethod(String partStr) {
         try {
             File input = new File("input.txt");
             Scanner myScanner = new Scanner(input);
@@ -35,7 +33,7 @@ public class Main {
                     }
 
                     if (counter == sumOfSmallerInts(partInt)) {
-                        System.out.println(i);
+                        System.out.println(partStr + ": " + i);
                         return;
                     }
 
