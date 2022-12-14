@@ -5,10 +5,8 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        mainMethod("part1"); // "part1" || or 'doesn't matter what'
-    }
+        String part = "part1"; // "part1" || or 'doesn't matter what'
 
-    public static void mainMethod(String part) {
         try {
             File input = new File("input.txt");
             Scanner myReader = new Scanner(input);
@@ -59,6 +57,7 @@ public class Main {
             }
 
             // print answer
+            System.out.print(part + ": ");
             for (ArrayList<Character> stack : stacks) System.out.print(stack.get(stack.size() - 1));
 
             myReader.close();
