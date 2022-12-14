@@ -42,7 +42,7 @@ public class Main {
 
                 answer += points; // add the points from this round to the final answer
             }
-            System.out.println(answer);
+            System.out.println(part + ": " + answer);
             myReader.close();
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
