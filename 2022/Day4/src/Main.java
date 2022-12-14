@@ -16,7 +16,7 @@ public class Main {
 
             while (myReader.hasNextLine()) {
                 int[] elves = new int[4]; // an array to store the ranges of both elves
-                String[] elvesStr = myReader.nextLine().split(",|-"); // get the ranges into the String array
+                String[] elvesStr = myReader.nextLine().split("[,\\-]"); // get the ranges into the String array
                 for (int i = 0; i < elvesStr.length; i++) {
                     elves[i] = Integer.parseInt(elvesStr[i]); // convert them to ints in the main array
                 }
