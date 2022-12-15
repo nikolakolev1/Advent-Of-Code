@@ -133,8 +133,6 @@ public class Main {
 class Packet {
     ArrayList<Item> items = new ArrayList<>();
     String packetAsString;
-    int openingBracketsCounter = 0;
-    int closingBracketsCounter = 0;
 
     Packet(String thisLine) {
         packetAsString = thisLine;
@@ -142,43 +140,8 @@ class Packet {
         packetAsString_Manipulation(packetAsString);
     }
 
-    // TODO: Fix repetition (almost the same method in Item)
     void packetAsString_Manipulation(String packetAsString) {
-        for (int i = 0; i < packetAsString.length(); i++) {
-            char currentChar = packetAsString.charAt(i);
-
-            if (Character.isDigit(currentChar)) {
-                if (Character.isDigit(packetAsString.charAt(i + 1))) {
-                    items.add(new Item(Integer.parseInt(packetAsString.substring(i, i + 2))));
-                    i++;
-                } else {
-                    items.add(new Item(Integer.parseInt(packetAsString.substring(i, i + 1))));
-                }
-            } else if (currentChar == 91) { // is '['
-                openingBracketsCounter++;
-                if (openingBracketsCounter > 1) {
-                    int tempOpenCounter = 0;
-                    int tempCloseCounter = 0;
-                    for (int j = i; j < packetAsString.length(); j++) {
-                        currentChar = packetAsString.charAt(j);
-                        if (currentChar == 91) {
-                            tempOpenCounter++;
-                        } else if (currentChar == 93) {
-                            tempCloseCounter++;
-                            if (tempOpenCounter == tempCloseCounter) {
-                                items.add(new Item(packetAsString.substring(i, j + 1)));
-                                i = j - 1;
-                                break;
-                            }
-                        }
-                    }
-                }
-            } else if (currentChar == 93) { // is ']'
-                if (++closingBracketsCounter == openingBracketsCounter) {
-                    return;
-                }
-            }
-        }
+        String_Manipulator.packetOrItemAsString_Manipulation(packetAsString, items);
     }
 }
 
@@ -188,8 +151,6 @@ class Item {
     String listAsString;
     boolean isInteger = false;
     boolean isList = false;
-    int openingBracketsCounter = 0;
-    int closingBracketsCounter = 0;
 
     Item(int i) {
         intValue = i;
@@ -204,29 +165,49 @@ class Item {
     }
 
     void listAsString_Manipulation(String listAsString) {
-        for (int i = 0; i < listAsString.length(); i++) {
-            char currentChar = listAsString.charAt(i);
+        String_Manipulator.packetOrItemAsString_Manipulation(listAsString, list);
+    }
+
+    Packet returnItemAsPacket() {
+        if (isList) {
+            return new Packet(listAsString);
+        } else {
+            return new Packet("[" + intValue + "]");
+        }
+    }
+}
+
+class String_Manipulator {
+    public String_Manipulator() {
+    }
+
+    public static void packetOrItemAsString_Manipulation(String packetOrListStr, ArrayList<Item> packetOrList) {
+        int openingBracketsCounter = 0;
+        int closingBracketsCounter = 0;
+
+        for (int i = 0; i < packetOrListStr.length(); i++) {
+            char currentChar = packetOrListStr.charAt(i);
 
             if (Character.isDigit(currentChar)) {
-                if (Character.isDigit(listAsString.charAt(i + 1))) {
-                    list.add(new Item(Integer.parseInt(listAsString.substring(i, i + 2))));
+                if (Character.isDigit(packetOrListStr.charAt(i + 1))) {
+                    packetOrList.add(new Item(Integer.parseInt(packetOrListStr.substring(i, i + 2))));
                     i++;
                 } else {
-                    list.add(new Item(Integer.parseInt(listAsString.substring(i, i + 1))));
+                    packetOrList.add(new Item(Integer.parseInt(packetOrListStr.substring(i, i + 1))));
                 }
             } else if (currentChar == 91) { // is '['
                 openingBracketsCounter++;
                 if (openingBracketsCounter > 1) {
                     int tempOpenCounter = 0;
                     int tempCloseCounter = 0;
-                    for (int j = i; j < listAsString.length(); j++) {
-                        currentChar = listAsString.charAt(j);
+                    for (int j = i; j < packetOrListStr.length(); j++) {
+                        currentChar = packetOrListStr.charAt(j);
                         if (currentChar == 91) {
                             tempOpenCounter++;
                         } else if (currentChar == 93) {
                             tempCloseCounter++;
                             if (tempOpenCounter == tempCloseCounter) {
-                                list.add(new Item(listAsString.substring(i, j + 1)));
+                                packetOrList.add(new Item(packetOrListStr.substring(i, j + 1)));
                                 i = j - 1;
                                 break;
                             }
@@ -238,14 +219,6 @@ class Item {
                     return;
                 }
             }
-        }
-    }
-
-    Packet returnItemAsPacket() {
-        if (isList) {
-            return new Packet(listAsString);
-        } else {
-            return new Packet("[" + intValue + "]");
         }
     }
 }
