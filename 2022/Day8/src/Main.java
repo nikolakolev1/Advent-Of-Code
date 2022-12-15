@@ -93,9 +93,9 @@ class Tree {
         bottomNeighbour = bottomN;
     }
 
-    private int maxHeightToL = 0;
-
     private boolean checkVisLeft() {
+        int maxHeightToL = 0;
+
         Tree leftN = leftNeighbour;
         while (leftN != null) {
             if (leftN.height >= maxHeightToL) {
@@ -109,9 +109,9 @@ class Tree {
         return true;
     }
 
-    private int maxHeightToR;
-
     private boolean checkVisRight() {
+        int maxHeightToR = 0;
+
         Tree rightN = rightNeighbour;
         while (rightN != null) {
             if (rightN.height >= maxHeightToR) {
@@ -125,9 +125,9 @@ class Tree {
         return true;
     }
 
-    private int maxHeightToT;
-
     private boolean checkVisTop() {
+        int maxHeightToT = 0;
+
         Tree topN = topNeighbour;
         while (topN != null) {
             if (topN.height >= maxHeightToT) {
@@ -141,9 +141,9 @@ class Tree {
         return true;
     }
 
-    private int maxHeightToB;
-
     private boolean checkVisBottom() {
+        int maxHeightToB = 0;
+
         Tree bottomN = bottomNeighbour;
         while (bottomN != null) {
             if (bottomN.height >= maxHeightToB) {
@@ -173,63 +173,71 @@ class Tree {
         }
     }
 
-    private int scenicToL = 0;
+    private int scenicLeft() {
+        int scenicToL = 0;
 
-    private void scenicLeft() {
         Tree leftN = leftNeighbour;
         while (leftN != null) {
             scenicToL++;
             if (leftN.height >= height) {
-                return;
+                break;
             }
             leftN = leftN.leftNeighbour;
         }
+
+        return scenicToL;
     }
 
-    private int scenicToR = 0;
+    private int scenicRight() {
+        int scenicToR = 0;
 
-    private void scenicRight() {
         Tree rightN = rightNeighbour;
         while (rightN != null) {
             scenicToR++;
             if (rightN.height >= height) {
-                return;
+                break;
             }
             rightN = rightN.rightNeighbour;
         }
+
+        return scenicToR;
     }
 
-    private int scenicToT = 0;
+    private int scenicTop() {
+        int scenicToT = 0;
 
-    private void scenicTop() {
         Tree topN = topNeighbour;
         while (topN != null) {
             scenicToT++;
             if (topN.height >= height) {
-                return;
+                break;
             }
             topN = topN.topNeighbour;
         }
+
+        return scenicToT;
     }
 
-    private int scenicToB = 0;
+    private int scenicBottom() {
+        int scenicToB = 0;
 
-    private void scenicBottom() {
         Tree bottomN = bottomNeighbour;
         while (bottomN != null) {
             scenicToB++;
             if (bottomN.height >= height) {
-                return;
+                break;
             }
             bottomN = bottomN.bottomNeighbour;
         }
+
+        return scenicToB;
     }
 
     public int scenicScore() {
-        scenicLeft();
-        scenicRight();
-        scenicTop();
-        scenicBottom();
+        int scenicToL = scenicLeft();
+        int scenicToR = scenicRight();
+        int scenicToT = scenicTop();
+        int scenicToB = scenicBottom();
         return scenicToL * scenicToR * scenicToT * scenicToB;
     }
 
