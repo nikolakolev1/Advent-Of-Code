@@ -113,59 +113,31 @@ public class Main {
             for (int j = 0; j < currentArrLength; j++) {
                 Tile currentTile = map.get(i).get(j);
                 if (currentTile != null) {
-                    boolean topmost = false;
-                    boolean bottommost = false;
-                    boolean leftmost = false;
-                    boolean rightmost = false;
+                    Tile[] neighbours = new Tile[4];
+
+                    boolean topmost = false, bottommost = false;
+                    boolean leftmost = false, rightmost = false;
 
                     if (i == 0) {
                         topmost = true;
                     } else if (i == map.size() - 1) {
                         bottommost = true;
                     }
-
                     if (j == 0) {
                         leftmost = true;
                     } else if (j == currentArrLength - 1) {
                         rightmost = true;
                     }
 
-                    if (!topmost) currentTile.neighbours[0] = (map.get(i - 1).get(j));
-                    if (!bottommost) currentTile.neighbours[1] = (map.get(i + 1).get(j));
-                    if (!leftmost) currentTile.neighbours[2] = (map.get(i).get(j - 1));
-                    if (!rightmost) currentTile.neighbours[3] = (map.get(i).get(j + 1));
-                }
-            }
-        }
+                    if (!topmost) neighbours[0] = (map.get(i - 1).get(j));
+                    if (!bottommost) neighbours[1] = (map.get(i + 1).get(j));
+                    if (!leftmost) neighbours[2] = (map.get(i).get(j - 1));
+                    if (!rightmost) neighbours[3] = (map.get(i).get(j + 1));
 
-        provideTilesWithNeighboursTo();
-        provideTilesWithNeighboursFrom();
-    }
-
-    private static void provideTilesWithNeighboursTo() {
-        for (ArrayList<Tile> currentArrL : map) {
-            for (Tile currentTile : currentArrL) {
-                if (currentTile != null) {
-                    for (int k = 0; k < currentTile.neighbours.length; k++) {
-                        Tile neighbour = currentTile.neighbours[k];
+                    for (Tile neighbour : neighbours) {
                         if (neighbour != null) {
                             int heightDifference = neighbour.height - currentTile.height;
                             if (heightDifference <= 1) currentTile.neighboursTo.add(neighbour);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private static void provideTilesWithNeighboursFrom() {
-        for (ArrayList<Tile> currentArrL : map) {
-            for (Tile currentTile : currentArrL) {
-                if (currentTile != null) {
-                    for (int k = 0; k < currentTile.neighbours.length; k++) {
-                        Tile neighbour = currentTile.neighbours[k];
-                        if (neighbour != null) {
-                            int heightDifference = neighbour.height - currentTile.height;
                             if (heightDifference >= -1) currentTile.neighboursFrom.add(neighbour);
                         }
                     }
@@ -211,7 +183,6 @@ public class Main {
 
 class Tile {
     int height;
-    Tile[] neighbours = new Tile[4];
     ArrayList<Tile> neighboursTo = new ArrayList<>();
     ArrayList<Tile> neighboursFrom = new ArrayList<>();
     Integer distanceToFinal;
