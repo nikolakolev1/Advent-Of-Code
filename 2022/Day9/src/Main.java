@@ -77,65 +77,55 @@ public class Main {
             int differenceInX = headNewCoordinates[0] - xCoordinate;
             int differenceInY = headNewCoordinates[1] - yCoordinate;
 
-            if (differenceInY == 0) {
-                if (differenceInX == 2) {
-                    xCoordinate++;
-                } else if (differenceInX == -2) {
-                    xCoordinate--;
-                }
-            } else if (differenceInX == 0) {
-                if (differenceInY == 2) {
-                    yCoordinate++;
-                } else if (differenceInY == -2) {
-                    yCoordinate--;
-                }
+            if (differenceInY == 0 && differenceInX == 2) {
+                xCoordinate++;
+            } else if (differenceInY == 0 && differenceInX == -2) {
+                xCoordinate--;
+            } else if (differenceInX == 0 && differenceInY == 2) {
+                yCoordinate++;
+            } else if (differenceInX == 0 && differenceInY == -2) {
+                yCoordinate--;
             } else if (differenceInY == 1 || differenceInY == -1) {
                 if (differenceInX == 2) {
                     xCoordinate++;
+                    yCoordinate--;
                     if (differenceInY == 1) {
-                        yCoordinate++;
-                    } else {
-                        yCoordinate--;
+                        yCoordinate += 2;
                     }
                 } else if (differenceInX == -2) {
                     xCoordinate--;
+                    yCoordinate--;
                     if (differenceInY == 1) {
-                        yCoordinate++;
-                    } else {
-                        yCoordinate--;
+                        yCoordinate += 2;
                     }
                 }
             } else if (differenceInX == 1 || differenceInX == -1) {
                 if (differenceInY == 2) {
-                    if (differenceInX == 1) {
-                        xCoordinate++;
-                    } else {
-                        xCoordinate--;
-                    }
                     yCoordinate++;
-                } else if (differenceInY == -2) {
+                    xCoordinate--;
                     if (differenceInX == 1) {
-                        xCoordinate++;
-                    } else {
-                        xCoordinate--;
+                        xCoordinate += 2;
                     }
+                } else if (differenceInY == -2) {
                     yCoordinate--;
+                    xCoordinate--;
+                    if (differenceInX == 1) {
+                        xCoordinate += 2;
+                    }
                 }
-            } else {
+            } else if (differenceInY == 2){
+                yCoordinate++;
                 if (differenceInX == 2) {
                     xCoordinate++;
-                    if (differenceInY == 2) {
-                        yCoordinate++;
-                    } else if (differenceInY == -2) {
-                        yCoordinate--;
-                    }
                 } else if (differenceInX == -2) {
                     xCoordinate--;
-                    if (differenceInY == 2) {
-                        yCoordinate++;
-                    } else if (differenceInY == -2) {
-                        yCoordinate--;
-                    }
+                }
+            } else if (differenceInY == -2) {
+                yCoordinate--;
+                if (differenceInX == 2) {
+                    xCoordinate++;
+                } else if (differenceInX == -2) {
+                    xCoordinate--;
                 }
             }
 
