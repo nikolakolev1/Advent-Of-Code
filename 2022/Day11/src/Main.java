@@ -79,7 +79,7 @@ public class Main {
 
     private static void turn() {
         for (Monkey monkey : monkeys) {
-            int monkeyItemCount = monkey.getQueueLength();
+            int monkeyItemCount = monkey.items.size();
             for (int i = 0; i < monkeyItemCount; i++) {
                 Integer[] toDoThisTurn = monkey.throwItemToMonkey();
                 if (toDoThisTurn != null) {
@@ -90,10 +90,10 @@ public class Main {
     }
 
     private static void calculateMonkeyBusiness(String part) {
-        BigInteger mostInspectedItems1 = new BigInteger("0");
-        BigInteger mostInspectedItems2 = new BigInteger("0");
+        BigInteger mostInspectedItems1 = new BigInteger("0"), mostInspectedItems2 = new BigInteger("0");
+
         for (Monkey monkey : monkeys) {
-            BigInteger currentMonkeyInspectedItems = new BigInteger(String.valueOf(monkey.getInspectedItems()));
+            BigInteger currentMonkeyInspectedItems = new BigInteger(String.valueOf(monkey.inspectedItems));
             if (currentMonkeyInspectedItems.compareTo(mostInspectedItems1) > 0) {
                 mostInspectedItems2 = mostInspectedItems1;
                 mostInspectedItems1 = currentMonkeyInspectedItems;
@@ -101,16 +101,17 @@ public class Main {
                 mostInspectedItems2 = currentMonkeyInspectedItems;
             }
         }
+
         System.out.println(part + ": " + (mostInspectedItems1.multiply(mostInspectedItems2)));
     }
 
     static class Monkey {
         private final String part;
-        private final Queue<Integer> items = new LinkedList<>();
+        public final Queue<Integer> items = new LinkedList<>();
         private final String[] operation;
         private final int testDivisibleBy;
         private final int[] testOutcomeToMonkey;
-        private int inspectedItems = 0;
+        public int inspectedItems = 0;
 
         public Monkey(String part, ArrayList<Integer> items, String[] operation, int testDivisibleBy, int[] testOutcomeToMonkey) {
             this.part = part;
@@ -151,14 +152,6 @@ public class Main {
                 }
             }
             return null;
-        }
-
-        public int getQueueLength() {
-            return items.size();
-        }
-
-        public int getInspectedItems() {
-            return inspectedItems;
         }
     }
 }
