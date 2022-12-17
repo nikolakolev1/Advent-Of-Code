@@ -6,30 +6,46 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
-    private static int columnStart = 1000, columnEnd = -1, rowEnd = -1;
+    private static int columnStart, columnEnd, rowEnd;
     private static ArrayList<ArrayList<String>> cave;
-    private static int sand = 0;
-    private static final int mapOffsetX = 5;
-    private static final int mapOffsetY = 1; // isn't functional
+    private static int sand;
 
 
     public static void main(String[] args) {
+        part1();
+        part2();
+    }
+
+    private static void part1() {
         String inputStr = "input.txt";
+        sand = 0;
 
         findRowsAndColumns(loadData1(inputStr));
         createMine();
         addRocksToMine(loadData2(inputStr));
-        for (int i = 0; i < 110; i++) {
-            pourOneSand(500 - columnStart + mapOffsetX, 0);
+        for (int i = 0; i < 700; i++) {
+            pourOneSand(500 - columnStart, 0);// + mapOffsetX, 0);
         }
-//        for (int i = 0; i < 550; i++) {
-//            pourOneSand(479 - columnStart, 0);
-//        }
-//        pourOneSand(500 - columnStart, 0);
         printMine();
 
         System.out.println();
-        System.out.println("Sand: " + sand);
+        System.out.println("Part1 Sand: " + sand);
+    }
+
+    private static void part2() {
+        String inputStr = "part2_hardcode.txt";
+        sand = 0;
+
+        findRowsAndColumns(loadData1(inputStr));
+        createMine();
+        addRocksToMine(loadData2(inputStr));
+        for (int i = 0; i < 31706; i++) {
+            pourOneSand(500 - columnStart, 0);// + mapOffsetX, 0);
+        }
+        printMine();
+
+        System.out.println();
+        System.out.println("Part2 Sand: " + sand);
     }
 
     private static ArrayList<String> loadData1(String inputStr) {
@@ -53,13 +69,18 @@ public class Main {
     }
 
     private static void findRowsAndColumns(ArrayList<String> allData) {
+        columnStart = 1000;
+        columnEnd = -1;
+        rowEnd = -1;
+
         for (String coordinates : allData) {
-            int thisColumn = Integer.parseInt(coordinates.substring(0, 3));
-            int thisRow = Integer.parseInt(coordinates.substring(4));
+            String[] columnAndRow = coordinates.split(",");
+            int thisColumn = Integer.parseInt(columnAndRow[0]);
+            int thisRow = Integer.parseInt(columnAndRow[1]);
 
             if (columnStart > thisColumn) columnStart = thisColumn;
             else if (columnEnd < thisColumn) columnEnd = thisColumn;
-            else if (rowEnd < thisRow) rowEnd = thisRow;
+            if (rowEnd < thisRow) rowEnd = thisRow;
         }
     }
 
@@ -67,11 +88,11 @@ public class Main {
         cave = new ArrayList<>();
 
         int rowAmount = rowEnd;
-        for (int j = 0; j < rowAmount + 1 + (2 * mapOffsetY); j++) {
+        for (int j = 0; j < rowAmount + 1; j++) {// + (2 * mapOffsetY); j++) {
             ArrayList<String> thisRow = new ArrayList<>();
 
             int columnAmount = columnEnd - columnStart;
-            for (int i = 0; i < columnAmount + 1 + (2 * mapOffsetX); i++) {
+            for (int i = 0; i < columnAmount + 1; i++) {// + (2 * mapOffsetX); i++) {
                 thisRow.add(".");
             }
 
@@ -115,7 +136,7 @@ public class Main {
                 boolean positiveDiff = true;
 
                 if (Objects.equals(thisPath.get(j), thisPath.get(j + 2))) {
-                    int x = thisPath.get(j) + mapOffsetX;
+                    int x = thisPath.get(j);
                     int y1 = thisPath.get(j + 1);
                     int y2 = thisPath.get(j + 3);
 
@@ -130,13 +151,13 @@ public class Main {
                         if (!positiveDiff) {
                             cave.get(y1 + k).set(x - columnStart, "#");
                         } else {
-                            cave.get(y2 - k).set(x - columnStart, "#");
+                            cave.get(y1 - k).set(x - columnStart, "#");
                         }
                     }
                 } else {
                     int y = thisPath.get(j + 1);
-                    int x1 = thisPath.get(j) + mapOffsetX;
-                    int x2 = thisPath.get(j + 2) + mapOffsetX;
+                    int x1 = thisPath.get(j);
+                    int x2 = thisPath.get(j + 2);
 
                     int difference = x1 - x2;
 
@@ -186,7 +207,14 @@ public class Main {
     }
 
     private static void printMine() {
-        for (ArrayList<String> row : cave) {
+        int caveRows = cave.size();
+        for (int i = 0; i < caveRows; i++) {
+            ArrayList<String> row = cave.get(i);
+            System.out.print(i);
+            if (i < 10) System.out.print("   ");
+            else if (i < 100) System.out.print("  ");
+            else System.out.print(" ");
+
             for (String tile : row) {
                 System.out.print(tile);
             }
