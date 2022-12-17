@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-    public static ArrayList<Packet> packets = new ArrayList<>();
-    public static ArrayList<Integer> indicesOfPairsInOrder = new ArrayList<>();
+    private static final ArrayList<Packet> packets = new ArrayList<>();
+    private static final ArrayList<Integer> indicesOfPairsInOrder = new ArrayList<>();
 
     public static void main(String[] args) {
         loadData();
@@ -84,7 +84,10 @@ public class Main {
         ArrayList<Integer> part2Answer = new ArrayList<>();
 
         for (int i = 0; i < sortedPackets.size(); i++) {
-//            System.out.println(sortedPackets.get(i).packetAsString);
+            String index = i + "";
+            if (i < 10) index += "  ";
+            else if (i < 100) index += " ";
+            System.out.println(index + ": " + sortedPackets.get(i).packetAsString);
             if (sortedPackets.get(i).packetAsString.equals("[[2]]") || sortedPackets.get(i).packetAsString.equals("[[6]]")) {
                 part2Answer.add(i);
             }
@@ -93,7 +96,7 @@ public class Main {
         System.out.println("(incorrect) Part 2: " + part2Answer.get(0) * part2Answer.get(1));
     }
 
-    public static ArrayList<Packet> merge(ArrayList<Packet> a, ArrayList<Packet> b) {
+    private static ArrayList<Packet> merge(ArrayList<Packet> a, ArrayList<Packet> b) {
         ArrayList<Packet> merged = new ArrayList<>();
         int mergedEndSize = a.size() + b.size();
         int indexA = 0, indexB = 0; // indexA, indexB: next index to be checked from a & b
@@ -113,7 +116,7 @@ public class Main {
     /*
      * mergesort method for Task 1.2
      */
-    public static ArrayList<Packet> mergesort(ArrayList<Packet> packets) {
+    private static ArrayList<Packet> mergesort(ArrayList<Packet> packets) {
         if (packets.size() < 2) return packets; // if arr is too short -> return it
 
         ArrayList<Packet> arrL1 = new ArrayList<>(), arrL2 = new ArrayList<>();
