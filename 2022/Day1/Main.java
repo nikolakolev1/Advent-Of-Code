@@ -1,6 +1,6 @@
-import java.io.File; // Import the File class
-import java.io.FileNotFoundException; // Import this class to handle errors
-import java.util.Scanner; // Import the Scanner class to read text files
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -9,7 +9,7 @@ public class Main {
 
     public static void mainMethod(String part) {
         int[] firstThree = new int[3]; // an array to store the top 3 biggest results
-        int temp = 0, temp2, answer = 0; // temp and temp2 are used to juggle the ints in the array when adding a new int
+        int temp = 0, temp2, answer = 0; // temp and temp2 are used to juggle the numbers in the array when adding a new int
 
         try {
             File caloriesFile = new File("input.txt");
@@ -18,7 +18,7 @@ public class Main {
             while (myReader.hasNextLine()) {
                 String str = myReader.nextLine();
 
-                if (isNumeric(myReader.nextLine())) {
+                if (isNumeric(str)) {
                     temp += Integer.parseInt(str); // if != blank, add the number to the total calc of the elf
                 } else {
                     for (int i = 0; i < firstThree.length; i++) { // else -> check whether it should be among the top 3 elves
@@ -40,7 +40,7 @@ public class Main {
                 }
             }
 
-            System.out.println(answer);
+            System.out.println("=== Part " + part.charAt(4) + " ===\nAnswer: " + answer);
             myReader.close();
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
