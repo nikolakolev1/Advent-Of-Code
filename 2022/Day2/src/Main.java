@@ -42,7 +42,7 @@ public class Main {
 
                 answer += points; // add the points from this round to the final answer
             }
-            System.out.println(part + ": " + answer);
+            System.out.println("=== Part " + part.charAt(1) + " ===\nAnswer: " + answer);
             myReader.close();
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
@@ -52,27 +52,33 @@ public class Main {
 
     public static int YourMove_Part1(int charComparison) {
         int currentRoundArr = 3; // give scissors (and then check whether to change)
+
         if (charComparison < 0) {
             currentRoundArr = 1; // if "X", give rock
+
         } else if (charComparison == 0) {
             currentRoundArr = 2; // else if "Y", give paper
         }
+
         return currentRoundArr;
     }
 
     public static int YourMove_Part2(int[] currentRoundArr, int charComparison) {
         int currentRoundNum = currentRoundArr[0]; // if "Y", make draw
+
         if (charComparison < 0) { // if "X", lose
             currentRoundNum = currentRoundArr[0] - 1;
             if (currentRoundNum == 0) {
                 currentRoundNum = 3;
             }
+
         } else if (charComparison > 0) { // else if "Z", win
             currentRoundNum = currentRoundArr[0] + 1;
             if (currentRoundNum == 4) {
                 currentRoundNum = 1;
             }
         }
+
         return currentRoundNum;
     }
 }
