@@ -19,8 +19,7 @@ public class Main {
         for (Integer i : valuesAtTimestamps) {
             answerP1 += i;
         }
-        System.out.println();
-        System.out.println("Part 1: " + answerP1);
+        System.out.println("\nPart 1: " + answerP1);
     }
 
     private static void loadData() {
@@ -43,7 +42,7 @@ public class Main {
         counter++;
         checkIfTimestampToRecord();
 
-        if (thisLine.startsWith("a")) { // if addx
+        if (thisLine.startsWith("a")) {
             mapBuilderEvaluatePixel();
 
             thisLine = thisLine.substring(5);
@@ -57,11 +56,8 @@ public class Main {
     private static void mapBuilderEvaluatePixel() {
         int pixelIndex = counter - 1 - counterSubtract;
 
-        if (pixelIndex >= x - 1 && pixelIndex <= x + 1) {
-            part2Str.append("#");
-        } else {
-            part2Str.append(".");
-        }
+        if (pixelIndex >= x - 1 && pixelIndex <= x + 1) part2Str.append("#");
+        else part2Str.append(".");
 
         checkIfTimestampToPrintLine();
     }
