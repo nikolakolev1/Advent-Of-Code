@@ -73,17 +73,35 @@ public class Main {
 
         for (int i = 0; i < numbersCount; i++) {
             Number currentNum = numbers.get(i);
-            Number previousNum = new Number(0), nextNum = new Number(0);
+            Number previousNum = new Number(0);
+            Number nextNum = new Number(0);
+//            Number[] prev10_100_100 = new Number[3];
+//            Number[] next10_100_100 = new Number[3];
+
             if (i > 0) {
                 previousNum = numbers.get(i - 1);
+//                if (i > 9) prev10_100_100[0] = numbers.get(i - 10);
+//                else prev10_100_100[0] = numbers.get(numbersCount + (i - 10));
+//                if (i > 99) prev10_100_100[1] = numbers.get(i - 100);
+//                else prev10_100_100[1] = numbers.get(numbersCount + (i - 100));
+//                if (i > 999) prev10_100_100[2] = numbers.get(i - 1000);
+//                else prev10_100_100[2] = numbers.get(numbersCount + (i - 1000));
             }
             if (i < lastNumIndex) {
                 nextNum = numbers.get(i + 1);
+//                if (i < lastNumIndex - 9) next10_100_100[0] = numbers.get(i + 10);
+//                else next10_100_100[0] = numbers.get(i + (numbersCount - 10));
+//                if (i < lastNumIndex - 99) next10_100_100[1] = numbers.get(i + 100);
+//                else next10_100_100[1] = numbers.get(i + (numbersCount - 100));
+//                if (i < lastNumIndex - 999) prev10_100_100[2] = numbers.get(i + 1000);
+//                else next10_100_100[2] = numbers.get(i + (numbersCount - 1000));
             }
 
             if (i == firstNumIndex) {
                 currentNum.left = numbers.get(lastNumIndex);
                 currentNum.right = nextNum;
+
+//                prev10_100_100 = new Number[]{numbers.get(numbersCount - 10), numbers.get(numbersCount - 100), numbers.get(numbersCount - 1000)};
             } else if (i == lastNumIndex) {
                 currentNum.left = previousNum;
                 currentNum.right = numbers.get(firstNumIndex);
@@ -171,9 +189,11 @@ public class Main {
         public long value;
         public Number left;
         public Number right;
+//        public Number[] l10_100_1000_r10_100_1000;
 
         public Number(long value) {
             this.value = value;
+//            l10_100_1000_r10_100_1000 = new Number[6];
         }
     }
 }
