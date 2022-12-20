@@ -8,17 +8,18 @@ public class Main {
     private static int[] blueprintResults;
 
     public static void main(String[] args) {
-        loadData("input2.txt");
+        loadData("input.txt");
 
-        int blueprintIndexTemp = 0;
+        int blueprintsSize = blueprints.size();
+        int allQualityLevels = 0;
+        for (int i = 0; i < blueprintsSize; i++) {
+            // blueprintIndex = blueprintNumber - 1 | turn = minute - 1 | goFor = 1: ore; 2; clay; 3: obsidian; 4: geode
+            dfs(i, 2, 1, new int[]{1, 0, 0, 0}, new int[4]);
+            dfs(i, 1, 1, new int[]{1, 0, 0, 0}, new int[4]);
+            allQualityLevels += ((i + 1) * blueprintResults[i]);
+        }
 
-        // TODO: for loop the length of blueprints
-        // blueprintIndex = blueprintNumber - 1 | turn = minute - 1 | goFor = 1: ore; 2; clay; 3: obsidian; 4: geode
-        dfs(blueprintIndexTemp, 2, 1, new int[]{1, 0, 0, 0}, new int[4]);
-        dfs(blueprintIndexTemp, 1, 1, new int[]{1, 0, 0, 0}, new int[4]);
-
-        System.out.println(blueprintResults[blueprintIndexTemp]);
-        System.out.println("Hello world!");
+        System.out.println(allQualityLevels);
     }
 
     private static void loadData(String file) {
@@ -66,10 +67,9 @@ public class Main {
     }
 
     private static void robotPurchasing(int blueprintIndex, int goFor, int turn, int[] robots, int[] resources) {
-        resourcesGathering(robots, resources);
-
         // termination condition
         if (turn == 24) { // return because you start from 0 (if you started for 1 would do resource gathering;
+            resourcesGathering(robots, resources);
             if (blueprintResults[blueprintIndex] < resources[3]) blueprintResults[blueprintIndex] = resources[3];
         } else if (turn < 24) {
             Integer[] currentBlueprint = blueprints.get(blueprintIndex);
@@ -78,13 +78,12 @@ public class Main {
                 case 1 -> {
                     if (resources[0] < currentBlueprint[1]) {
                         while (resources[0] < currentBlueprint[1]) {
-                            if (turn <= 24) turn++;
+                            resourcesGathering(robots, resources);
+                            if (turn <= 23) turn++;
                             else {
-                                if (blueprintResults[blueprintIndex] < resources[3])
-                                    blueprintResults[blueprintIndex] = resources[3];
+                                if (blueprintResults[blueprintIndex] < resources[3]) blueprintResults[blueprintIndex] = resources[3];
                                 return;
                             }
-                            resourcesGathering(robots, resources);
                         }
                     }
 
@@ -95,13 +94,12 @@ public class Main {
                 case 2 -> {
                     if (resources[0] < currentBlueprint[2]) {
                         while (resources[0] < currentBlueprint[2]) {
-                            if (turn <= 24) turn++;
+                            resourcesGathering(robots, resources);
+                            if (turn <= 23) turn++;
                             else {
-                                if (blueprintResults[blueprintIndex] < resources[3])
-                                    blueprintResults[blueprintIndex] = resources[3];
+                                if (blueprintResults[blueprintIndex] < resources[3]) blueprintResults[blueprintIndex] = resources[3];
                                 return;
                             }
-                            resourcesGathering(robots, resources);
                         }
                     }
 
@@ -112,13 +110,12 @@ public class Main {
                 case 3 -> {
                     if (resources[0] < currentBlueprint[3] || resources[1] < currentBlueprint[4]) {
                         while (resources[0] < currentBlueprint[3] || resources[1] < currentBlueprint[4]) {
-                            if (turn <= 24) turn++;
+                            resourcesGathering(robots, resources);
+                            if (turn <= 23) turn++;
                             else {
-                                if (blueprintResults[blueprintIndex] < resources[3])
-                                    blueprintResults[blueprintIndex] = resources[3];
+                                if (blueprintResults[blueprintIndex] < resources[3]) blueprintResults[blueprintIndex] = resources[3];
                                 return;
                             }
-                            resourcesGathering(robots, resources);
                         }
                     }
 
@@ -131,10 +128,9 @@ public class Main {
                     if (resources[0] < currentBlueprint[5] || resources[2] < currentBlueprint[6]) {
                         while (resources[0] < currentBlueprint[5] || resources[2] < currentBlueprint[6]) {
                             resourcesGathering(robots, resources);
-                            if (turn < 24) turn++;
+                            if (turn <= 23) turn++;
                             else {
-                                if (blueprintResults[blueprintIndex] < resources[3])
-                                    blueprintResults[blueprintIndex] = resources[3];
+                                if (blueprintResults[blueprintIndex] < resources[3]) blueprintResults[blueprintIndex] = resources[3];
                                 return;
                             }
                         }
@@ -146,35 +142,37 @@ public class Main {
                 }
             }
 
-            int turnP1 = turn + 1;
+            int[] temp = new int[robots.length];
+            System.arraycopy(robots, 0, temp, 0, temp.length);
+            temp[goFor - 1] = robots[goFor - 1] - 1;
+            resourcesGathering(temp, resources);
+
             // go for geode
             // if obsidian (and clay) gathering possible
-            // and obsidian for geode is no more than a few turns away
-            if (robots[2] > 0 && robots[2] > currentBlueprint[6] / 5) {
-                dfs(blueprintIndex, 4, turnP1, robots, resources);
+            // and obsidian for geode is no more than a few turns away (or the time is almost up)
+            if (robots[2] > 0 && (turn > 19 || robots[2] > currentBlueprint[6] / 5)) {
+                dfs(blueprintIndex, 4, turn + 1, robots, resources);
             }
 
             // go for obsidian
             // if clay gathering (only) possible
-            // and more obsidian robots are required
-            if (robots[1] > 0 && robots[2] < currentBlueprint[6] / 3) {
+            if (robots[1] > 0) {
                 // and clay for geode is no more than a few turns away
                 if (robots[1] > currentBlueprint[4] / 5)
-                    dfs(blueprintIndex, 3, turnP1, robots, resources);
+                    dfs(blueprintIndex, 3, turn + 1, robots, resources);
             }
 
             // go for clay
             // if clay robots are more than two moves away form obsidian
-            // and turn is less than 15
-            if (robots[1] < currentBlueprint[4] / 2 && turn < 15) { // restricting condition (lessen possibilities)
-                dfs(blueprintIndex, 2, turnP1, robots, resources);
+            if (robots[1] <= currentBlueprint[4]) { // restricting condition (lessen possibilities)
+                dfs(blueprintIndex, 2, turn + 1, robots, resources);
             }
 
             // go for ore
             // if you have less than the max number of ores for clay
             // and turn is less than 12
-            if (robots[0] < currentBlueprint[3] && turn < 12) { // restricting condition (lessen possibilities)
-                dfs(blueprintIndex, 1, turnP1, robots, resources);
+            if (robots[0] <= currentBlueprint[3] && turn < 12) { // restricting condition (lessen possibilities)
+                dfs(blueprintIndex, 1, turn + 1, robots, resources);
             }
         } else {
             System.out.println("ERROR: This shouldn't be reached.");
