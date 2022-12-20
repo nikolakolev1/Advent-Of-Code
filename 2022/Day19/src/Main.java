@@ -6,8 +6,19 @@ import java.util.Scanner;
 public class Main {
     private static ArrayList<Integer[]> blueprints;
     private static int[] blueprintResults;
+    private static int part;
 
     public static void main(String[] args) {
+        part1();
+
+        System.out.println();
+
+        part2();
+        System.out.println();
+    }
+
+    private static void part1() {
+        part = 1;
         loadData("input.txt");
 
         int blueprintsSize = blueprints.size();
@@ -19,7 +30,35 @@ public class Main {
             allQualityLevels += ((i + 1) * blueprintResults[i]);
         }
 
-        System.out.println(allQualityLevels);
+        System.out.println("=== Part 1 ===\nAnswer: " + allQualityLevels);
+    }
+
+    // Run it after part 1
+    private static void part2() {
+        part = 2;
+        int blueprintsSize = blueprints.size();
+        if (blueprintsSize == 30) {
+            for (int i = blueprintsSize; i > 3; i--) {
+                blueprints.remove(i - 1);
+            }
+            blueprintResults = new int[3];
+
+            blueprintsSize = 3;
+            for (int i = 0; i < blueprintsSize; i++) {
+                // blueprintIndex = blueprintNumber - 1 | turn = minute - 1 | goFor = 1: ore; 2; clay; 3: obsidian; 4: geode
+                dfs(i, 2, 1, new int[]{1, 0, 0, 0}, new int[4]);
+                dfs(i, 1, 1, new int[]{1, 0, 0, 0}, new int[4]);
+            }
+
+            int result = 1;
+            for (int i : blueprintResults) {
+                result *= i;
+            }
+
+            System.out.println("=== Part 2 ===\nAnswer: " + result);
+        } else {
+            System.out.println("Run 'part2()' after running 'part1()', please.");
+        }
     }
 
     private static void loadData(String file) {
@@ -47,12 +86,14 @@ public class Main {
     // (blueprint index) 1, (goFor 1 ore) 4, (goFor 2 ore) 2, (goFor 3 ore) 3, (goFor 3 clay) 14,
     // (goFor 4 ore) 2, (goFor 4 obs) 7
     private static void dfs(int blueprintIndex, int goFor, int turn, int[] robots, int[] resources) {
+        int partMax = part == 1 ? 24 : 32;
+
         int[] newRobots = new int[robots.length];
         System.arraycopy(robots, 0, newRobots, 0, robots.length);
         int[] newResources = new int[resources.length];
         System.arraycopy(resources, 0, newResources, 0, resources.length);
 
-        if (turn <= 24) {
+        if (turn <= partMax) {
 //            resourcesGathering(newRobots, newResources);
             robotPurchasing(blueprintIndex, goFor, turn, newRobots, newResources);
         }
@@ -67,11 +108,13 @@ public class Main {
     }
 
     private static void robotPurchasing(int blueprintIndex, int goFor, int turn, int[] robots, int[] resources) {
+        int partMax = part == 1 ? 24 : 32;
+
         // termination condition
-        if (turn == 24) { // return because you start from 0 (if you started for 1 would do resource gathering;
+        if (turn == partMax) { // return because you start from 0 (if you started for 1 would do resource gathering;
             resourcesGathering(robots, resources);
             if (blueprintResults[blueprintIndex] < resources[3]) blueprintResults[blueprintIndex] = resources[3];
-        } else if (turn < 24) {
+        } else if (turn < partMax) {
             Integer[] currentBlueprint = blueprints.get(blueprintIndex);
 
             switch (goFor) {
@@ -79,9 +122,10 @@ public class Main {
                     if (resources[0] < currentBlueprint[1]) {
                         while (resources[0] < currentBlueprint[1]) {
                             resourcesGathering(robots, resources);
-                            if (turn <= 23) turn++;
+                            if (turn <= partMax - 1) turn++;
                             else {
-                                if (blueprintResults[blueprintIndex] < resources[3]) blueprintResults[blueprintIndex] = resources[3];
+                                if (blueprintResults[blueprintIndex] < resources[3])
+                                    blueprintResults[blueprintIndex] = resources[3];
                                 return;
                             }
                         }
@@ -95,9 +139,10 @@ public class Main {
                     if (resources[0] < currentBlueprint[2]) {
                         while (resources[0] < currentBlueprint[2]) {
                             resourcesGathering(robots, resources);
-                            if (turn <= 23) turn++;
+                            if (turn <= partMax - 1) turn++;
                             else {
-                                if (blueprintResults[blueprintIndex] < resources[3]) blueprintResults[blueprintIndex] = resources[3];
+                                if (blueprintResults[blueprintIndex] < resources[3])
+                                    blueprintResults[blueprintIndex] = resources[3];
                                 return;
                             }
                         }
@@ -111,9 +156,10 @@ public class Main {
                     if (resources[0] < currentBlueprint[3] || resources[1] < currentBlueprint[4]) {
                         while (resources[0] < currentBlueprint[3] || resources[1] < currentBlueprint[4]) {
                             resourcesGathering(robots, resources);
-                            if (turn <= 23) turn++;
+                            if (turn <= partMax - 1) turn++;
                             else {
-                                if (blueprintResults[blueprintIndex] < resources[3]) blueprintResults[blueprintIndex] = resources[3];
+                                if (blueprintResults[blueprintIndex] < resources[3])
+                                    blueprintResults[blueprintIndex] = resources[3];
                                 return;
                             }
                         }
@@ -128,9 +174,10 @@ public class Main {
                     if (resources[0] < currentBlueprint[5] || resources[2] < currentBlueprint[6]) {
                         while (resources[0] < currentBlueprint[5] || resources[2] < currentBlueprint[6]) {
                             resourcesGathering(robots, resources);
-                            if (turn <= 23) turn++;
+                            if (turn <= partMax - 1) turn++;
                             else {
-                                if (blueprintResults[blueprintIndex] < resources[3]) blueprintResults[blueprintIndex] = resources[3];
+                                if (blueprintResults[blueprintIndex] < resources[3])
+                                    blueprintResults[blueprintIndex] = resources[3];
                                 return;
                             }
                         }
