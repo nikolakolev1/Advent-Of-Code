@@ -13,7 +13,7 @@ public class Main {
     private static int cubeSideLength;
 
     public static void main(String[] args) {
-        loadData("input.txt");
+        loadData("input2.txt");
         part1();
 
 //        setStartCoordinates();
