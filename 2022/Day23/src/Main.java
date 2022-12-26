@@ -48,18 +48,18 @@ public class Main {
                     isFirstLine = false;
                 }
 //                else {
-                    ArrayList<Elf> row = new ArrayList<>();
-                    setAllToNull(row, rowLength);
-                    for (int i = 0; i < thisLine.length; i++) {
-                        if (thisLine[i].equals("#")) {
-                            Elf newElf = new Elf(rowIndex, addLength + i);
+                ArrayList<Elf> row = new ArrayList<>();
+                setAllToNull(row, rowLength);
+                for (int i = 0; i < thisLine.length; i++) {
+                    if (thisLine[i].equals("#")) {
+                        Elf newElf = new Elf(rowIndex, addLength + i);
 
-                            row.set(addLength + i, newElf);
-                            elves.add(newElf);
-                        }
+                        row.set(addLength + i, newElf);
+                        elves.add(newElf);
                     }
-                    map.add(row);
-                    rowIndex++;
+                }
+                map.add(row);
+                rowIndex++;
 //                }
             }
             addBlankRows(addLength, rowLength);
@@ -98,7 +98,7 @@ public class Main {
                                 elf.setCourseWest();
                             } else if (elf.checkEast()) {
                                 elf.setCourseEast();
-                            }
+                            } else elf.moveThisTurn = false;
                         }
                         case 1 -> {
                             if (elf.checkSouth()) {
@@ -109,7 +109,7 @@ public class Main {
                                 elf.setCourseEast();
                             } else if (elf.checkNorth()) {
                                 elf.setCourseNorth();
-                            }
+                            } else elf.moveThisTurn = false;
                         }
                         case 2 -> {
                             if (elf.checkWest()) {
@@ -120,7 +120,7 @@ public class Main {
                                 elf.setCourseNorth();
                             } else if (elf.checkSouth()) {
                                 elf.setCourseSouth();
-                            }
+                            } else elf.moveThisTurn = false;
                         }
                         case 3 -> {
                             if (elf.checkEast()) {
@@ -131,7 +131,7 @@ public class Main {
                                 elf.checkSouth();
                             } else if (elf.checkWest()) {
                                 elf.setCourseWest();
-                            }
+                            } else elf.moveThisTurn = false;
                         }
                     }
                 }
@@ -139,13 +139,16 @@ public class Main {
         }
 
         for (Elf elf : elves) {
-            if (map.get(elf.nextCoordinates[0]).get(elf.nextCoordinates[1]) == null) {
-                updateMap(elf);
-                elf.moveToNextCoordinates();
-            } else {
-                Elf elfToReturn = map.get(elf.nextCoordinates[0]).get(elf.nextCoordinates[1]);
-                returnMapToPrevState(elf, elfToReturn);
+            if (elf.moveThisTurn) {
+                if (map.get(elf.nextCoordinates[0]).get(elf.nextCoordinates[1]) == null) {
+                    updateMap(elf);
+                    elf.moveToNextCoordinates();
+                } else {
+                    Elf elfToReturn = map.get(elf.nextCoordinates[0]).get(elf.nextCoordinates[1]);
+                    returnMapToPrevState(elf, elfToReturn);
+                }
             }
+            elf.moveThisTurn = false;
         }
 
         if (++direction == 4) direction = 0;
@@ -159,9 +162,11 @@ public class Main {
     private static void returnMapToPrevState(Elf elf, Elf elfToReturn) {
         map.get(elf.nextCoordinates[0]).set(elf.nextCoordinates[1], null);
         map.get(elfToReturn.previousCoordinates[0]).set(elfToReturn.previousCoordinates[1], elfToReturn);
+        elfToReturn.coordinates[0] = elfToReturn.previousCoordinates[0];
+        elfToReturn.coordinates[1] = elfToReturn.previousCoordinates[1];
     }
 
-    // TODO: Something here is off
+    // TODO: Something here is off maybe
     private static int calculateAnswer() {
         int emptyTiles = 0;
         int[] minXAndMinY = new int[]{100, 100};
@@ -197,6 +202,7 @@ public class Main {
         public int[] coordinates;
         public int[] previousCoordinates;
         public int[] nextCoordinates;
+        public boolean moveThisTurn;
 
         private Elf(int rowCoordinate, int columnCoordinate) {
             coordinates = new int[]{rowCoordinate, columnCoordinate};
@@ -213,7 +219,8 @@ public class Main {
                         return false;
                     } else {
                         // TODO: Last added these
-                        if ((i != 0 && j != 0) && map.get(coordinates[0] + i).get(coordinates[1] + j) != null) {
+                        if ((i != 0 || j != 0) && map.get(coordinates[0] + i).get(coordinates[1] + j) != null) {
+                            moveThisTurn = true;
                             return true;
                         }
                     }
