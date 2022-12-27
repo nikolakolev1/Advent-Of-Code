@@ -5,20 +5,41 @@ import java.util.*;
 public class Main {
     private static ArrayList<ArrayList<ArrayList<Tile>>> allMaps;
     private static ArrayList<ArrayList<Tile>> initialMap;
+    private static Integer[][][] tileReachedWith;
     private static final ArrayList<Blizzard> allBlizzards = new ArrayList<>();
-    private static int[] myCoordinates;
-    private static int[] goalCoordinates;
-    // TODO: idea - do a DFS where the termination condition is if(myCoordinates == goalCoordinates)
-    // RANT: IMPOSSIBLE TO WORK WHILE DAD SNORES NEXT TO MY HEAD
+    private static int mapSizeY;
+    private static int mapSizeX;
+    private static int leastMoves = 100000;
 
     public static void main(String[] args) {
-        loadData("input2.txt");
-        setStartAndGoalCoordinates();
+        part1();
+
+        loadData("input.txt");
         loadALlMaps();
-        DFS(0, myCoordinates);
+        loadTileReachedWith();
+        DFS(0, new int[]{0, 1});
+        System.out.println(leastMoves);
+    }
+
+    private static void part1() {
+        loadData("input.txt");
+        loadALlMaps();
+        loadTileReachedWith();
+
+        DFS(0, new int[]{0, 1});
+
+        System.out.println(leastMoves);
+    }
+
+    private static void part2() {
+        loadData("input.txt");
+        loadALlMaps();
+        loadTileReachedWith();
+
+        DFS(0, new int[]{0, 1});
 
 
-        System.out.println("Hello world!");
+        System.out.println(leastMoves);
     }
 
     private static void loadData(String file) {
@@ -48,8 +69,10 @@ public class Main {
     }
 
     private static void loadALlMaps() {
-        int yAxis = initialMap.size() - 2;
-        int xAxis = initialMap.get(0).size() - 2;
+        mapSizeY = initialMap.size();
+        mapSizeX = initialMap.get(0).size();
+        int yAxis = mapSizeY - 2;
+        int xAxis = mapSizeX - 2;
 
         // expand if necessary
         ArrayList<Integer> commonMultiples = new ArrayList<>();
@@ -83,14 +106,21 @@ public class Main {
         for (Integer commonFactor : commonMultiples) {
             commonPart *= commonFactor;
         }
-        int GCF = ((initialMap.size() - 2) * (initialMap.get(0).size() - 2)) / commonPart;
+        int GCF = ((mapSizeY - 2) * (mapSizeX - 2)) / commonPart;
 
         allMaps = new ArrayList<>();
 
         for (int i = 0; i < GCF; i++) {
             allMaps.add(copyMap(initialMap));
+//            printCurrentState();
             moveBlizzards();
         }
+    }
+
+    private static void loadTileReachedWith() {
+        int time = allMaps.size();
+
+        tileReachedWith = new Integer[mapSizeY][mapSizeX][time];
     }
 
     private static void moveBlizzards() {
@@ -105,32 +135,45 @@ public class Main {
         for (ArrayList<Tile> tiles : mapToCopy) {
             ArrayList<Tile> copiedRow = new ArrayList<>();
             for (int j = 0; j < rowSize; j++) {
-                copiedRow.add(tiles.get(j));
+                Tile originalTile = tiles.get(j);
+                Tile copiedTile = new Tile(originalTile.coordinates[0], originalTile.coordinates[1], ".");
+                if (originalTile.endOfMap) {
+                    copiedTile.endOfMap = true;
+                } else {
+                    copiedTile.blizzardsOnTile.addAll(originalTile.blizzardsOnTile);
+                }
+                copiedRow.add(copiedTile);
             }
             copiedMap.add(copiedRow);
         }
         return copiedMap;
     }
 
-    private static void setStartAndGoalCoordinates() {
-        myCoordinates = new int[]{0, 1};
-        goalCoordinates = new int[]{initialMap.size() - 1, initialMap.get(0).size() - 1};
-    }
-
     private static void DFS(int movesUpToNow, int[] coordinates) {
-        // TODO: Stopped here - I believe that there is some issue with the
-        //       generation of new maps because it says that on maps with index 1, 2, and 3
-        //       there is one blizzard on [1, 1], while on map 1 there should be 0
-
-        if (coordinates[0] == goalCoordinates[0] && coordinates[1] == goalCoordinates[1]) {
+        if (coordinates[0] == mapSizeY - 1) {
             System.out.println("Reached goal position with: " + movesUpToNow + " moves");
+            if (movesUpToNow < leastMoves) {
+                leastMoves = movesUpToNow;
+            }
             return;
-        } else if (movesUpToNow > 50) {
-            System.out.print(":(");
+        } else if (movesUpToNow >= leastMoves) {
             return;
+        } else {
+            Integer min = tileReachedWith[coordinates[0]][coordinates[1]][movesUpToNow % allMaps.size()];
+            if (min == null) {
+                min = movesUpToNow;
+            } else if (movesUpToNow < min) {
+                min = movesUpToNow;
+            } else {
+                return;
+            }
+            tileReachedWith[coordinates[0]][coordinates[1]][movesUpToNow % allMaps.size()] = min;
+//            System.out.println(":(");
         }
 
-        ArrayList<ArrayList<Tile>> nextMap = allMaps.get((movesUpToNow % allMaps.size()) + 1);
+        int nextMapIndex = (movesUpToNow % allMaps.size()) + 1;
+        if (nextMapIndex == allMaps.size()) nextMapIndex = 0;
+        ArrayList<ArrayList<Tile>> nextMap = allMaps.get(nextMapIndex);
         int[] currentCoordinates = new int[]{coordinates[0], coordinates[1]};
         Queue<int[]> scenarios = new LinkedList<>();
 
@@ -152,10 +195,10 @@ public class Main {
         if (left.blizzardsOnTile.size() == 0 && !left.endOfMap) {
             scenarios.add(new int[]{currentCoordinates[0], currentCoordinates[1] - 1});
         }
-        if (coordinates[0] != 0 && (up.blizzardsOnTile.size() == 0 && up.endOfMap)) {
+        if (coordinates[0] != 0 && (up.blizzardsOnTile.size() == 0 && !up.endOfMap)) {
             scenarios.add(new int[]{currentCoordinates[0] - 1, currentCoordinates[1]});
         }
-        if (same.blizzardsOnTile.size() == 0 && same.endOfMap) {
+        if (same.blizzardsOnTile.size() == 0 && !same.endOfMap) {
             scenarios.add(new int[]{currentCoordinates[0], currentCoordinates[1]});
         }
 
@@ -164,12 +207,9 @@ public class Main {
         }
     }
 
-    private static void printCurrentState() {
-        int mapY = initialMap.size();
-        int mapX = initialMap.get(0).size();
-
-        for (int y = 0; y < mapY; y++) {
-            for (int x = 0; x < mapX; x++) {
+    private static void printCurrentState(int[] myCoordinates) {
+        for (int y = 0; y < mapSizeY; y++) {
+            for (int x = 0; x < mapSizeX; x++) {
                 if (y == myCoordinates[0] && x == myCoordinates[1]) {
                     System.out.print("E");
                 } else {
@@ -250,11 +290,11 @@ public class Main {
                 case (3) -> coordinates[0]++;
             }
 
-            if (coordinates[0] <= 0) coordinates[0] = initialMap.size() - 2;
-            else if (coordinates[0] >= initialMap.size() - 1) coordinates[0] = 1;
+            if (coordinates[0] <= 0) coordinates[0] = mapSizeY - 2;
+            else if (coordinates[0] >= mapSizeY - 1) coordinates[0] = 1;
 
-            if (coordinates[1] <= 0) coordinates[1] = initialMap.get(0).size() - 2;
-            else if (coordinates[1] >= initialMap.get(0).size() - 1) coordinates[1] = 1;
+            if (coordinates[1] <= 0) coordinates[1] = mapSizeX - 2;
+            else if (coordinates[1] >= mapSizeX - 1) coordinates[1] = 1;
 
             initialMap.get(coordinates[0]).get(coordinates[1]).blizzardsOnTile.add(this);
         }
