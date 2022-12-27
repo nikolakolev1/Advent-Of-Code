@@ -7,21 +7,33 @@ public class Main {
     private static ArrayList<ArrayList<Elf>> map;
     private static int direction; // 0 - North; 1 - South; 2 - West; 3 - East
     private static ArrayList<Elf> elves;
+    private static boolean elvesMovedThisRound = true;
 
     public static void main(String[] args) {
-        loadData("input2.txt");
-        printMap();
+        part1();
         System.out.println();
+        part2();
+    }
+
+    private static void part1() {
+        loadData("input.txt");
 
         for (int i = 0; i < 10; i++) {
             allElvesMove();
-            printMap();
-            System.out.println();
         }
 
-        System.out.println("Answer: " + calculateAnswer());
+        System.out.println("=== Part 1 ===\nAnswer: " + calculateAnswer());
+    }
 
-//        System.out.println("Hello world!");
+    private static void part2() {
+        loadData("input.txt");
+
+        int moves = 0;
+        while (elvesMovedThisRound) {
+            allElvesMove();
+            moves++;
+        }
+        System.out.println("=== Part 2 ===\nAnswer: " + moves);
     }
 
     private static void loadData(String file) {
@@ -47,7 +59,7 @@ public class Main {
                     rowIndex += addLength;
                     isFirstLine = false;
                 }
-//                else {
+
                 ArrayList<Elf> row = new ArrayList<>();
                 setAllToNull(row, rowLength);
                 for (int i = 0; i < thisLine.length; i++) {
@@ -60,7 +72,6 @@ public class Main {
                 }
                 map.add(row);
                 rowIndex++;
-//                }
             }
             addBlankRows(addLength, rowLength);
 
@@ -85,6 +96,8 @@ public class Main {
     }
 
     private static void allElvesMove() {
+        elvesMovedThisRound = false;
+
         for (ArrayList<Elf> row : map) {
             for (Elf elf : row) {
                 if (elf != null && elf.checkIfToMove()) {
@@ -128,12 +141,14 @@ public class Main {
                             } else if (elf.checkNorth()) {
                                 elf.setCourseNorth();
                             } else if (elf.checkSouth()) {
-                                elf.checkSouth();
+                                elf.setCourseSouth();
                             } else if (elf.checkWest()) {
                                 elf.setCourseWest();
                             } else elf.moveThisTurn = false;
                         }
                     }
+
+                    elvesMovedThisRound = true;
                 }
             }
         }
@@ -166,7 +181,6 @@ public class Main {
         elfToReturn.coordinates[1] = elfToReturn.previousCoordinates[1];
     }
 
-    // TODO: Something here is off maybe
     private static int calculateAnswer() {
         int emptyTiles = 0;
         int[] minXAndMinY = new int[]{100, 100};
