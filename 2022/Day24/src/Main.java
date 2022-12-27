@@ -13,12 +13,8 @@ public class Main {
 
     public static void main(String[] args) {
         part1();
-
-        loadData("input.txt");
-        loadALlMaps();
-        loadTileReachedWith();
-        DFS(0, new int[]{0, 1});
-        System.out.println(leastMoves);
+        System.out.println();
+        part2();
     }
 
     private static void part1() {
@@ -26,9 +22,9 @@ public class Main {
         loadALlMaps();
         loadTileReachedWith();
 
-        DFS(0, new int[]{0, 1});
+        DFS(0, new int[]{0, 1}, mapSizeY - 1, 0);
 
-        System.out.println(leastMoves);
+        System.out.println("=== Part 1 ===\nAnswer: " + leastMoves);
     }
 
     private static void part2() {
@@ -36,10 +32,22 @@ public class Main {
         loadALlMaps();
         loadTileReachedWith();
 
-        DFS(0, new int[]{0, 1});
+        int totalLeastMoves = 0;
 
+        DFS(0, new int[]{0, 1}, mapSizeY - 1, totalLeastMoves);
+        totalLeastMoves += leastMoves;
+        leastMoves = 100000;
+        loadTileReachedWith();
 
-        System.out.println(leastMoves);
+        DFS(0, new int[]{mapSizeY - 1, mapSizeX - 2}, 0, totalLeastMoves);
+        totalLeastMoves += leastMoves;
+        leastMoves = 100000;
+        loadTileReachedWith();
+
+        DFS(0, new int[]{0, 1}, mapSizeY - 1, totalLeastMoves);
+        totalLeastMoves += leastMoves;
+
+        System.out.println("=== Part 2 ===\nAnswer: " + totalLeastMoves);
     }
 
     private static void loadData(String file) {
@@ -149,9 +157,10 @@ public class Main {
         return copiedMap;
     }
 
-    private static void DFS(int movesUpToNow, int[] coordinates) {
-        if (coordinates[0] == mapSizeY - 1) {
-            System.out.println("Reached goal position with: " + movesUpToNow + " moves");
+    private static void DFS(int movesUpToNow, int[] coordinates, int goal, int carry) {
+        int thisMapIndex = (movesUpToNow + carry) % allMaps.size();
+
+        if (coordinates[0] == goal) {
             if (movesUpToNow < leastMoves) {
                 leastMoves = movesUpToNow;
             }
@@ -159,7 +168,7 @@ public class Main {
         } else if (movesUpToNow >= leastMoves) {
             return;
         } else {
-            Integer min = tileReachedWith[coordinates[0]][coordinates[1]][movesUpToNow % allMaps.size()];
+            Integer min = tileReachedWith[coordinates[0]][coordinates[1]][thisMapIndex];
             if (min == null) {
                 min = movesUpToNow;
             } else if (movesUpToNow < min) {
@@ -167,18 +176,20 @@ public class Main {
             } else {
                 return;
             }
-            tileReachedWith[coordinates[0]][coordinates[1]][movesUpToNow % allMaps.size()] = min;
-//            System.out.println(":(");
+            tileReachedWith[coordinates[0]][coordinates[1]][thisMapIndex] = min;
         }
 
-        int nextMapIndex = (movesUpToNow % allMaps.size()) + 1;
+        int nextMapIndex = thisMapIndex + 1;
         if (nextMapIndex == allMaps.size()) nextMapIndex = 0;
         ArrayList<ArrayList<Tile>> nextMap = allMaps.get(nextMapIndex);
         int[] currentCoordinates = new int[]{coordinates[0], coordinates[1]};
         Queue<int[]> scenarios = new LinkedList<>();
 
         Tile right = nextMap.get(currentCoordinates[0]).get(currentCoordinates[1] + 1);
-        Tile down = nextMap.get(currentCoordinates[0] + 1).get(currentCoordinates[1]);
+        Tile down = null;
+        if (coordinates[0] != mapSizeY - 1) {
+            down = nextMap.get(currentCoordinates[0] + 1).get(currentCoordinates[1]);
+        }
         Tile left = nextMap.get(currentCoordinates[0]).get(currentCoordinates[1] - 1);
         Tile up = null;
         if (coordinates[0] != 0) {
@@ -186,24 +197,39 @@ public class Main {
         }
         Tile same = nextMap.get(currentCoordinates[0]).get(currentCoordinates[1]);
 
-        if (right.blizzardsOnTile.size() == 0 && !right.endOfMap) {
-            scenarios.add(new int[]{currentCoordinates[0], currentCoordinates[1] + 1});
-        }
-        if (down.blizzardsOnTile.size() == 0 && !down.endOfMap) {
-            scenarios.add(new int[]{currentCoordinates[0] + 1, currentCoordinates[1]});
-        }
-        if (left.blizzardsOnTile.size() == 0 && !left.endOfMap) {
-            scenarios.add(new int[]{currentCoordinates[0], currentCoordinates[1] - 1});
-        }
-        if (coordinates[0] != 0 && (up.blizzardsOnTile.size() == 0 && !up.endOfMap)) {
-            scenarios.add(new int[]{currentCoordinates[0] - 1, currentCoordinates[1]});
+        if (goal == 0) {
+            if (left.blizzardsOnTile.size() == 0 && !left.endOfMap) {
+                scenarios.add(new int[]{currentCoordinates[0], currentCoordinates[1] - 1});
+            }
+            if (up.blizzardsOnTile.size() == 0 && !up.endOfMap) {
+                scenarios.add(new int[]{currentCoordinates[0] - 1, currentCoordinates[1]});
+            }
+            if (right.blizzardsOnTile.size() == 0 && !right.endOfMap) {
+                scenarios.add(new int[]{currentCoordinates[0], currentCoordinates[1] + 1});
+            }
+            if (coordinates[0] != mapSizeY - 1 && (down.blizzardsOnTile.size() == 0 && !down.endOfMap)) {
+                scenarios.add(new int[]{currentCoordinates[0] + 1, currentCoordinates[1]});
+            }
+        } else {
+            if (right.blizzardsOnTile.size() == 0 && !right.endOfMap) {
+                scenarios.add(new int[]{currentCoordinates[0], currentCoordinates[1] + 1});
+            }
+            if (coordinates[0] != mapSizeY - 1 && (down.blizzardsOnTile.size() == 0 && !down.endOfMap)) {
+                scenarios.add(new int[]{currentCoordinates[0] + 1, currentCoordinates[1]});
+            }
+            if (left.blizzardsOnTile.size() == 0 && !left.endOfMap) {
+                scenarios.add(new int[]{currentCoordinates[0], currentCoordinates[1] - 1});
+            }
+            if (coordinates[0] != 0 && (up.blizzardsOnTile.size() == 0 && !up.endOfMap)) {
+                scenarios.add(new int[]{currentCoordinates[0] - 1, currentCoordinates[1]});
+            }
         }
         if (same.blizzardsOnTile.size() == 0 && !same.endOfMap) {
             scenarios.add(new int[]{currentCoordinates[0], currentCoordinates[1]});
         }
 
         for (int[] scenario : scenarios) {
-            DFS(movesUpToNow + 1, scenario);
+            DFS(movesUpToNow + 1, scenario, goal, carry);
         }
     }
 
