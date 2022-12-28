@@ -1,5 +1,5 @@
 # Advent-Of-Code
-Here I will be posting my (![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)) solutions to the AoC :)
+Here I will be posting my (Java) solutions to the AoC :)
 
 
 # 2022
