@@ -10,7 +10,7 @@ public class Main {
     private static final ArrayList<Monkey> monkeys = new ArrayList<>();
 
     public static void main(String[] args) {
-        String part = "Part 1"; // "Part 1" || "Part 2"
+        int part = 1; // 1 || 2
         createMonkeys(part);
 
         // do x turns
@@ -21,7 +21,7 @@ public class Main {
         calculateMonkeyBusiness(part);
     }
 
-    private static void createMonkeys(String part) {
+    private static void createMonkeys(int part) {
         try {
             File input = new File("input.txt");
             Scanner myScanner = new Scanner(input);
@@ -89,7 +89,7 @@ public class Main {
         }
     }
 
-    private static void calculateMonkeyBusiness(String part) {
+    private static void calculateMonkeyBusiness(int part) {
         BigInteger mostInspectedItems1 = new BigInteger("0"), mostInspectedItems2 = new BigInteger("0");
 
         for (Monkey monkey : monkeys) {
@@ -102,18 +102,18 @@ public class Main {
             }
         }
 
-        System.out.println(part + ": " + (mostInspectedItems1.multiply(mostInspectedItems2)));
+        System.out.println("=== Part " + part + " ===\nAnswer: " + (mostInspectedItems1.multiply(mostInspectedItems2)));
     }
 
     static class Monkey {
-        private final String part;
+        private final int part;
         public final Queue<Integer> items = new LinkedList<>();
         private final String[] operation;
         private final int testDivisibleBy;
         private final int[] testOutcomeToMonkey;
         public int inspectedItems = 0;
 
-        public Monkey(String part, ArrayList<Integer> items, String[] operation, int testDivisibleBy, int[] testOutcomeToMonkey) {
+        public Monkey(int part, ArrayList<Integer> items, String[] operation, int testDivisibleBy, int[] testOutcomeToMonkey) {
             this.part = part;
             this.items.addAll(items);
             this.operation = operation;
@@ -128,7 +128,7 @@ public class Main {
         public Integer[] throwItemToMonkey() {
             Integer itemWorryLevel = topItemNewWorryLevel();
             if (itemWorryLevel != null) {
-                if (part.equals("Part 1")) {
+                if (part == 1) {
                     itemWorryLevel /= 3;
                 }
                 itemWorryLevel %= 9699690;
