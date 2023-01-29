@@ -17,6 +17,15 @@ public class Main {
     }
 
     private static void mainMethod() {
+        loadData();
+        calcAnswer(mainDir);
+
+        System.out.println("=== Part 1 ===\nAnswer: " + answerPart1);
+        System.out.println();
+        System.out.println("=== Part 2 ===\nAnswer: " + answerPart2);
+    }
+
+    private static void loadData() {
         try {
             File input = new File("input.txt");
             Scanner myScanner = new Scanner(input);
@@ -49,10 +58,6 @@ public class Main {
             System.out.println("File with that name was not found");
             fnfe.printStackTrace();
         }
-
-        calcAnswer(mainDir);
-        System.out.println("Part1: " + answerPart1);
-        System.out.println("Part2: " + answerPart2);
     }
 
     // Set one of the booleans to true
