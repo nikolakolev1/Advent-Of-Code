@@ -72,9 +72,9 @@ public class Main {
         int size = rowInOrder.size();
 
         if (part == 1) {
-            System.out.println("=== Part1 ===\nAnswer: " + answerP1(rowInOrder.get(size - 1), rowInOrder.get(size - 2)));
+            System.out.println("=== Part 1 ===\nAnswer: " + answerP1(rowInOrder.get(size - 1), rowInOrder.get(size - 2)));
         } else if (answerFoundP2) {
-            System.out.println("=== Part2 ===\nAnswer: " + answerP2(rowInOrder.get(size - 2), rowInOrder.get(size - 1)));
+            System.out.println("=== Part 2 ===\nAnswer: " + answerP2(rowInOrder.get(size - 2), rowInOrder.get(size - 1)));
         }
     }
 
