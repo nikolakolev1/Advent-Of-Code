@@ -3,15 +3,14 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Main {
-    // Sorry for how unreadable that is
     public static void main(String[] args) {
-        String partStr = "part1"; // "part1" || whatever string
+        int part = 2; // 1 || whatever int
 
         try {
             File input = new File("input.txt");
             Scanner myScanner = new Scanner(input);
 
-            int partInt = partStr.equals("part1") ? 4 : 14;
+            int partInt = (part == 1) ? 4 : 14;
             Character[] currentChars = new Character[partInt];
             if (myScanner.hasNext()) {
                 String test = myScanner.next();
@@ -33,7 +32,7 @@ public class Main {
                     }
 
                     if (counter == sumOfSmallerInts(partInt)) {
-                        System.out.println(partStr + ": " + i);
+                        System.out.println("=== Part " + part + " ===\nAnswer: " + i);
                         return;
                     }
 
