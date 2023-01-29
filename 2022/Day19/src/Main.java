@@ -10,11 +10,8 @@ public class Main {
 
     public static void main(String[] args) {
         part1();
-
         System.out.println();
-
         part2();
-        System.out.println();
     }
 
     private static void part1() {
