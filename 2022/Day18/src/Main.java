@@ -7,11 +7,11 @@ public class Main {
     private static ArrayList<Integer[]> cubes;
     private static Integer[] smallestXYZ;
     private static int[] biggestXYZ;
-    private static ArrayList<ArrayList<ArrayList<Boolean>>> xyzSpace;
-    private static ArrayList<ArrayList<ArrayList<Boolean>>> xyzOuterAir;
+    private static ArrayList<ArrayList<ArrayList<Boolean>>> xyzSpace, xyzOuterAir;
 
     public static void main(String[] args) {
         part1();
+        System.out.println();
         part2();
     }
 
@@ -20,11 +20,7 @@ public class Main {
         createSpace();
         insertCubesInSpace();
 
-        System.out.println("=== Part 1 ===");
-        System.out.print("Answer: ");
-        System.out.println(calculateTotalArea());
-
-        System.out.println();
+        System.out.println("=== Part 1 ===\nAnswer: " + calculateTotalArea());
     }
 
     private static void part2() {
@@ -36,9 +32,7 @@ public class Main {
         createOuterAir();
         insertAirInOuterAir();
 
-        System.out.println("=== Part 2 ===");
-        System.out.print("Answer: ");
-        System.out.println(calculateTotalArea() - calculateInnerArea());
+        System.out.println("=== Part 2 ===\nAnswer: " + (calculateTotalArea() - calculateInnerArea()));
     }
 
     private static void loadData(String file) {
