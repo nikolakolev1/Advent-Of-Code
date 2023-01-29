@@ -10,9 +10,9 @@ public class Main {
     private static ArrayList<ArrayList<String>> cave;
     private static int sand;
 
-
     public static void main(String[] args) {
         part1();
+        System.out.println();
         part2();
     }
 
@@ -26,10 +26,11 @@ public class Main {
         for (int i = 0; i < 700; i++) {
             pourOneSand(500 - columnStart, 0);// + mapOffsetX, 0);
         }
-        printMine();
 
-        System.out.println();
-        System.out.println("Part1 Sand: " + sand);
+//        printMine();
+//        System.out.println();
+
+        System.out.println("=== Part 1 ===\nSand: " + sand);
     }
 
     private static void part2() {
@@ -42,10 +43,11 @@ public class Main {
         for (int i = 0; i < 31706; i++) {
             pourOneSand(500 - columnStart, 0);// + mapOffsetX, 0);
         }
-        printMine();
 
-        System.out.println();
-        System.out.println("Part2 Sand: " + sand);
+//        printMine();
+//        System.out.println();
+
+        System.out.println("=== Part 2 ===\nSand: " + sand);
     }
 
     private static ArrayList<String> loadData1(String inputStr) {
