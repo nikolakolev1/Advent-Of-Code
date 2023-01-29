@@ -4,10 +4,6 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        mainMethod();
-    }
-
-    public static void mainMethod() {
         Set<String> tailPositionsPart1 = new HashSet<>();
         Head head = new Head();
         Tail tail = new Tail();
@@ -36,100 +32,100 @@ public class Main {
             throw new RuntimeException(e);
         }
 
-        System.out.println("Part 1: " + tailPositionsPart1.size());
-        System.out.println("Part 2: " + tailPositionsPart2.size());
+        System.out.println("=== Part 1 ===\nAnswer: " + tailPositionsPart1.size());
+        System.out.println();
+        System.out.println("=== Part 2 ===\nAnswer: " + tailPositionsPart2.size());
     }
 
     static class Head {
-        public Map<String, int[]> directionsMap;
-        public int xCoordinate;
-        public int yCoordinate;
+        public Map<String, int[]> directions;
+        public int x, y;
 
         public Head() {
-            directionsMap = new HashMap<>();
-            directionsMap.put("R", new int[]{1, 0});
-            directionsMap.put("L", new int[]{-1, 0});
-            directionsMap.put("U", new int[]{0, 1});
-            directionsMap.put("D", new int[]{0, -1});
+            directions = new HashMap<>();
+            directions.put("R", new int[]{1, 0});
+            directions.put("L", new int[]{-1, 0});
+            directions.put("U", new int[]{0, 1});
+            directions.put("D", new int[]{0, -1});
 
-            xCoordinate = 0;
-            yCoordinate = 0;
+            x = 0;
+            y = 0;
         }
 
         public int[] move(String direction) {
-            int[] changeCoordinates = directionsMap.get(direction);
-            xCoordinate += changeCoordinates[0];
-            yCoordinate += changeCoordinates[1];
-            return new int[]{xCoordinate, yCoordinate};
+            int[] changeCoordinates = directions.get(direction);
+            x += changeCoordinates[0];
+            y += changeCoordinates[1];
+            return new int[]{x, y};
         }
     }
 
     static class Tail {
-        public int xCoordinate;
-        public int yCoordinate;
+        public int x;
+        public int y;
 
         public Tail() {
-            xCoordinate = 0;
-            yCoordinate = 0;
+            x = 0;
+            y = 0;
         }
 
         public int[] moveIf(int[] headNewCoordinates) {
-            int differenceInX = headNewCoordinates[0] - xCoordinate;
-            int differenceInY = headNewCoordinates[1] - yCoordinate;
+            int differenceInX = headNewCoordinates[0] - x;
+            int differenceInY = headNewCoordinates[1] - y;
 
             if (differenceInY == 0 && differenceInX == 2) {
-                xCoordinate++;
+                x++;
             } else if (differenceInY == 0 && differenceInX == -2) {
-                xCoordinate--;
+                x--;
             } else if (differenceInX == 0 && differenceInY == 2) {
-                yCoordinate++;
+                y++;
             } else if (differenceInX == 0 && differenceInY == -2) {
-                yCoordinate--;
+                y--;
             } else if (differenceInY == 1 || differenceInY == -1) {
                 if (differenceInX == 2) {
-                    xCoordinate++;
-                    yCoordinate--;
+                    x++;
+                    y--;
                     if (differenceInY == 1) {
-                        yCoordinate += 2;
+                        y += 2;
                     }
                 } else if (differenceInX == -2) {
-                    xCoordinate--;
-                    yCoordinate--;
+                    x--;
+                    y--;
                     if (differenceInY == 1) {
-                        yCoordinate += 2;
+                        y += 2;
                     }
                 }
             } else if (differenceInX == 1 || differenceInX == -1) {
                 if (differenceInY == 2) {
-                    yCoordinate++;
-                    xCoordinate--;
+                    y++;
+                    x--;
                     if (differenceInX == 1) {
-                        xCoordinate += 2;
+                        x += 2;
                     }
                 } else if (differenceInY == -2) {
-                    yCoordinate--;
-                    xCoordinate--;
+                    y--;
+                    x--;
                     if (differenceInX == 1) {
-                        xCoordinate += 2;
+                        x += 2;
                     }
                 }
             } else if (differenceInY == 2){
-                yCoordinate++;
+                y++;
                 if (differenceInX == 2) {
-                    xCoordinate++;
+                    x++;
                 } else if (differenceInX == -2) {
-                    xCoordinate--;
+                    x--;
                 }
             } else if (differenceInY == -2) {
-                yCoordinate--;
+                y--;
                 if (differenceInX == 2) {
-                    xCoordinate++;
+                    x++;
                 } else if (differenceInX == -2) {
-                    xCoordinate--;
+                    x--;
                 }
             }
 
-            return new int[]{xCoordinate, yCoordinate};
+            return new int[]{x, y};
         }
     }
 }
