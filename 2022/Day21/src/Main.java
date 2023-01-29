@@ -103,15 +103,10 @@ public class Main {
             long int1 = calculateMonkey(monkeys.get(monkeyIndices.get(monkeyToCalc.operation[0])));
             long int2 = calculateMonkey(monkeys.get(monkeyIndices.get(monkeyToCalc.operation[2])));
 
-            if (monkeyToCalc.addition) {
-                return int1 + int2;
-            } else if (monkeyToCalc.subtraction) {
-                return int1 - int2;
-            } else if (monkeyToCalc.multiplication) {
-                return int1 * int2;
-            } else {
-                return int1 / int2;
-            }
+            if (monkeyToCalc.addition) return int1 + int2;
+            else if (monkeyToCalc.subtraction) return int1 - int2;
+            else if (monkeyToCalc.multiplication) return int1 * int2;
+            else return int1 / int2;
         }
     }
 
@@ -127,11 +122,7 @@ public class Main {
         public String name;
         public long number;
         public String[] operation;
-        public boolean yellNumber;
-        public boolean addition;
-        public boolean subtraction;
-        public boolean multiplication;
-        public boolean division;
+        public boolean yellNumber, addition, subtraction, multiplication, division;
 
         public Monkey(String[] yelling) {
             name = yelling[0];
