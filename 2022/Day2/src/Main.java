@@ -20,12 +20,9 @@ public class Main {
 
                 // rival elf's move
                 int charComparison = Character.compare(currentRoundStr.charAt(0), 'B'); // use it to identify rock, paper or scissors
-                currentRoundArr[0] = 3; // if scissors
-                if (charComparison < 0) {
-                    currentRoundArr[0] = 1; // if rock
-                } else if (charComparison == 0) {
-                    currentRoundArr[0] = 2; // if paper
-                }
+                if (charComparison < 0) currentRoundArr[0] = 1; // if rock
+                else if (charComparison == 0) currentRoundArr[0] = 2; // if paper
+                else currentRoundArr[0] = 3; // if scissors
 
                 // your move
                 charComparison = Character.compare(currentRoundStr.charAt(2), 'Y'); // use it to identify rock, paper or scissors
@@ -53,12 +50,8 @@ public class Main {
     public static int YourMove_Part1(int charComparison) {
         int currentRoundArr = 3; // give scissors (and then check whether to change)
 
-        if (charComparison < 0) {
-            currentRoundArr = 1; // if "X", give rock
-
-        } else if (charComparison == 0) {
-            currentRoundArr = 2; // else if "Y", give paper
-        }
+        if (charComparison < 0) currentRoundArr = 1; // if "X", give rock
+        else if (charComparison == 0) currentRoundArr = 2; // else if "Y", give paper
 
         return currentRoundArr;
     }
@@ -68,15 +61,10 @@ public class Main {
 
         if (charComparison < 0) { // if "X", lose
             currentRoundNum = currentRoundArr[0] - 1;
-            if (currentRoundNum == 0) {
-                currentRoundNum = 3;
-            }
-
+            if (currentRoundNum == 0) currentRoundNum = 3;
         } else if (charComparison > 0) { // else if "Z", win
             currentRoundNum = currentRoundArr[0] + 1;
-            if (currentRoundNum == 4) {
-                currentRoundNum = 1;
-            }
+            if (currentRoundNum == 4) currentRoundNum = 1;
         }
 
         return currentRoundNum;
