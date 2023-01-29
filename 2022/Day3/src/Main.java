@@ -5,10 +5,10 @@ import java.util.HashSet;
 
 public class Main {
     public static void main(String[] args) {
-        mainMethod("part2");
+        mainMethod(2);
     }
 
-    public static void mainMethod(String part) {
+    public static void mainMethod(int part) {
         int answer = 0;
         HashSet<Character> compareHS = new HashSet<>();
 
@@ -17,8 +17,8 @@ public class Main {
             Scanner myReader = new Scanner(input);
 
             while (myReader.hasNextLine()) {
-                if (part.equals("part1")) answer = part1(myReader, compareHS, answer); // calc for part1
-                else if (part.equals("part2")) answer = part2(myReader, compareHS, answer); // or for part2 of the task
+                if (part == 1) answer = part1(myReader, compareHS, answer); // calc for part1
+                else answer = part2(myReader, compareHS, answer); // or for part2 of the task
                 compareHS.clear(); // clear the set on every turn
             }
 
@@ -28,7 +28,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        System.out.println(answer);
+        System.out.println("=== Part " + part + " ===\nAnswer: " + answer);
     }
 
     public static int part1(Scanner myReader, HashSet<Character> compareHS, int answer) {
