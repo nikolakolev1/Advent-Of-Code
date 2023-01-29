@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
-        String part = "part1"; // "part1" || or 'doesn't matter what'
+        int part = 1; // 1 || or 'doesn't matter what'
 
         try {
             File input = new File("input.txt");
@@ -49,15 +49,15 @@ public class Main {
 
                 // move the crates: one by one (part1) || all at once (part2)
                 for (int i = 0; i < moveAmount; i++) {
-                    Character cratesToMove = part.equals("part1") ? fromStack.get(fromStack.size() - 1) : fromStack.get(fromStack.size() - (moveAmount - i));
-                    if (part.equals("part1")) fromStack.remove(fromStack.size() - 1);
+                    Character cratesToMove = part == 1 ? fromStack.get(fromStack.size() - 1) : fromStack.get(fromStack.size() - (moveAmount - i));
+                    if (part == 1) fromStack.remove(fromStack.size() - 1);
                     else fromStack.remove(fromStack.size() - (moveAmount - i));
                     toStack.add(cratesToMove);
                 }
             }
 
             // print answer
-            System.out.print(part + ": ");
+            System.out.print("=== Part " + part + " ===\nAnswer: ");
             for (ArrayList<Character> stack : stacks) System.out.print(stack.get(stack.size() - 1));
 
             myReader.close();
