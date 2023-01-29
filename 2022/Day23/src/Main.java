@@ -232,7 +232,6 @@ public class Main {
                         System.out.println("Elf goes out of bounds");
                         return false;
                     } else {
-                        // TODO: Last added these
                         if ((i != 0 || j != 0) && map.get(coordinates[0] + i).get(coordinates[1] + j) != null) {
                             moveThisTurn = true;
                             return true;
