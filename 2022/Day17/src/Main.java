@@ -15,11 +15,12 @@ public class Main {
 
     public static void main(String[] args) {
         part1();
+//        System.out.println();
 //        part2attempt();
     }
 
     private static void part1() {
-        System.out.println("=== Part 1 ===\n");
+        System.out.println("=== Part 1 ===");
 
         loadData("input.txt");
         loadInitialChamber();
@@ -51,10 +52,9 @@ public class Main {
                 cache.add(newEntry);
                 cached.add(rocksSettled);
 
-                int cacheSize = cache.size();
-                for (int i = 0; i < cacheSize - 1; i++) {
-                    if (compareSections(cache.get(i), cache.get(cacheSize - 1))) {
-                        System.out.println(i + " " + (cacheSize - 1));
+                for (int i = 0; i < cache.size() - 1; i++) {
+                    if (compareSections(cache.get(i), cache.get(cache.size() - 1))) {
+                        System.out.println(i + " " + (cache.size() - 1));
                     }
                 }
             }
@@ -95,15 +95,14 @@ public class Main {
     }
 
     private static void printChamber() {
-        int chamberSize = chamber.size();
-        int height = chamberSize;
+        int height = chamber.size();
         String heightStr;
 
-        for (int i = 0; i < chamberSize; i++) {
+        for (int i = 0; i < chamber.size(); i++) {
             heightStr = height + "";
             if (height < 10) heightStr += "  ";
             else if (height < 100) heightStr += " ";
-            System.out.println(heightStr + "|" + chamber.get(chamberSize - 1 - i) + "|");
+            System.out.println(heightStr + "|" + chamber.get(chamber.size() - 1 - i) + "|");
             height--;
         }
         System.out.println("   +-------+");
@@ -205,9 +204,7 @@ public class Main {
     }
 
     private static boolean interferingWithAnotherRockLeftOrRight(String move) {
-        int chamberSize = chamber.size();
-
-        if (bottommost < chamberSize && move.equals("<")) {
+        if (bottommost < chamber.size() && move.equals("<")) {
             char leftBottom = chamber.get(bottommost).charAt(leftmost - 1);
 
             switch (rocksCounter) {
@@ -218,7 +215,7 @@ public class Main {
                     if ((chamber.get(bottommost).charAt(leftmost) == 35)) {
                         return true;
                     }
-                    if (bottommost + 1 < chamberSize) {
+                    if (bottommost + 1 < chamber.size()) {
                         if (chamber.get(bottommost + 1).charAt(leftmost - 1) == 35) {
                             return true;
                         }
@@ -227,20 +224,20 @@ public class Main {
 
                 case 3 -> {
                     for (int i = 0; i < 3; i++) {
-                        if (bottommost + i < chamberSize) {
+                        if (bottommost + i < chamber.size()) {
                             if (chamber.get(bottommost + i).charAt(leftmost - 1) == 35) return true;
                         } else break;
                     }
                 }
                 case 4 -> {
                     for (int i = 0; i < 2; i++) {
-                        if (bottommost + i < chamberSize) {
+                        if (bottommost + i < chamber.size()) {
                             if (chamber.get(bottommost + i).charAt(leftmost - 1) == 35) return true;
                         } else break;
                     }
                 }
             }
-        } else if (bottommost < chamberSize) {
+        } else if (bottommost < chamber.size()) {
             char rightBottom = chamber.get(bottommost).charAt(rightmost + 1);
 
             switch (rocksCounter) {
@@ -249,7 +246,7 @@ public class Main {
                 }
                 case 1 -> {
                     if (chamber.get(bottommost).charAt(rightmost) == 35) return true;
-                    if (bottommost + 1 < chamberSize) {
+                    if (bottommost + 1 < chamber.size()) {
                         if (chamber.get(bottommost + 1).charAt(rightmost + 1) == 35) {
                             return true;
                         }
@@ -257,21 +254,21 @@ public class Main {
                 }
                 case 2 -> {
                     for (int i = 0; i < 3; i++) {
-                        if (bottommost + i < chamberSize) {
+                        if (bottommost + i < chamber.size()) {
                             if (chamber.get(bottommost + i).charAt(rightmost + 1) == 35) return true;
                         } else break;
                     }
                 }
                 case 3 -> {
                     for (int i = 0; i < 4; i++) {
-                        if (bottommost + i < chamberSize) {
+                        if (bottommost + i < chamber.size()) {
                             if (chamber.get(bottommost + i).charAt(rightmost + 1) == 35) return true;
                         } else break;
                     }
                 }
                 case 4 -> {
                     for (int i = 0; i < 2; i++) {
-                        if (bottommost + i < chamberSize) {
+                        if (bottommost + i < chamber.size()) {
                             if (chamber.get(bottommost + i).charAt(rightmost + 1) == 35) return true;
                         } else break;
                     }
@@ -283,11 +280,9 @@ public class Main {
     }
 
     private static boolean interferingWithAnotherRockDown() {
-        int chamberSize = chamber.size();
-
         if (bottommost == 0) return true;
 
-        if (bottommost - 1 < chamberSize) {
+        if (bottommost - 1 < chamber.size()) {
             String nextBottom = chamber.get(bottommost - 1).toString();
 
             switch (rocksCounter) {
@@ -299,7 +294,7 @@ public class Main {
                 case 1 -> {
                     for (int i = 0; i < 2; i++) {
                         if (nextBottom.charAt(leftmost + 1) == 35) return true;
-                        if (bottommost < chamberSize) {
+                        if (bottommost < chamber.size()) {
                             if (chamber.get(bottommost).charAt(leftmost + (2 * i)) == 35) return true;
                         }
                     }
@@ -342,8 +337,7 @@ public class Main {
     }
 
     private static boolean compareSections(LinkedList<StringBuilder> a, LinkedList<StringBuilder> b) {
-        int sectionsSize = a.size();
-        for (int i = 0; i < sectionsSize; i++) {
+        for (int i = 0; i < a.size(); i++) {
             StringBuilder aStr = a.get(i);
             StringBuilder bStr = b.get(i);
 
