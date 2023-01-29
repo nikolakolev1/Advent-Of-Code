@@ -140,14 +140,14 @@ public class Main {
             if (newLeft.equals(currentNumber)) {
                 newLeft = newLeft.left;
             }
-        } else {
-            return;
-        }
+        } else return;
 
         currentNumber.left = newLeft;
         currentNumber.right = newRight;
+
         oldLeft.right = oldRight;
         oldRight.left = oldLeft;
+
         newLeft.right = currentNumber;
         newRight.left = currentNumber;
     }
