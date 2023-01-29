@@ -11,6 +11,7 @@ public class Main {
         loadData();
 
         part1();
+        System.out.println();
         part2();
     }
 
@@ -56,6 +57,7 @@ public class Main {
             }
         }
 
+        // debug
 //        System.out.println("This shouldn't be reached... maybe... idk now");
         return true;
     }
@@ -73,7 +75,7 @@ public class Main {
         for (Integer pairIndex : indicesOfPairsInOrder) {
             result += pairIndex;
         }
-        System.out.println("Part 1: " + result);
+        System.out.println("=== Part 1 ===\nAnswer: " + result);
     }
 
     private static void part2() {
@@ -87,13 +89,14 @@ public class Main {
             String index = i + "";
             if (i < 10) index += "  ";
             else if (i < 100) index += " ";
-            System.out.println(index + ": " + sortedPackets.get(i).packetAsString);
+            // debug
+//            System.out.println(index + ": " + sortedPackets.get(i).packetAsString);
             if (sortedPackets.get(i).packetAsString.equals("[[2]]") || sortedPackets.get(i).packetAsString.equals("[[6]]")) {
                 part2Answer.add(i);
             }
         }
 
-        System.out.println("(incorrect) Part 2: " + part2Answer.get(0) * part2Answer.get(1));
+        System.out.println("=== (incorrect) Part 2 ===\nAnswer: " + part2Answer.get(0) * part2Answer.get(1));
     }
 
     private static ArrayList<Packet> merge(ArrayList<Packet> a, ArrayList<Packet> b) {
@@ -113,9 +116,6 @@ public class Main {
         return merged;
     }
 
-    /*
-     * mergesort method for Task 1.2
-     */
     private static ArrayList<Packet> mergesort(ArrayList<Packet> packets) {
         if (packets.size() < 2) return packets; // if arr is too short -> return it
 
@@ -152,8 +152,7 @@ class Item {
     Integer intValue;
     ArrayList<Item> list = new ArrayList<>();
     String listAsString;
-    boolean isInteger = false;
-    boolean isList = false;
+    boolean isInteger, isList;
 
     Item(int i) {
         intValue = i;
@@ -181,9 +180,6 @@ class Item {
 }
 
 class String_Manipulator {
-    public String_Manipulator() {
-    }
-
     public static void packetOrItemAsString_Manipulation(String packetOrListStr, ArrayList<Item> packetOrList) {
         int openingBracketsCounter = 0;
         int closingBracketsCounter = 0;
