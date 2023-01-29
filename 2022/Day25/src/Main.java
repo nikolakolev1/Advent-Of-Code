@@ -46,9 +46,8 @@ public class Main {
 
     private static void loadBiggestDecimalWithRemaining() {
         biggestDecimalWithRemaining = new HashMap<>();
-        int powersOf5Size = powersOf5.size();
 
-        for (int i = 0; i < powersOf5Size; i++) {
+        for (int i = 0; i < powersOf5.size(); i++) {
             if (i == 0) {
                 biggestDecimalWithRemaining.put(i, 2L);
             } else {
@@ -138,9 +137,7 @@ public class Main {
     }
 
     private static int identifySNAFULength(long decimal) {
-        int powersOf5Size = powersOf5.size();
-
-        for (int i = powersOf5Size - 1; i > 0; i--) {
+        for (int i = powersOf5.size() - 1; i > 0; i--) {
             if (decimal >= 2 * powersOf5.get(i - 1)) {
                 return i;
             }
