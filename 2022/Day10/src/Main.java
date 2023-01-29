@@ -11,15 +11,17 @@ public class Main {
     static int counterSubtract = 0;
 
     public static void main(String[] args) {
-        System.out.println("Part 2: ");
+        System.out.println("=== Part 2 ===");
 
         loadData();
+
+        System.out.println();
 
         int answerP1 = 0;
         for (Integer i : valuesAtTimestamps) {
             answerP1 += i;
         }
-        System.out.println("\nPart 1: " + answerP1);
+        System.out.println("=== Part 1 ===\nAnswer: " + answerP1);
     }
 
     private static void loadData() {
@@ -40,7 +42,7 @@ public class Main {
         mapBuilderEvaluatePixel();
 
         counter++;
-        checkIfTimestampToRecord();
+        checkIfToRecord();
 
         if (thisLine.startsWith("a")) {
             mapBuilderEvaluatePixel();
@@ -49,7 +51,7 @@ public class Main {
             x += Integer.parseInt(thisLine);
 
             counter++;
-            checkIfTimestampToRecord();
+            checkIfToRecord();
         }
     }
 
@@ -59,16 +61,16 @@ public class Main {
         if (pixelIndex >= x - 1 && pixelIndex <= x + 1) part2Str.append("#");
         else part2Str.append(".");
 
-        checkIfTimestampToPrintLine();
+        checkIfToPrint();
     }
 
-    private static void checkIfTimestampToRecord() {
+    private static void checkIfToRecord() {
         if (counter == 20 || counter == 60 || counter == 100 || counter == 140 || counter == 180 || counter == 220) {
             valuesAtTimestamps.add(counter * x);
         }
     }
 
-    private static void checkIfTimestampToPrintLine() {
+    private static void checkIfToPrint() {
         if (counter == 40 || counter == 80 || counter == 120 || counter == 160 || counter == 200 || counter == 240) {
             System.out.println(part2Str);
             part2Str = new StringBuilder();
