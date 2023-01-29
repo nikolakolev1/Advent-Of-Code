@@ -4,7 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="74e9b5c0-6ac8-4f1d-99f6-be19ccf93186" name="Changes" comment="Day10 - Shorten If-Statements" />
+    <list default="true" id="74e9b5c0-6ac8-4f1d-99f6-be19ccf93186" name="Changes" comment="Day10 - Shorten If-Statements">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Day10/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Day10/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Day14/out/production/Day14/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Day14/out/production/Day14/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Day14/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Day14/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Day15/out/production/Day15/Beacon.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Day15/out/production/Day15/Beacon.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Day15/out/production/Day15/Coordinates.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Day15/out/production/Day15/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Day15/out/production/Day15/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Day15/out/production/Day15/Sensor.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Day15/out/production/Day15/Sensor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Day15/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Day15/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Day2/out/production/Day2/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Day2/out/production/Day2/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Day3/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Day3/src/Main.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -22,7 +34,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "D:/Main/Other/AdventOfCode/2022/Day21"
+    "last_opened_file_path": "D:/Main/Other/AdventOfCode/2022/Day23"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
