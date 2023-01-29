@@ -7,10 +7,6 @@ public class Main {
     private static final ArrayList<ArrayList<Tree>> forest = new ArrayList<>();
 
     public static void main(String[] args) {
-        mainMethod();
-    }
-
-    private static void mainMethod() {
         loadData();
         provideNeighbours();
 
@@ -26,8 +22,10 @@ public class Main {
                 }
             }
         }
-        System.out.println("Part 1: " + answerP1);
-        System.out.println("Part 2: " + answerP2);
+
+        System.out.println("=== Part 1 ===\nAnswer: " + answerP1);
+        System.out.println();
+        System.out.println("=== Part 2 ===\nAnswer: " + answerP2);
     }
 
     private static void loadData() {
@@ -55,10 +53,8 @@ public class Main {
 
         for (int i = 0; i < forest.size(); i++) {
             for (int j = 0; j < rowSize; j++) {
-                Tree leftNeigh = null;
-                Tree rightNeigh = null;
-                Tree topNeigh = null;
-                Tree bottomNeigh = null;
+                Tree leftNeigh = null, rightNeigh = null, topNeigh = null, bottomNeigh = null;
+
                 if (j > 0) {
                     leftNeigh = forest.get(i).get(j - 1);
                 }
@@ -71,6 +67,7 @@ public class Main {
                 if (i < forest.size() - 1) {
                     bottomNeigh = forest.get(i + 1).get(j);
                 }
+
                 forest.get(i).get(j).assignNeighbours(leftNeigh, rightNeigh, topNeigh, bottomNeigh);
             }
         }
