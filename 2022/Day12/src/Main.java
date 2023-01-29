@@ -118,16 +118,11 @@ public class Main {
                     boolean topmost = false, bottommost = false;
                     boolean leftmost = false, rightmost = false;
 
-                    if (i == 0) {
-                        topmost = true;
-                    } else if (i == map.size() - 1) {
-                        bottommost = true;
-                    }
-                    if (j == 0) {
-                        leftmost = true;
-                    } else if (j == currentArrLength - 1) {
-                        rightmost = true;
-                    }
+                    if (i == 0) topmost = true;
+                    else if (i == map.size() - 1) bottommost = true;
+
+                    if (j == 0) leftmost = true;
+                    else if (j == currentArrLength - 1) rightmost = true;
 
                     if (!topmost) neighbours[0] = (map.get(i - 1).get(j));
                     if (!bottommost) neighbours[1] = (map.get(i + 1).get(j));
@@ -152,9 +147,7 @@ public class Main {
             Tile tileToCalc = calculateNext.get(calcNextCounter++);
             addToCalcNext(tileToCalc);
 
-            if (tileToCalc.isStart) {
-                return;
-            }
+            if (tileToCalc.isStart) return;
 
             for (int i = 0; i < tileToCalc.neighboursTo.size(); i++) {
                 Tile nextWillBeAt = tileToCalc.neighboursTo.get(i);
