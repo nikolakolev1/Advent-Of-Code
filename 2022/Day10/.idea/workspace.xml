@@ -7,11 +7,6 @@
     <list default="true" id="74e9b5c0-6ac8-4f1d-99f6-be19ccf93186" name="Changes" comment="Day10 - Shorten If-Statements">
       <change beforePath="$PROJECT_DIR$/../Day14/out/production/Day14/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Day14/out/production/Day14/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Day14/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Day14/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Day15/out/production/Day15/Beacon.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Day15/out/production/Day15/Beacon.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Day15/out/production/Day15/Coordinates.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Day15/out/production/Day15/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Day15/out/production/Day15/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Day15/out/production/Day15/Sensor.class" beforeDir="false" afterPath="$PROJECT_DIR$/../Day15/out/production/Day15/Sensor.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Day15/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Day15/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +93,14 @@
       <option name="project" value="LOCAL" />
       <updated>1675013412059</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Day10 - Shorten If-Statements">
+      <created>1675013799146</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1675013799146</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
