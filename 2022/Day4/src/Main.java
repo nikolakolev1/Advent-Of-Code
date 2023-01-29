@@ -4,10 +4,10 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        mainMethod("part1"); // "part1" || or "part2"
+        mainMethod(1); // 1 || or 2
     }
 
-    public static void mainMethod(String part) {
+    public static void mainMethod(int part) {
         int answer = 0;
 
         try {
@@ -16,13 +16,13 @@ public class Main {
 
             while (myReader.hasNextLine()) {
                 int[] elves = new int[4]; // an array to store the ranges of both elves
-                String[] elvesStr = myReader.nextLine().split("[,\\-]"); // get the ranges into the String array
+                String[] elvesStr = myReader.nextLine().split("[,-]"); // get the ranges into the String array
                 for (int i = 0; i < elvesStr.length; i++) {
-                    elves[i] = Integer.parseInt(elvesStr[i]); // convert them to ints in the main array
+                    elves[i] = Integer.parseInt(elvesStr[i]); // convert them to int in the main array
                 }
 
-                if (part.equals("part1")) answer = part1(elves) ? answer + 1 : answer; // answer if part1
-                else if (part.equals("part2")) answer = part2(elves) ? answer + 1 : answer; // or part 2
+                if (part == 1) answer = part1(elves) ? answer + 1 : answer; // answer if part1
+                else if (part == 2) answer = part2(elves) ? answer + 1 : answer; // or part 2
             }
 
             myReader.close();
@@ -31,7 +31,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        System.out.println(answer);
+        System.out.println("=== Part " + part + " ===\nAnswer: " + answer);
     }
 
     public static boolean part1(int[] elves) {
