@@ -15,8 +15,7 @@ public class Main {
         loadData("input.txt");
         part1(2022);
         System.out.println();
-        reset();
-        part2(1000000000000l);
+        part2(1000000000000L);
     }
 
     private static void part1(int movesToCalc) {
@@ -55,7 +54,7 @@ public class Main {
      * |..#.#..|
      * |..#.#..|
      *
-     * 2704 height difference (preCycleMoves)
+     * 2704 height difference (singleCycleHeight)
      * 1720 rock difference (cycleDurationRocks)
      *
      * 1st occurs at 236 rocks (preCycleRocks) && 375 height
@@ -63,12 +62,12 @@ public class Main {
      * 3rd occurs at 3676 rocks && 5783 height
      */
     private static void part2(long rocksToCalc) {
-        // TODO: Debug
+        long afterPreCycleRocks = rocksToCalc - preCycleRocks;
         long preCycleHeight = heightAfterRocks(preCycleRocks); // should be 375
-        long cycleRepetition = (rocksToCalc - preCycleRocks) / cycleDurationRocks;
+        long cycleRepetition = afterPreCycleRocks / cycleDurationRocks;
         long totalCycleHeight = cycleRepetition * singleCycleHeight;
-        long postCycleRocks = rocksToCalc - (((rocksToCalc - preCycleRocks) * cycleDurationRocks) + preCycleRocks);
-        long postCycleHeight = heightAfterRocks(postCycleRocks);
+        long postCycleRocks = afterPreCycleRocks - (cycleRepetition * cycleDurationRocks);
+        long postCycleHeight = heightAfterRocks2(postCycleRocks);
 
         System.out.println("=== Part 2 ===\nHeight: " + (preCycleHeight + totalCycleHeight + postCycleHeight));
     }
@@ -148,7 +147,17 @@ public class Main {
         while (rocksSettled < moves) {
             move();
         }
-        return highestRockIndex;
+        return highestRockIndex + 1;
+    }
+
+    private static long heightAfterRocks2(long moves) {
+        long preHighestRock = heightAfterRocks(preCycleRocks);
+
+        while (rocksSettled < (moves + preCycleRocks)) {
+            move();
+        }
+
+        return (highestRockIndex + 1) - preHighestRock;
     }
 
     private static void moveLeftOrRight() {
