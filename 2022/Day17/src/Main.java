@@ -5,72 +5,72 @@ import java.util.Scanner;
 
 public class Main {
     private static String[] inputStream;
-    private static final LinkedList<StringBuilder> chamber = new LinkedList<>();
-    private static int rocksCounter;
-    private static int jetCounter;
-    private static int rocksSettled;
+    private static LinkedList<StringBuilder> chamber = new LinkedList<>();
+    private static int highestRockIndex, rocksCounter, jetCounter, rocksSettled;
     private static int leftmost, rightmost, bottommost;
-    private static int highestRockIndex;
     private static int moves = 0;
+    private static final int preCycleRocks = 236, cycleDurationRocks = 1720, singleCycleHeight = 2704; // hardcoded
 
     public static void main(String[] args) {
-        part1();
-//        System.out.println();
-//        part2attempt();
-    }
-
-    private static void part1() {
-        System.out.println("=== Part 1 ===");
-
         loadData("input.txt");
+        part1(2022);
+        System.out.println();
+        reset();
+        part2(1000000000000l);
+    }
+
+    private static void part1(int movesToCalc) {
         loadInitialChamber();
 
-        while (rocksSettled < 2022) {
+        while (rocksSettled < movesToCalc) {
             move();
         }
 
 //        printChamber();
-
+//        System.out.println();
+        System.out.println("=== Part 1 ===");
         System.out.println("Height: " + (highestRockIndex + 1));
         System.out.println("Chamber size: " + chamber.size());
         System.out.println("Moves: " + moves);
     }
 
-    private static void part2attempt() {
-        loadData("input2.txt");
-        loadInitialChamber();
+    /*
+     * sequence:
+     * |..####.|
+     * |..##...|
+     * |..##...|
+     * |..#....|
+     * |..#....|
+     * |..#.#..|
+     * |..#.#..|
+     * |..###..|
+     * |....#..|
+     * |...###.|
+     * |....#..|
+     * |..####.|
+     * |.##....|
+     * |.##....|
+     * |..#....|
+     * |..#....|
+     * |..#.#..|
+     * |..#.#..|
+     *
+     * 2704 height difference (preCycleMoves)
+     * 1720 rock difference (cycleDurationRocks)
+     *
+     * 1st occurs at 236 rocks (preCycleRocks) && 375 height
+     * 2nd occurs at 1956 rocks && 3079 height
+     * 3rd occurs at 3676 rocks && 5783 height
+     */
+    private static void part2(long rocksToCalc) {
+        // TODO: Debug
+        long preCycleHeight = heightAfterRocks(preCycleRocks); // should be 375
+        long cycleRepetition = (rocksToCalc - preCycleRocks) / cycleDurationRocks;
+        long totalCycleHeight = cycleRepetition * singleCycleHeight;
+        long postCycleRocks = rocksToCalc - (((rocksToCalc - preCycleRocks) * cycleDurationRocks) + preCycleRocks);
+        long postCycleHeight = heightAfterRocks(postCycleRocks);
 
-        LinkedList<LinkedList<StringBuilder>> cache = new LinkedList<>();
-        LinkedList<Integer> cached = new LinkedList<>();
-
-        while (rocksSettled < 1501) {
-            if ((rocksSettled > 0 && rocksSettled % 30 == 0) && !cached.contains(rocksSettled)) {
-                LinkedList<StringBuilder> newEntry = new LinkedList<>();
-                for (int i = 30; i > 0; i--) {
-                    newEntry.add(chamber.get(highestRockIndex - i));
-                }
-                cache.add(newEntry);
-                cached.add(rocksSettled);
-
-                for (int i = 0; i < cache.size() - 1; i++) {
-                    if (compareSections(cache.get(i), cache.get(cache.size() - 1))) {
-                        System.out.println(i + " " + (cache.size() - 1));
-                    }
-                }
-            }
-
-            move();
-        }
-
-//        printChamber();
-
-        System.out.println();
-        System.out.println();
-
-        System.out.println("Height: " + (highestRockIndex + 1));
-        System.out.println("Settled rocks: " + rocksSettled);
-        System.out.println("Chamber size: " + chamber.size());
-        System.out.println("Moves: " + moves);
+        System.out.println("=== Part 2 ===\nHeight: " + (preCycleHeight + totalCycleHeight + postCycleHeight));
     }
 
     private static void loadData(String file) {
@@ -84,17 +84,32 @@ public class Main {
         }
     }
 
+    private static void reset() {
+        chamber = new LinkedList<>();
+        loadInitialChamber();
+
+        moves = 0;
+        rocksSettled = 0;
+    }
+
     private static void loadInitialChamber() {
         for (int i = 0; i < 3; i++) {
             chamber.add(new StringBuilder("......."));
         }
         highestRockIndex = -1;
-        jetCounter = 0;
         rocksCounter = 0;
+        jetCounter = 0;
         assignEndPoints();
     }
 
     private static void printChamber() {
+        for (int i = 0; i < chamber.size(); i++) {
+            System.out.println("|" + chamber.get(chamber.size() - 1 - i) + "|");
+        }
+        System.out.println("+-------+");
+    }
+
+    private static void printChamberWithDetails() {
         int height = chamber.size();
         String heightStr;
 
@@ -128,13 +143,21 @@ public class Main {
         moveDown();
     }
 
+    private static long heightAfterRocks(long moves) {
+        reset();
+        while (rocksSettled < moves) {
+            move();
+        }
+        return highestRockIndex;
+    }
+
     private static void moveLeftOrRight() {
         moves++;
 
         String leftOrRight = inputStream[jetCounter++];
         if (jetCounter == inputStream.length) jetCounter = 0;
 
-        if (!(goingOutOfBounds(leftOrRight) || interferingWithAnotherRockLeftOrRight(leftOrRight))) {
+        if (!(goingOutOfBounds(leftOrRight) || interferingWithRockLeftOrRight(leftOrRight))) {
             switch (leftOrRight) {
                 case "<" -> {
                     leftmost -= 1;
@@ -149,7 +172,7 @@ public class Main {
     }
 
     private static void moveDown() {
-        if (interferingWithAnotherRockDown()) {
+        if (interferingWithRockDown()) {
             checkIfNewHighest();
 
             StringBuilder bottom = chamber.get(bottommost);
@@ -203,7 +226,7 @@ public class Main {
         } else return rightmost == 6;
     }
 
-    private static boolean interferingWithAnotherRockLeftOrRight(String move) {
+    private static boolean interferingWithRockLeftOrRight(String move) {
         if (bottommost < chamber.size() && move.equals("<")) {
             char leftBottom = chamber.get(bottommost).charAt(leftmost - 1);
 
@@ -279,7 +302,7 @@ public class Main {
         return false;
     }
 
-    private static boolean interferingWithAnotherRockDown() {
+    private static boolean interferingWithRockDown() {
         if (bottommost == 0) return true;
 
         if (bottommost - 1 < chamber.size()) {
@@ -334,19 +357,5 @@ public class Main {
                 chamber.add(new StringBuilder("......."));
             }
         }
-    }
-
-    private static boolean compareSections(LinkedList<StringBuilder> a, LinkedList<StringBuilder> b) {
-        for (int i = 0; i < a.size(); i++) {
-            StringBuilder aStr = a.get(i);
-            StringBuilder bStr = b.get(i);
-
-            int length = aStr.length();
-            for (int j = 0; j < length; j++) {
-                if (aStr.charAt(j) != bStr.charAt(j)) return false;
-            }
-        }
-
-        return true;
     }
 }
