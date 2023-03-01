@@ -27,8 +27,8 @@ public class Main {
             pourOneSand(500 - columnStart, 0);// + mapOffsetX, 0);
         }
 
-//        printMine();
-//        System.out.println();
+        printMine();
+        System.out.println();
 
         System.out.println("=== Part 1 ===\nSand: " + sand);
     }
