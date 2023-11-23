@@ -1,0 +1,15 @@
+Algorithms and Data Structures
+
+Search Algorithms
+- BFS
+- DFS
+
+Sorts
+- Merge Sort
+
+Pathfinding (shortest path)
+- Dijkstra's Algorithm - I don't remember that one
+- A* - I don't remember that one
+
+Other
+- Regular Expressions (I'll have to google them)

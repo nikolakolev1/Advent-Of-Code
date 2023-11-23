@@ -5,7 +5,7 @@ public class Helper {
         return "data/day" + day + "/input.txt";
     }
 
-    public static void printAnswer(int part, int asnwer) {
-        System.out.println("=== Part " + part + " ===\nAnswer: " + asnwer + "\n");
+    public static void printAnswer(int part, int answer) {
+        System.out.println("=== Part " + part + " ===\nAnswer: " + answer + "\n");
     }
 }
