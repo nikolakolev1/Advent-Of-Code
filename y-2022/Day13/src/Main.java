@@ -32,6 +32,7 @@ public class Main {
         }
     }
 
+    // 2022 version
     private static boolean comparePackets(Packet left, Packet right) {
         int combinedLength = left.items.size() + right.items.size() + 1;
         boolean bool;
@@ -62,6 +63,85 @@ public class Main {
         return true;
     }
 
+    // 2023 version
+    private static int comparePacketsNew(Packet left, Packet right) {
+        int combinedLength = left.items.size() + right.items.size() + 1;
+
+        Item leftCurrentItem, rightCurrentItem;
+
+        for (int i = 0; i < combinedLength; i++) {
+            if (left.items.size() == i) return 1;
+            leftCurrentItem = left.items.get(i);
+
+            if (right.items.size() == i) return -1;
+            rightCurrentItem = right.items.get(i);
+
+            if (leftCurrentItem.isInteger && rightCurrentItem.isInteger) {
+                int compareInts = compareInts(leftCurrentItem.intValue, rightCurrentItem.intValue);
+                if (compareInts != 0) return compareInts;
+            } else if (leftCurrentItem.isInteger && rightCurrentItem.isList) {
+                int compareIntAndList = compareIntAndList(leftCurrentItem.intValue, rightCurrentItem);
+                if (compareIntAndList != 0) return compareIntAndList;
+            } else if (leftCurrentItem.isList && rightCurrentItem.isInteger) {
+                int compareListAndInt = compareListAndInt(leftCurrentItem, rightCurrentItem.intValue);
+                if (compareListAndInt != 0) return compareListAndInt;
+            } else {
+                int compareLists = compareLists(leftCurrentItem, rightCurrentItem);
+                if (compareLists != 0) return compareLists;
+            }
+        }
+
+        return 1;
+    }
+
+    private static int compareInts(int left, int right) {
+        return Integer.compare(right, left);
+    }
+
+    private static int compareLists(Item leftList, Item rightList) {
+        int combinedLength = leftList.list.size() + rightList.list.size() + 1;
+
+        Item leftCurrentItem, rightCurrentItem;
+
+        for (int i = 0; i < combinedLength; i++) {
+            if (leftList.list.size() == i) return 1;
+            leftCurrentItem = leftList.list.get(i);
+
+            if (rightList.list.size() == i) return -1;
+            rightCurrentItem = rightList.list.get(i);
+
+            if (leftCurrentItem.isInteger && rightCurrentItem.isInteger) {
+                int compareInts = compareInts(leftCurrentItem.intValue, rightCurrentItem.intValue);
+                if (compareInts != 0) return compareInts;
+            } else if (leftCurrentItem.isInteger && rightCurrentItem.isList) {
+                int compareIntAndList = compareIntAndList(leftCurrentItem.intValue, rightCurrentItem);
+                if (compareIntAndList != 0) return compareIntAndList;
+            } else if (leftCurrentItem.isList && rightCurrentItem.isInteger) {
+                int compareListAndInt = compareListAndInt(leftCurrentItem, rightCurrentItem.intValue);
+                if (compareListAndInt != 0) return compareListAndInt;
+            } else {
+                int compareLists = compareLists(leftCurrentItem, rightCurrentItem);
+                if (compareLists != 0) return compareLists;
+            }
+        }
+
+        return 1;
+    }
+
+    private static int compareIntAndList(int left, Item right) {
+        String leftAsListString = "[" + left + "]";
+        Item leftAsList = new Item(leftAsListString);
+
+        return compareLists(leftAsList, right);
+    }
+
+    private static int compareListAndInt(Item left, int right) {
+        String rightAsListString = "[" + right + "]";
+        Item rightAsList = new Item(rightAsListString);
+
+        return compareLists(left, rightAsList);
+    }
+
     private static void part1() {
         int packetsSize = packets.size();
         for (int i = 0; i < packetsSize; i++) {
@@ -82,21 +162,27 @@ public class Main {
         packets.add(new Packet("[[2]]"));
         packets.add(new Packet("[[6]]"));
 
-        ArrayList<Packet> sortedPackets = mergesort(packets);
+        // 2022 version
+//        ArrayList<Packet> sortedPackets = mergesort(packets);
+
+        // 2023 version
+        packets.sort((left, right) -> -1 * comparePacketsNew(left, right));
+
         ArrayList<Integer> part2Answer = new ArrayList<>();
 
-        for (int i = 0; i < sortedPackets.size(); i++) {
-            String index = i + "";
-            if (i < 10) index += "  ";
-            else if (i < 100) index += " ";
+        for (int i = 0; i < packets.size(); i++) {
             // debug
-//            System.out.println(index + ": " + sortedPackets.get(i).packetAsString);
-            if (sortedPackets.get(i).packetAsString.equals("[[2]]") || sortedPackets.get(i).packetAsString.equals("[[6]]")) {
+//            String index = i + "";
+//            if (i < 10) index += "  ";
+//            else if (i < 100) index += " ";
+//            System.out.println(index + ": " + packets.get(i).packetAsString);
+
+            if (packets.get(i).packetAsString.equals("[[2]]") || packets.get(i).packetAsString.equals("[[6]]")) {
                 part2Answer.add(i);
             }
         }
 
-        System.out.println("=== (incorrect) Part 2 ===\nAnswer: " + part2Answer.get(0) * part2Answer.get(1));
+        System.out.println("===  Part 2 ===\nAnswer: " + (part2Answer.get(0) + 1) * (part2Answer.get(1) + 1));
     }
 
     private static ArrayList<Packet> merge(ArrayList<Packet> a, ArrayList<Packet> b) {
@@ -194,7 +280,7 @@ class String_Manipulator {
                 } else {
                     packetOrList.add(new Item(Integer.parseInt(packetOrListStr.substring(i, i + 1))));
                 }
-            } else if (currentChar == 91) { // is '['
+            } else if (currentChar == 91) { // char is [
                 openingBracketsCounter++;
                 if (openingBracketsCounter > 1) {
                     int tempOpenCounter = 0;
@@ -213,7 +299,7 @@ class String_Manipulator {
                         }
                     }
                 }
-            } else if (currentChar == 93) { // is ']'
+            } else if (currentChar == 93) { // char is ]
                 if (++closingBracketsCounter == openingBracketsCounter) {
                     return;
                 }
