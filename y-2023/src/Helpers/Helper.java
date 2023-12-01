@@ -8,4 +8,8 @@ public class Helper {
     public static void printAnswer(int part, int answer) {
         System.out.println("=== Part " + part + " ===\nAnswer: " + answer + "\n");
     }
+
+    public static void printAnswer(int part, int answer, long time) {
+        System.out.println("=== Part " + part + " ===\nAnswer: " + answer + " (" + time + "ms)\n");
+    }
 }
