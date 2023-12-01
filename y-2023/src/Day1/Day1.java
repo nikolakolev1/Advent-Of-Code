@@ -13,8 +13,18 @@ public class Day1 {
 
     public static void main(String[] args) {
         loadData();
-        part1();
-        part2();
+
+        long p1_start = System.nanoTime();
+        int p1_answer = part1();
+        long p1_end = System.nanoTime();
+        long p1_time = (p1_end - p1_start) / 1000000;
+        Helper.printAnswer(1, p1_answer, p1_time);
+
+        long p2_start = System.nanoTime();
+        int p2_answer = part2();
+        long p2_end = System.nanoTime();
+        long p2_time = (p2_end - p2_start) / 1000000;
+        Helper.printAnswer(2, p2_answer, p2_time);
     }
 
     private static void loadData() {
@@ -32,7 +42,7 @@ public class Day1 {
         }
     }
 
-    private static void part1() {
+    private static int part1() {
         int sum = 0;
 
         // For each line, get the first and last numeric digits, combine them into a number, and add it to the sum
@@ -41,10 +51,10 @@ public class Day1 {
             sum += num;
         }
 
-        Helper.printAnswer(1, sum);
+        return sum;
     }
 
-    private static void part2() {
+    private static int part2() {
         int sum = 0, num;
 
         // For each line, check if it contains a spelled digit
@@ -72,7 +82,7 @@ public class Day1 {
             sum += num;
         }
 
-        Helper.printAnswer(2, sum);
+        return sum;
     }
 
     /**
