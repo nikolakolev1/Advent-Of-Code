@@ -35,6 +35,7 @@ public class Day1 {
     private static void part1() {
         int sum = 0;
 
+        // For each line, get the first and last numeric digits, combine them into a number, and add it to the sum
         for (String line : lines) {
             int num = extractNumber_NumericOnly(line);
             sum += num;
@@ -46,7 +47,9 @@ public class Day1 {
     private static void part2() {
         int sum = 0, num;
 
+        // For each line, check if it contains a spelled digit
         for (String line : lines) {
+            // If it does -> manipulate the string differently
             if (hasSpelledDigit(line)) {
                 int[] firstSpelledDigit = getFirstSpelledDigit(line);
                 int[] lastSpelledDigit = getLastSpelledDigit(line);
@@ -59,7 +62,10 @@ public class Day1 {
 
                 int[] digits = new int[]{firstDigit, lastDigit};
                 num = buildInteger(digits);
-            } else {
+            }
+
+            // If it doesn't -> manipulate the string as in part 1
+            else {
                 num = extractNumber_NumericOnly(line);
             }
 
@@ -76,8 +82,10 @@ public class Day1 {
      * @return = int[] {digit, index}
      */
     private static int[] getFirstNumericDigit(String str) {
+        int strLength = str.length(); // avoid calling length() multiple times
+
         // Loop through the string and return the first numeric character
-        for (int i = 0; i < str.length(); i++) {
+        for (int i = 0; i < strLength; i++) {
             if (Character.isDigit(str.charAt(i))) {
                 return new int[]{Character.getNumericValue(str.charAt(i)), i};
             }
@@ -93,8 +101,10 @@ public class Day1 {
      * @return = int[] {digit, index}
      */
     private static int[] getLastNumericDigit(String str) {
+        int strLength = str.length(); // avoid calling length() multiple times
+
         // Loop through the string backwards and return the first numeric character
-        for (int i = str.length() - 1; i >= 0; i--) {
+        for (int i = strLength - 1; i >= 0; i--) {
             if (Character.isDigit(str.charAt(i))) {
                 return new int[]{Character.getNumericValue(str.charAt(i)), i};
             }
@@ -127,7 +137,9 @@ public class Day1 {
      * @return = int[] {digit, index}
      */
     private static int[] getFirstSpelledDigit(String str) {
-        for (int i = 0; i < str.length() - 2; i++) {
+        int strLength = str.length(); // avoid calling length() multiple times
+
+        for (int i = 0; i < strLength - 2; i++) {
             // Skip if the character is a digit (a spelled digit cannot contain a numeric)
             if (Character.isDigit(str.charAt(i))) {
                 continue;
@@ -136,7 +148,7 @@ public class Day1 {
             // For each spelled digit, check if the string starts with it
             for (int j = 0; j < SPELLED_DIGITS.length; j++) {
                 // Make sure the spelled digit doesn't go out of bounds
-                if (i + SPELLED_DIGITS[j].length() <= str.length() && str.startsWith(SPELLED_DIGITS[j], i)) {
+                if (i + SPELLED_DIGITS[j].length() <= strLength && str.startsWith(SPELLED_DIGITS[j], i)) {
                     return new int[]{j + 1, i};
                 }
             }
@@ -152,7 +164,9 @@ public class Day1 {
      * @return = int[] {digit, index}
      */
     private static int[] getLastSpelledDigit(String str) {
-        for (int i = str.length() - 3; i >= 0; i--) {
+        int strLength = str.length(); // avoid calling length() multiple times
+
+        for (int i = strLength - 3; i >= 0; i--) {
             // Skip if the character is a digit (a spelled digit cannot contain a numeric)
             if (Character.isDigit(str.charAt(i))) {
                 i -= 2;
@@ -160,10 +174,7 @@ public class Day1 {
             }
 
             // Make sure the spelled digit doesn't go out of bounds
-            int end = str.length();
-            if (i + 5 < str.length()) {
-                end = i + 5;
-            }
+            int end = Math.min(i + 5, strLength);
 
             // For each spelled digit, check if the string has it
             for (int j = 0; j < SPELLED_DIGITS.length; j++) {
