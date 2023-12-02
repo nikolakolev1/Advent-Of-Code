@@ -8,7 +8,7 @@ import java.util.Scanner;
 
 public class Stream_Day2 {
     private static final ArrayList<int[]> data = new ArrayList<>();
-    private static final int RED_I = 0, GREEN_I = 1, BLUE_I = 2;
+    private static final int RED_I = 0, GREEN_I = 1, BLUE_I = 2, GAME_I = 3;
     private static final int RED_MAX = 12, GREEN_MAX = 13, BLUE_MAX = 14;
 
     public static void main(String[] args) {
@@ -33,8 +33,11 @@ public class Stream_Day2 {
             File input = new File(Helper.filename(2));
             Scanner scanner = new Scanner(input);
 
+            int game = 1;
+
             while (scanner.hasNextLine()) {
-                int[] rgbValues = new int[3];
+                int[] rgbValues = new int[4];
+                rgbValues[GAME_I] = game++;
 
                 String line = scanner.nextLine();
                 String[] split = line.split(" ");
@@ -62,22 +65,17 @@ public class Stream_Day2 {
     }
 
     private static int part1() {
-        int dataSize = data.size(); // avoid calling .size() every iteration
-
-        int sum = 0;
-
         // for each game, check if the max value for each color > the max possible value
-        for (int i = 0; i < dataSize; i++) {
-            if (data.get(i)[RED_I] <= RED_MAX && data.get(i)[GREEN_I] <= GREEN_MAX && data.get(i)[BLUE_I] <= BLUE_MAX) {
-                sum += (i + 1);
-            }
-        }
-
-        return sum;
+        return data.stream()
+                .filter(rgbValues -> rgbValues[RED_I] <= RED_MAX && rgbValues[GREEN_I] <= GREEN_MAX && rgbValues[BLUE_I] <= BLUE_MAX)
+                .mapToInt(rgbValues -> rgbValues[GAME_I])
+                .sum();
     }
 
     private static int part2() {
         // for each game, add the product of the max values for each color
-        return data.stream().mapToInt(rgbValues -> rgbValues[RED_I] * rgbValues[GREEN_I] * rgbValues[BLUE_I]).sum();
+        return data.stream()
+                .mapToInt(rgbValues -> rgbValues[RED_I] * rgbValues[GREEN_I] * rgbValues[BLUE_I])
+                .sum();
     }
 }
