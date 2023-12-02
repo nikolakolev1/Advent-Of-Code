@@ -26,7 +26,6 @@ import Day7.Day7;
 import Day8.Day8;
 import Day9.Day9;
 
-
 public class Helper {
     private static final int P1 = 0, P2 = 1, P1_TIME = 2, P2_TIME = 3;
 
@@ -34,17 +33,17 @@ public class Helper {
         return "data/day" + day + "/input.txt";
     }
 
-    public static void solveAndPrint(int day) {
-        int[] answers = solve(day);
-        System.out.println("*** Day " + day + " ***");
+    public static void solveAndPrint(int dayInt) {
+        int[] answers = solve(dayInt);
+        System.out.println("*** Day " + dayInt + " ***");
         printAnswer(1, answers[0]);
         printAnswer(2, answers[1]);
         System.out.println();
     }
 
-    public static void solveAndPrint_Time(int day) {
-        long[] answers = solve_Time(day);
-        System.out.println("*** Day " + day + " ***");
+    public static void solveAndPrint_Time(int dayInt) {
+        long[] answers = solve_Time(dayInt);
+        System.out.println("*** Day " + dayInt + " ***");
         printAnswer(1, (int) answers[P1], answers[P1_TIME]);
         printAnswer(2, (int) answers[P2], answers[P2_TIME]);
         System.out.println();
@@ -58,490 +57,63 @@ public class Helper {
         System.out.println("Part " + part + ": " + answer + " (" + time + "ms)");
     }
 
-    public static int[] solve(int day) throws IllegalStateException {
-        switch (day) {
-            case 1 -> {
-                Day1.loadData(filename(day));
-                return new int[]{Day1.part1(), Day1.part2()};
-            }
-            case 2 -> {
-                Day2.loadData(filename(day));
-                return new int[]{Day2.part1(), Day2.part2()};
-            }
-            case 3 -> {
-                Day3.loadData(filename(day));
-                return new int[]{Day3.part1(), Day3.part2()};
-            }
-            case 4 -> {
-                Day4.loadData(filename(day));
-                return new int[]{Day4.part1(), Day4.part2()};
-            }
-            case 5 -> {
-                Day5.loadData(filename(day));
-                return new int[]{Day5.part1(), Day5.part2()};
-            }
-            case 6 -> {
-                Day6.loadData(filename(day));
-                return new int[]{Day6.part1(), Day6.part2()};
-            }
-            case 7 -> {
-                Day7.loadData(filename(day));
-                return new int[]{Day7.part1(), Day7.part2()};
-            }
-            case 8 -> {
-                Day8.loadData(filename(day));
-                return new int[]{Day8.part1(), Day8.part2()};
-            }
-            case 9 -> {
-                Day9.loadData(filename(day));
-                return new int[]{Day9.part1(), Day9.part2()};
-            }
-            case 10 -> {
-                Day10.loadData(filename(day));
-                return new int[]{Day10.part1(), Day10.part2()};
-            }
-            case 11 -> {
-                Day11.loadData(filename(day));
-                return new int[]{Day11.part1(), Day11.part2()};
-            }
-            case 12 -> {
-                Day12.loadData(filename(day));
-                return new int[]{Day12.part1(), Day12.part2()};
-            }
-            case 13 -> {
-                Day13.loadData(filename(day));
-                return new int[]{Day13.part1(), Day13.part2()};
-            }
-            case 14 -> {
-                Day14.loadData(filename(day));
-                return new int[]{Day14.part1(), Day14.part2()};
-            }
-            case 15 -> {
-                Day15.loadData(filename(day));
-                return new int[]{Day15.part1(), Day15.part2()};
-            }
-            case 16 -> {
-                Day16.loadData(filename(day));
-                return new int[]{Day16.part1(), Day16.part2()};
-            }
-            case 17 -> {
-                Day17.loadData(filename(day));
-                return new int[]{Day17.part1(), Day17.part2()};
-            }
-            case 18 -> {
-                Day18.loadData(filename(day));
-                return new int[]{Day18.part1(), Day18.part2()};
-            }
-            case 19 -> {
-                Day19.loadData(filename(day));
-                return new int[]{Day19.part1(), Day19.part2()};
-            }
-            case 20 -> {
-                Day20.loadData(filename(day));
-                return new int[]{Day20.part1(), Day20.part2()};
-            }
-            case 21 -> {
-                Day21.loadData(filename(day));
-                return new int[]{Day21.part1(), Day21.part2()};
-            }
-            case 22 -> {
-                Day22.loadData(filename(day));
-                return new int[]{Day22.part1(), Day22.part2()};
-            }
-            case 23 -> {
-                Day23.loadData(filename(day));
-                return new int[]{Day23.part1(), Day23.part2()};
-            }
-            case 24 -> {
-                Day24.loadData(filename(day));
-                return new int[]{Day24.part1(), Day24.part2()};
-            }
-            case 25 -> {
-                Day25.loadData(filename(day));
-                return new int[]{Day25.part1(), Day25.part2()};
-            }
+    private static Day getDay(int day) {
+        return switch (day) {
+            case 1 -> new Day1();
+            case 2 -> new Day2();
+            case 3 -> new Day3();
+            case 4 -> new Day4();
+//            case 5 -> new Day5();
+//            case 6 -> new Day6();
+//            case 7 -> new Day7();
+//            case 8 -> new Day8();
+//            case 9 -> new Day9();
+//            case 10 -> new Day10();
+//            case 11 -> new Day11();
+//            case 12 -> new Day12();
+//            case 13 -> new Day13();
+//            case 14 -> new Day14();
+//            case 15 -> new Day15();
+//            case 16 -> new Day16();
+//            case 17 -> new Day17();
+//            case 18 -> new Day18();
+//            case 19 -> new Day19();
+//            case 20 -> new Day20();
+//            case 21 -> new Day21();
+//            case 22 -> new Day22();
+//            case 23 -> new Day23();
+//            case 24 -> new Day24();
+//            case 25 -> new Day25();
             default -> throw new IllegalStateException("Invalid day: " + day);
-        }
+        };
     }
 
-    public static long[] solve_Time(int day) throws IllegalStateException {
-        switch (day) {
-            case 1 -> {
-                Day1.loadData(filename(day));
+    public static int[] solve(int dayInt) {
+        Day day = getDay(dayInt);
 
-                long p1_start = System.nanoTime();
-                int p1_answer = Day1.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
+        day.loadData(filename(dayInt));
 
-                long p2_start = System.nanoTime();
-                int p2_answer = Day1.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
+        int p1_answer = day.part1();
+        int p2_answer = day.part2();
 
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 2 -> {
-                Day2.loadData(filename(day));
+        return new int[]{p1_answer, p2_answer};
+    }
 
-                long p1_start = System.nanoTime();
-                int p1_answer = Day2.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
+    public static long[] solve_Time(int dayInt) {
+        Day day = getDay(dayInt);
 
-                long p2_start = System.nanoTime();
-                int p2_answer = Day2.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
+        day.loadData(filename(dayInt));
 
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 3 -> {
-                Day3.loadData(filename(day));
+        long p1_start = System.nanoTime();
+        int p1_answer = day.part1();
+        long p1_end = System.nanoTime();
+        long p1_time_ms = (p1_end - p1_start) / 1000000;
 
-                long p1_start = System.nanoTime();
-                int p1_answer = Day3.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
+        long p2_start = System.nanoTime();
+        int p2_answer = day.part2();
+        long p2_end = System.nanoTime();
+        long p2_time_ms = (p2_end - p2_start) / 1000000;
 
-                long p2_start = System.nanoTime();
-                int p2_answer = Day3.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 4 -> {
-                Day4.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day4.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day4.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 5 -> {
-                Day5.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day5.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day5.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 6 -> {
-                Day6.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day6.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day6.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 7 -> {
-                Day7.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day7.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day7.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 8 -> {
-                Day8.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day8.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day8.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 9 -> {
-                Day9.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day9.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day9.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 10 -> {
-                Day10.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day10.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day10.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 11 -> {
-                Day11.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day11.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day11.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 12 -> {
-                Day12.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day12.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day12.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 13 -> {
-                Day13.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day13.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day13.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 14 -> {
-                Day14.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day14.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day14.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 15 -> {
-                Day15.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day15.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day15.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 16 -> {
-                Day16.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day16.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day16.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 17 -> {
-                Day17.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day17.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day17.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 18 -> {
-                Day18.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day18.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day18.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 19 -> {
-                Day19.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day19.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day19.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 20 -> {
-                Day20.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day20.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day20.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 21 -> {
-                Day21.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day21.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day21.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 22 -> {
-                Day22.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day22.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day22.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 23 -> {
-                Day23.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day23.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day23.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 24 -> {
-                Day24.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day24.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day24.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            case 25 -> {
-                Day25.loadData(filename(day));
-
-                long p1_start = System.nanoTime();
-                int p1_answer = Day25.part1();
-                long p1_end = System.nanoTime();
-                long p1_time_ms = (p1_end - p1_start) / 1000000;
-
-                long p2_start = System.nanoTime();
-                int p2_answer = Day25.part2();
-                long p2_end = System.nanoTime();
-                long p2_time_ms = (p2_end - p2_start) / 1000000;
-
-                return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
-            }
-            default -> throw new IllegalStateException("Invalid day: " + day);
-        }
+        return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
     }
 }

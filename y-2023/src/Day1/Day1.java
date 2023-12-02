@@ -1,23 +1,26 @@
 package Day1;
 
+import Helpers.Day;
 import Helpers.Helper;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Day1 {
+public class Day1 implements Day {
     private static final ArrayList<String> lines = new ArrayList<>();
     private static final int VALUE = 0, INDEX = 1;
     private static final String[] SPELLED_DIGITS = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}; // 1-9, 0 is not included
 
     public static void main(String[] args) {
-        loadData(Helper.filename(1));
-        System.out.println(part1());
-        System.out.println(part2());
+        Day1 day1 = new Day1();
+        day1.loadData(Helper.filename(1));
+        System.out.println(day1.part1());
+        System.out.println(day1.part2());
     }
 
-    public static void loadData(String filename) {
+    @Override
+    public void loadData(String filename) {
         try {
             File input = new File(filename);
             Scanner scanner = new Scanner(input);
@@ -32,7 +35,8 @@ public class Day1 {
         }
     }
 
-    public static int part1() {
+    @Override
+    public int part1() {
         int sum = 0;
 
         // For each line, get the first and last numeric digits, combine them into a number, and add it to the sum
@@ -44,7 +48,8 @@ public class Day1 {
         return sum;
     }
 
-    public static int part2() {
+    @Override
+    public int part2() {
         int sum = 0, num;
 
         // For each line, check if it contains a spelled digit

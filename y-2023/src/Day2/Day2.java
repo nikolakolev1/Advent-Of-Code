@@ -6,18 +6,20 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Day2 {
+public class Day2 implements Helpers.Day{
     private static final ArrayList<int[]> data = new ArrayList<>();
     private static final int RED_I = 0, GREEN_I = 1, BLUE_I = 2;
     private static final int RED_MAX = 12, GREEN_MAX = 13, BLUE_MAX = 14;
 
     public static void main(String[] args) {
-        loadData(Helper.filename(2));
-        System.out.println(part1());
-        System.out.println(part2());
+        Day2 day2 = new Day2();
+        day2.loadData(Helper.filename(2));
+        System.out.println(day2.part1());
+        System.out.println(day2.part2());
     }
 
-    public static void loadData(String filename) {
+    @Override
+    public void loadData(String filename) {
         try {
             File input = new File(filename);
             Scanner scanner = new Scanner(input);
@@ -50,7 +52,8 @@ public class Day2 {
         }
     }
 
-    public static int part1() {
+    @Override
+    public int part1() {
         int dataSize = data.size(); // avoid calling .size() every iteration
 
         int sum = 0;
@@ -65,7 +68,8 @@ public class Day2 {
         return sum;
     }
 
-    public static int part2() {
+    @Override
+    public int part2() {
         int sum = 0;
 
         // for each game, add the product of the max values for each color
