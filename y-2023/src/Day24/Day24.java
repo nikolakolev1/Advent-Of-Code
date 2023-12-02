@@ -12,7 +12,7 @@ public class Day24 {
         part2();
     }
 
-    private static void loadData(String filename) {
+    public static void loadData(String filename) {
         try {
             File input = new File(filename);
             Scanner scanner = new Scanner(input);
@@ -27,11 +27,13 @@ public class Day24 {
         }
     }
 
-    private static void part1() {
+    public static int part1() {
         Helper.printAnswer(1, -1);
+        return 0;
     }
 
-    private static void part2() {
+    public static int part2() {
         Helper.printAnswer(2, -1);
+        return 0;
     }
 }

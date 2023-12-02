@@ -12,25 +12,14 @@ public class Day2 {
     private static final int RED_MAX = 12, GREEN_MAX = 13, BLUE_MAX = 14;
 
     public static void main(String[] args) {
-        loadData();
-
-        long p1_start = System.nanoTime();
-        int p1_answer = part1();
-        long p1_end = System.nanoTime();
-        long p1_time = (p1_end - p1_start) / 1000000;
-
-        long p2_start = System.nanoTime();
-        int p2_answer = part2();
-        long p2_end = System.nanoTime();
-        long p2_time = (p2_end - p2_start) / 1000000;
-
-        Helper.printAnswer(1, p1_answer, p1_time);
-        Helper.printAnswer(2, p2_answer, p2_time);
+        loadData(Helper.filename(2));
+        System.out.println(part1());
+        System.out.println(part2());
     }
 
-    private static void loadData() {
+    public static void loadData(String filename) {
         try {
-            File input = new File(Helper.filename(2));
+            File input = new File(filename);
             Scanner scanner = new Scanner(input);
 
             while (scanner.hasNextLine()) {
@@ -61,7 +50,7 @@ public class Day2 {
         }
     }
 
-    private static int part1() {
+    public static int part1() {
         int dataSize = data.size(); // avoid calling .size() every iteration
 
         int sum = 0;
@@ -76,7 +65,7 @@ public class Day2 {
         return sum;
     }
 
-    private static int part2() {
+    public static int part2() {
         int sum = 0;
 
         // for each game, add the product of the max values for each color

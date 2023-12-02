@@ -7,14 +7,14 @@ import java.util.Scanner;
 
 public class Day21 {
     public static void main(String[] args) {
-//        loadData("data.txt");
+        loadData("data.txt");
         part1();
         part2();
     }
 
-    private static void loadData() {
+    public static void loadData(String filename) {
         try {
-            File input = new File(Helper.filename(21));
+            File input = new File(filename);
             Scanner scanner = new Scanner(input);
 
             while (scanner.hasNextLine()) {
@@ -27,11 +27,13 @@ public class Day21 {
         }
     }
 
-    private static void part1() {
+    public static int part1() {
         Helper.printAnswer(1, -1);
+        return 0;
     }
 
-    private static void part2() {
+    public static int part2() {
         Helper.printAnswer(2, -1);
+        return 0;
     }
 }

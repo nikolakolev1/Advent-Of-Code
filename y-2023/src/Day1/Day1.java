@@ -12,24 +12,14 @@ public class Day1 {
     private static final String[] SPELLED_DIGITS = {"one", "two", "three", "four", "five", "six", "seven", "eight", "nine"}; // 1-9, 0 is not included
 
     public static void main(String[] args) {
-        loadData();
-
-        long p1_start = System.nanoTime();
-        int p1_answer = part1();
-        long p1_end = System.nanoTime();
-        long p1_time = (p1_end - p1_start) / 1000000;
-        Helper.printAnswer(1, p1_answer, p1_time);
-
-        long p2_start = System.nanoTime();
-        int p2_answer = part2();
-        long p2_end = System.nanoTime();
-        long p2_time = (p2_end - p2_start) / 1000000;
-        Helper.printAnswer(2, p2_answer, p2_time);
+        loadData(Helper.filename(1));
+        System.out.println(part1());
+        System.out.println(part2());
     }
 
-    private static void loadData() {
+    public static void loadData(String filename) {
         try {
-            File input = new File(Helper.filename(1));
+            File input = new File(filename);
             Scanner scanner = new Scanner(input);
 
             while (scanner.hasNextLine()) {
@@ -42,7 +32,7 @@ public class Day1 {
         }
     }
 
-    private static int part1() {
+    public static int part1() {
         int sum = 0;
 
         // For each line, get the first and last numeric digits, combine them into a number, and add it to the sum
@@ -54,7 +44,7 @@ public class Day1 {
         return sum;
     }
 
-    private static int part2() {
+    public static int part2() {
         int sum = 0, num;
 
         // For each line, check if it contains a spelled digit

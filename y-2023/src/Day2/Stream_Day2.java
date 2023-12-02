@@ -13,19 +13,8 @@ public class Stream_Day2 {
 
     public static void main(String[] args) {
         loadData();
-
-        long p1_start = System.nanoTime();
-        int p1_answer = part1();
-        long p1_end = System.nanoTime();
-        long p1_time = (p1_end - p1_start) / 1000000;
-
-        long p2_start = System.nanoTime();
-        int p2_answer = part2();
-        long p2_end = System.nanoTime();
-        long p2_time = (p2_end - p2_start) / 1000000;
-
-        Helper.printAnswer(1, p1_answer, p1_time);
-        Helper.printAnswer(2, p2_answer, p2_time);
+        System.out.println(part1());
+        System.out.println(part2());
     }
 
     private static void loadData() {
