@@ -1,18 +1,21 @@
 package Day8;
 
+import Helpers.Day;
 import Helpers.Helper;
 
 import java.io.File;
 import java.util.Scanner;
 
-public class Day8 {
+public class Day8 implements Day {
     public static void main(String[] args) {
-//        loadData("data.txt");
-        part1();
-        part2();
+        Day day8 = new Day8();
+        day8.loadData(Helper.filename(8));
+        System.out.println(day8.part1());
+        System.out.println(day8.part2());
     }
 
-    public static void loadData(String filename) {
+    @Override
+    public void loadData(String filename) {
         try {
             File input = new File(filename);
             Scanner scanner = new Scanner(input);
@@ -27,12 +30,14 @@ public class Day8 {
         }
     }
 
-    public static int part1() {
+    @Override
+    public int part1() {
         Helper.printAnswer(1, -1);
         return 0;
     }
 
-    public static int part2() {
+    @Override
+    public int part2() {
         Helper.printAnswer(2, -1);
         return 0;
     }
