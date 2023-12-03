@@ -10,21 +10,13 @@ import java.util.Scanner;
 
 public class Day3 implements Day {
     private final ArrayList<char[]> lines = new ArrayList<>();
-    private static final int NUMBER = 0, X_END = 1;
+    private static final int NUMBER = 0, NUM_END = 1;
 
     public static void main(String[] args) {
         Day day3 = new Day3();
         day3.loadData(Helper.filename(3));
-
-        long startTime = System.nanoTime();
         System.out.println(day3.part1());
-        long endTime = System.nanoTime();
-        System.out.println("Part 1 time: " + (endTime - startTime) / 1000000 + "ms\n");
-
-        startTime = System.nanoTime();
         System.out.println(day3.part2());
-        endTime = System.nanoTime();
-        System.out.println("Part 2 time: " + (endTime - startTime) / 1000000 + "ms");
     }
 
     @Override
@@ -34,8 +26,7 @@ public class Day3 implements Day {
             Scanner scanner = new Scanner(input);
 
             while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                lines.add(line.toCharArray());
+                lines.add(scanner.nextLine().toCharArray());
             }
 
             scanner.close();
@@ -44,13 +35,24 @@ public class Day3 implements Day {
         }
     }
 
+    /*
+     * Pseudocode (part 1):
+     * 1) go through each line
+     * 2) go through each character in the line
+     * 3) if the character is a symbol (not a dot or a number)
+     *     3.1) get adjacent numbers on top, current, and bottom lines
+     * 4) if the character is a number or a dot - ignore
+     *
+     * Notes:
+     * - this doesn't work for numbers that are covered more than once by a symbol
+     */
     @Override
     public int part1() {
         int sum = 0;
 
-        List<Integer> numbers = findAllNumbers();
-        for (Integer number : numbers) {
-            sum += number;
+        List<Integer> nums = findAllNums();
+        for (Integer num : nums) {
+            sum += num;
         }
 
         return sum;
@@ -68,55 +70,41 @@ public class Day3 implements Day {
         return sum;
     }
 
-    /*
-     * Pseudocode:
-     * 1) go through each line
-     * 2) go through each character in the line
-     * 3) if the character is a symbol (not a dot or a number)
-     *     3.1) get adjacent numbers on top, current, and bottom lines
-     * 4) if the character is a number or a dot - ignore
-     *
-     * Notes:
-     * - this doesn't work for numbers that are covered more than once by a symbol
-     */
+    private List<Integer> findAllNums() {
+        List<Integer> nums = new ArrayList<>();
 
-    private List<Integer> findAllNumbers() {
-        List<Integer> numbers = new ArrayList<>();
+        int allLines = lines.size(); // Avoid calling lines.size() in the loop
 
-        int allLines = lines.size();
+        for (int y = 0; y < allLines; y++) {
+            char[] line = lines.get(y); // Avoid calling lines.get() in the loop
 
-        for (int line = 0; line < allLines; line++) {
-            char[] currentLine = lines.get(line);
-            int allChars = currentLine.length;
+            for (int x = 0; x < line.length; x++) {
+                char character = line[x];
 
-            for (int character = 0; character < allChars; character++) {
-                char currentChar = currentLine[character];
-
-                if (currentChar != '.' && !Character.isDigit(currentChar)) {
-                    List<Integer> adjacentNumbers = getAdjacentNumbers(line, character);
-                    if (!adjacentNumbers.isEmpty()) numbers.addAll(adjacentNumbers);
+                if (character != '.' && !Character.isDigit(character)) {
+                    List<Integer> adjacentNums = getAdjacentNums(y, x);
+                    if (!adjacentNums.isEmpty()) nums.addAll(adjacentNums);
                 }
             }
         }
 
-        return numbers;
+        return nums;
     }
 
     private List<Integer> findAllGears() {
         List<Integer> gears = new ArrayList<>();
 
-        int allLines = lines.size();
+        int allLines = lines.size(); // Avoid calling lines.size() in the loop
 
-        for (int line = 0; line < allLines; line++) {
-            char[] currentLine = lines.get(line);
-            int allChars = currentLine.length;
+        for (int y = 0; y < allLines; y++) {
+            char[] line = lines.get(y); // Avoid calling lines.get() in the loop
 
-            for (int character = 0; character < allChars; character++) {
-                char currentChar = currentLine[character];
+            for (int x = 0; x < line.length; x++) {
+                char character = line[x];
 
-                if (currentChar == '*') {
-                    List<Integer> adjacentNumbers = getAdjacentNumbers(line, character);
-                    if (adjacentNumbers.size() == 2) gears.add(adjacentNumbers.get(0) * adjacentNumbers.get(1));
+                if (character == '*') {
+                    List<Integer> adjacentNums = getAdjacentNums(y, x);
+                    if (adjacentNums.size() == 2) gears.add(adjacentNums.get(0) * adjacentNums.get(1));
                 }
             }
         }
@@ -124,146 +112,104 @@ public class Day3 implements Day {
         return gears;
     }
 
-    private List<Integer> getAdjacentNumbers(int y, int x) {
-        List<Integer> adjacentNumbers = new ArrayList<>();
+    private List<Integer> getAdjacentNums(int y, int x) {
+        List<Integer> adjNums = new ArrayList<>();
 
         // top line
         if (y > 0) {
-            List<Integer> topLineNumbers = getAdjacent_TopLine(y, x);
-            if (topLineNumbers != null) adjacentNumbers.addAll(topLineNumbers);
+            List<Integer> topLineNums = getAdjacent_TopOrBottomLine(y - 1, x);
+            if (topLineNums != null) adjNums.addAll(topLineNums);
         }
 
         // current line
-        List<Integer> currentLineNumbers = getAdjacent_CurrentLine(y, x);
-        if (currentLineNumbers != null) adjacentNumbers.addAll(currentLineNumbers);
+        List<Integer> thisLineNums = getAdjacent_CurrentLine(y, x);
+        if (thisLineNums != null) adjNums.addAll(thisLineNums);
 
         // bottom line
         if (y < lines.size() - 1) {
-            List<Integer> bottomLineNumbers = getAdjacent_BottomLine(y, x);
-            if (bottomLineNumbers != null) adjacentNumbers.addAll(bottomLineNumbers);
+            List<Integer> bottomLineNums = getAdjacent_TopOrBottomLine(y + 1, x);
+            if (bottomLineNums != null) adjNums.addAll(bottomLineNums);
         }
 
-        return adjacentNumbers;
+        return adjNums;
     }
 
-    private List<Integer> getAdjacent_TopLine(int y, int x) {
-        char[] topLine = lines.get(y - 1);
+    private List<Integer> getAdjacent_TopOrBottomLine(int y, int x) {
+        char[] line = lines.get(y);
 
-        // Similarity between this and getAdjacent_BottomLine => abstract into a method
         int[] num1 = null, num2 = null;
 
-        if (x != 0 && Character.isDigit(topLine[x - 1])) {
-            num1 = buildNumber(y - 1, x - 1);
+        if (x != 0 && Character.isDigit(line[x - 1])) {
+            num1 = buildNum(y, x - 1);
         }
 
         if (num1 != null) {
-            if (x != topLine.length - 1 && num1[X_END] < x + 1 && Character.isDigit(topLine[x + 1])) {
-                num2 = buildNumber(y - 1, x + 1);
+            if (x != line.length - 1 && num1[NUM_END] < x + 1 && Character.isDigit(line[x + 1])) {
+                num2 = buildNum(y, x + 1);
             }
         } else {
-            if (Character.isDigit(topLine[x])) {
-                num1 = buildNumber(y - 1, x);
-            } else if (Character.isDigit(topLine[x + 1])) {
-                num1 = buildNumber(y - 1, x + 1);
+            if (Character.isDigit(line[x])) {
+                num1 = buildNum(y, x);
+            } else if (Character.isDigit(line[x + 1])) {
+                num1 = buildNum(y, x + 1);
             }
         }
 
-        if (num1 != null) {
-            if (num2 != null) {
-                return List.of(num1[NUMBER], num2[NUMBER]);
-            } else {
-                return List.of(num1[NUMBER]);
-            }
-        } else {
-            return null;
-        }
+        return listOfNums(num1, num2);
     }
 
     private List<Integer> getAdjacent_CurrentLine(int y, int x) {
-        char[] currentLine = lines.get(y);
+        char[] line = lines.get(y);
 
         int[] numLeft = null, numRight = null;
 
-        if (x != 0 && Character.isDigit(currentLine[x - 1])) {
-            numLeft = buildNumber(y, x - 1);
+        if (x != 0 && Character.isDigit(line[x - 1])) {
+            numLeft = buildNum(y, x - 1);
         }
 
-        if (x != currentLine.length - 1 && Character.isDigit(currentLine[x + 1])) {
-            numRight = buildNumber(y, x + 1);
+        if (x != line.length - 1 && Character.isDigit(line[x + 1])) {
+            numRight = buildNum(y, x + 1);
         }
 
-        if (numLeft != null) {
-            if (numRight != null) {
-                return List.of(numLeft[NUMBER], numRight[NUMBER]);
-            } else {
-                return List.of(numLeft[NUMBER]);
-            }
-        } else {
-            if (numRight != null) {
-                return List.of(numRight[NUMBER]);
-            } else {
-                return null;
-            }
-        }
+        return listOfNums(numLeft, numRight);
     }
 
-    private List<Integer> getAdjacent_BottomLine(int y, int x) {
-        char[] bottomLine = lines.get(y + 1);
-
-        // Similarity between this and getAdjacent_BottomLine => abstract into a method
-        int[] num1 = null, num2 = null;
-
-        if (x != 0 && Character.isDigit(bottomLine[x - 1])) {
-            num1 = buildNumber(y + 1, x - 1);
-        }
-
-        if (num1 != null) {
-            if (x != bottomLine.length - 1 && num1[X_END] < x + 1 && Character.isDigit(bottomLine[x + 1])) {
-                num2 = buildNumber(y + 1, x + 1);
-            }
-        } else {
-            if (Character.isDigit(bottomLine[x])) {
-                num1 = buildNumber(y + 1, x);
-            } else if (Character.isDigit(bottomLine[x + 1])) {
-                num1 = buildNumber(y + 1, x + 1);
-            }
-        }
-
-        if (num1 != null) {
-            if (num2 != null) {
-                return List.of(num1[NUMBER], num2[NUMBER]);
-            } else {
-                return List.of(num1[NUMBER]);
-            }
-        } else {
-            return null;
-        }
-    }
-
-    private int[] buildNumber(int y, int x) {
+    /**
+     * Builds a number from a given line and an index of any digit in the number.
+     *
+     * @param y = line index
+     * @param x = index of ANY digit in the number
+     * @return int[] = {number, index of last digit in the number}
+     */
+    private int[] buildNum(int y, int x) {
         char[] line = lines.get(y);
 
-        int numberStart = x, numberEnd = x;
-        for (int i = x; i >= 0; i--) {
-            if (Character.isDigit(line[i])) {
-                numberStart = i;
-            } else {
-                break;
-            }
+        int start = x, end = x;
+
+        // find the start and end of the num
+        while (start > 0 && Character.isDigit(line[start - 1])) {
+            start--;
         }
-        for (int i = x; i < line.length; i++) {
-            if (Character.isDigit(line[i])) {
-                numberEnd = i;
-            } else {
-                break;
-            }
+        while (end < line.length - 1 && Character.isDigit(line[end + 1])) {
+            end++;
         }
 
-        StringBuilder number = new StringBuilder();
-        for (int i = numberStart; i <= numberEnd; i++) {
-            number.append(line[i]);
+        // build the number
+        StringBuilder num = new StringBuilder();
+        for (int i = start; i <= end; i++) {
+            num.append(line[i]);
         }
 
-        return new int[]{Integer.parseInt(number.toString()), numberEnd};
+        return new int[]{Integer.parseInt(num.toString()), end};
+    }
+
+    private List<Integer> listOfNums(int[]... nums) {
+        List<Integer> list = new ArrayList<>();
+
+        for (int[] num : nums) {
+            if (num != null) list.add(num[NUMBER]);
+        }
+
+        return !list.isEmpty() ? list : null;
     }
 }
