@@ -33,6 +33,10 @@ public class Helper {
         return "data/day" + day + "/input.txt";
     }
 
+    public static String filename_test(int day) {
+        return "data/day" + day + "/test_input.txt";
+    }
+
     public static void solveAndPrint(int dayInt) {
         int[] answers = solve(dayInt);
         System.out.println("*** Day " + dayInt + " ***");
