@@ -67,11 +67,11 @@ public class Helper {
             case 2 -> new Day2();
             case 3 -> new Day3();
             case 4 -> new Day4();
-//            case 5 -> new Day5();
-//            case 6 -> new Day6();
-//            case 7 -> new Day7();
-//            case 8 -> new Day8();
-//            case 9 -> new Day9();
+            case 5 -> new Day5();
+            case 6 -> new Day6();
+            case 7 -> new Day7();
+            case 8 -> new Day8();
+            case 9 -> new Day9();
 //            case 10 -> new Day10();
 //            case 11 -> new Day11();
 //            case 12 -> new Day12();
@@ -92,7 +92,7 @@ public class Helper {
         };
     }
 
-    public static int[] solve(int dayInt) {
+    private static int[] solve(int dayInt) {
         Day day = getDay(dayInt);
 
         day.loadData(filename(dayInt));
@@ -103,7 +103,7 @@ public class Helper {
         return new int[]{p1_answer, p2_answer};
     }
 
-    public static long[] solve_Time(int dayInt) {
+    private static long[] solve_Time(int dayInt) {
         Day day = getDay(dayInt);
 
         day.loadData(filename(dayInt));

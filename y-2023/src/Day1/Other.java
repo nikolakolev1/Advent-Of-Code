@@ -26,7 +26,7 @@ public class Other {
         }
     }
 
-    private static void loadData() throws IOException {
+    public static void loadData() throws IOException {
         input = Files.readString(Path.of(Helper.filename(1)));
     }
 

@@ -32,13 +32,11 @@ public class Day8 implements Day {
 
     @Override
     public int part1() {
-        Helper.printAnswer(1, -1);
-        return 0;
+        return -1;
     }
 
     @Override
     public int part2() {
-        Helper.printAnswer(2, -1);
-        return 0;
+        return -1;
     }
 }

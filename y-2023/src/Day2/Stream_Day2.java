@@ -17,7 +17,7 @@ public class Stream_Day2 {
         System.out.println(part2());
     }
 
-    private static void loadData() {
+    public static void loadData() {
         try {
             File input = new File(Helper.filename(2));
             Scanner scanner = new Scanner(input);
@@ -53,7 +53,7 @@ public class Stream_Day2 {
         }
     }
 
-    private static int part1() {
+    public static int part1() {
         // for each game, check if the max value for each color > the max possible value
         return data.stream()
                 .filter(rgbValues -> rgbValues[RED_I] <= RED_MAX && rgbValues[GREEN_I] <= GREEN_MAX && rgbValues[BLUE_I] <= BLUE_MAX)
@@ -61,7 +61,7 @@ public class Stream_Day2 {
                 .sum();
     }
 
-    private static int part2() {
+    public static int part2() {
         // for each game, add the product of the max values for each color
         return data.stream()
                 .mapToInt(rgbValues -> rgbValues[RED_I] * rgbValues[GREEN_I] * rgbValues[BLUE_I])
