@@ -13,3 +13,4 @@ Pathfinding (shortest path)
 
 Other
 - Regular Expressions (I'll have to google them)
+- Memoization (I forgot what that is)
