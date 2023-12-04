@@ -1,0 +1,3 @@
+Try implementing these:
+    - Java Streams API  - .stream() .filter() .map() .collect() etc.
+    - record            - private record Person(String name, int age) {}

@@ -1,4 +1,4 @@
-import Helpers.Helper;
+import General.Helper;
 
 public class Main {
     public static void main(String[] args) {
@@ -6,6 +6,7 @@ public class Main {
             Helper.solveAndPrint_Time(1);
             Helper.solveAndPrint_Time(2);
             Helper.solveAndPrint_Time(3);
+            Helper.solveAndPrint_Time(4);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
