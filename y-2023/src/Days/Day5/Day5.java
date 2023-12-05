@@ -84,18 +84,20 @@ public class Day5 implements Day {
     @Override
     public long part2() {
         // This code doesn't work for the real input (too slow)
-//        long min = Long.MAX_VALUE;
-//
-//        for (int i = 0; i < seedIDs.size(); i++) {
-//            long seedRangeStart = seedIDs.get(i);
-//            long seedRangeLength = seedIDs.get(++i);
-//
-//            for (long seed = seedRangeStart; seed < seedRangeStart + seedRangeLength; seed++) {
-//                min = Math.min(min, convertSeedToLocation(seed));
-//            }
-//        }
-//
-//        return min;
+        /*
+         * long min = Long.MAX_VALUE;
+
+         * for (int i = 0; i < seedIDs.size(); i++) {
+         *    long seedRangeStart = seedIDs.get(i);
+         *    long seedRangeLength = seedIDs.get(++i);
+         *
+         *    for (long seed = seedRangeStart; seed < seedRangeStart + seedRangeLength; seed++) {
+         *        min = Math.min(min, convertSeedToLocation(seed));
+         *    }
+         * }
+
+         * return min;
+         */
 
         return -1;
     }
