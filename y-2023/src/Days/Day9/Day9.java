@@ -31,13 +31,13 @@ public class Day9  implements Day {
     }
 
     @Override
-    public int part1() {
+    public long part1() {
         Helper.printAnswer(1, -1);
         return 0;
     }
 
     @Override
-    public int part2() {
+    public long part2() {
         Helper.printAnswer(2, -1);
         return 0;
     }

@@ -50,7 +50,7 @@ public class Stream_Day4 implements Day {
     }
 
     @Override
-    public int part1() {
+    public long part1() {
         return winningNums.stream()
                 .mapToInt(winning -> countMatches(winning, yourNums.get(winningNums.indexOf(winning))))
                 .map(matches -> (matches > 0) ? (int) Math.pow(2, matches - 1) : 0)
@@ -58,7 +58,7 @@ public class Stream_Day4 implements Day {
     }
 
     @Override
-    public int part2() {
+    public long part2() {
         winningNums.forEach(winning -> {
             int i = winningNums.indexOf(winning);
             int matches = Math.min(countMatches(winning, yourNums.get(i)), copies.size() - i - 1);

@@ -42,14 +42,14 @@ public class Stream_Day3 implements Day {
     }
 
     @Override
-    public int part1() {
+    public long part1() {
         return findAllNumbers().stream()
                 .mapToInt(Integer::intValue)
                 .sum();
     }
 
     @Override
-    public int part2() {
+    public long part2() {
         return findAllGears().stream()
                 .mapToInt(Integer::intValue)
                 .sum();

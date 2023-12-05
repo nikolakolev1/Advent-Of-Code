@@ -22,7 +22,7 @@ public class Helper {
     }
 
     public static void solveAndPrint(int dayInt) {
-        int[] answers = solve(dayInt);
+        long[] answers = solve(dayInt);
         System.out.println("*** Day " + dayInt + " ***");
         printAnswer(1, answers[0]);
         printAnswer(2, answers[1]);
@@ -37,7 +37,7 @@ public class Helper {
         System.out.println();
     }
 
-    public static void printAnswer(int part, int answer) {
+    public static void printAnswer(int part, long answer) {
         System.out.println("Part " + part + " : " + answer);
     }
 
@@ -76,15 +76,15 @@ public class Helper {
         };
     }
 
-    private static int[] solve(int dayInt) {
+    private static long[] solve(int dayInt) {
         Day day = getDay(dayInt);
 
         day.loadData(filename(dayInt));
 
-        int p1_answer = day.part1();
-        int p2_answer = day.part2();
+        long p1_answer = day.part1();
+        long p2_answer = day.part2();
 
-        return new int[]{p1_answer, p2_answer};
+        return new long[]{p1_answer, p2_answer};
     }
 
     private static long[] solve_Time(int dayInt) {
@@ -93,12 +93,12 @@ public class Helper {
         day.loadData(filename(dayInt));
 
         long p1_start = System.nanoTime();
-        int p1_answer = day.part1();
+        long p1_answer = day.part1();
         long p1_end = System.nanoTime();
         long p1_time_ms = (p1_end - p1_start) / 1000000;
 
         long p2_start = System.nanoTime();
-        int p2_answer = day.part2();
+        long p2_answer = day.part2();
         long p2_end = System.nanoTime();
         long p2_time_ms = (p2_end - p2_start) / 1000000;
 

@@ -36,7 +36,7 @@ public class Day1 implements Day {
     }
 
     @Override
-    public int part1() {
+    public long part1() {
         int sum = 0;
 
         // For each line, get the first and last numeric digits, combine them into a number, and add it to the sum
@@ -49,7 +49,7 @@ public class Day1 implements Day {
     }
 
     @Override
-    public int part2() {
+    public long part2() {
         int sum = 0, num;
 
         // For each line, check if it contains a spelled digit

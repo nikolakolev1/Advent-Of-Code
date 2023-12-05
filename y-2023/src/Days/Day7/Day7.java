@@ -32,12 +32,12 @@ public class Day7 implements Day {
     }
 
     @Override
-    public int part1() {
+    public long part1() {
         return -1;
     }
 
     @Override
-    public int part2() {
+    public long part2() {
         return -1;
     }
 }

@@ -56,7 +56,7 @@ public class Day4 implements Day {
     }
 
     @Override
-    public int part1() {
+    public long part1() {
         int sum = 0;
 
         int scratchcards = winningNums.size(); // to avoid calling size() every iteration
@@ -73,7 +73,7 @@ public class Day4 implements Day {
     }
 
     @Override
-    public int part2() {
+    public long part2() {
         int scratchcards = winningNums.size(); // to avoid calling size() every iteration
 
         for (int i = 0; i < scratchcards; i++) {
