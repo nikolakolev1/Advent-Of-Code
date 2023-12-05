@@ -10,6 +10,11 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Scanner;
 
+/**
+ * WRONG IDEA. Ranges cannot be merged top down. They have to be merged bottom up.
+ * If you merge them top-down, you will lose information.
+ * In the end there are very few ranges left, which makes it impossible to map the seeds to the soil.
+ */
 public class Day5_Part2 implements Day {
     private final ArrayList<Long> seedIDs = new ArrayList<>();
     private static final int DEST_RANGE_START = 0, SRC_RANGE_START = 1, RANGE_LENGTH = 2;
@@ -122,52 +127,108 @@ public class Day5_Part2 implements Day {
      * In the end, we will have a map that maps has the source ranges of the first map and the
      * destination ranges of the last map.
      * <p>
-     * TODO: FIX IT, IT DOESN'T WORK
+     * overlap options:
+     * - range2 contains range1
+     * r1: .....XXX.....
+     * r2: ...XXXXXXX...
+     * <p>
+     * - range1 overlaps lower part of range2
+     * r1: ..XXXX.......
+     * r2: ....XXXXX...
+     * <p>
+     * - range1 overlaps upper part of range2
+     * r1: .......XXXXX.
+     * r2:.....XXXXX....
+     * <p>
+     * range1 contains range2
+     * r1: ..XXXXXX....
+     * r2: ....XXX.....
      */
     private Map mergeMaps(Map map1, Map map2) {
         Map mergedMap = new Map();
 
         for (Range range1 : map1.ranges) {
             for (Range range2 : map2.ranges) {
-                if (range2.source.overlaps(range1.destination)) {
-                    if (range2.source.contains(range1.destination)) {
-                        long difference = range1.destination.left - range2.source.left;
-                        Range mergedRange = new Range(range2.destination.left + difference, range1.source.left, range1.length);
-                        mergedMap.addRange(mergedRange);
+                /*
+                 * range 1: 50 10 5
+                 * range 2: 20 40 60
+                 *
+                 * => merged: 30 10 5
+                 */
+                // NOTE: this is correct
+                if (range2.source.contains(range1.destination)) {
+                    long difference = range1.destination.left - range2.source.left;
+                    Range mergedRange = new Range(range2.destination.left + difference, range1.source.left, range1.length);
+                    mergedMap.addRange(mergedRange);
 
-                        // TODO: continue here maybe?
-                    } else if (range2.source.overlapsLower(range1.destination)) {
-                        long difference = range2.source.left - range1.destination.left;
-                        Range mergedRange = new Range(range2.destination.left, range1.source.left + difference, range1.length - difference);
-                        mergedMap.addRange(mergedRange);
+                    break;
+                }
 
-                        // TODO: continue here maybe?
-                    } else if (range2.source.overlapsUpper(range1.destination)) {
-                        long difference = range1.destination.right - range2.source.right;
-                        Range mergedRange = new Range(map2.mapValue(range1.source.left), range1.source.left, range1.length - difference);
-                        mergedMap.addRange(mergedRange);
+                /*
+                 * range 1: 50 10 5
+                 * range 2: 20 52 60
+                 *
+                 * => merged: 20 12 3
+                 */
+                // NOTE: this is correct
+                else if (range2.source.overlapsLower(range1.destination)) {
+                    long difference = range2.source.left - range1.destination.left;
+                    Range mergedRange = new Range(range2.destination.left, range1.source.left + difference, range1.length - difference);
+                    mergedMap.addRange(mergedRange);
+                }
 
-                        // TODO: continue here maybe?
-                    }
+                /*
+                 * range 1: 50 10 5
+                 * range 2: 20 47 7
+                 *
+                 * => merged: 20 10 2
+                 */
+                // NOTE: this is correct
+                else if (range2.source.overlapsUpper(range1.destination)) {
+                    long difference = range1.destination.left - range2.source.left;
+                    Range mergedRange = new Range(range2.destination.left, range1.source.left, range1.length - difference);
+                    mergedMap.addRange(mergedRange);
+                }
+
+                /*
+                 * range 1: 50 10 5
+                 * range 2: 20 51 3
+                 *
+                 * => merged: 20 11 3
+                 */
+                // NOTE: this is correct
+                else if (range1.destination.contains(range2.source)) {
+                    long difference = range2.source.left - range1.destination.left;
+                    Range mergedRange = new Range(range2.destination.left, range1.source.left + difference, range2.length);
+                    mergedMap.addRange(mergedRange);
                 }
             }
         }
 
-        return null;
+        return mergedMap;
     }
 
     private Map mergeAllMaps(ArrayList<Map> allMaps) {
         Map mergedMap = new Map();
 
-        for (int i = 0; i < allMaps.size() - 1; i++) {
-            Map map1 = allMaps.get(i);
-            Map map2 = allMaps.get(i + 1);
+        Map map1 = allMaps.get(0);
+        for (int i = 1; i < allMaps.size() - 1; i++) {
+            Map map2 = allMaps.get(i);
 
             mergedMap = mergeMaps(map1, map2);
-            allMaps.set(i + 1, mergedMap);
+            map1 = mergedMap;
         }
 
         return mergedMap;
+
+//        Map a = mergeMaps(allMaps.get(0), allMaps.get(1));
+//        Map b = mergeMaps(a, allMaps.get(2));
+//        Map c = mergeMaps(b, allMaps.get(3));
+//        Map d = mergeMaps(c, allMaps.get(4));
+//        Map e = mergeMaps(d, allMaps.get(5));
+//        Map f = mergeMaps(e, allMaps.get(6));
+
+//        return f;
     }
 
     class Map {
