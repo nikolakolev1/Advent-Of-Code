@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Day6 implements Day {
-    private record Race(long time, long distance) {}
-    private ArrayList<Race> races = new ArrayList<>();
+    private record Race(int time, long distance) {
+    }
+
+    private final ArrayList<Race> races = new ArrayList<>();
     private Race raceP2;
 
     public static void main(String[] args) {
@@ -28,8 +30,8 @@ public class Day6 implements Day {
             ArrayList<Integer> times = new ArrayList<>();
             ArrayList<Integer> distances = new ArrayList<>();
 
-            long rP2time = 0;
-            long rP2distance = 0;
+            int P2time = 0;
+            long P2distance = 0;
 
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
@@ -37,29 +39,34 @@ public class Day6 implements Day {
                 if (line.trim().isBlank()) continue;
 
                 String[] split = line.split(":");
+
+                // Time: ...
                 if (split[0].equals("Time")) {
-                    String raceP2time = split[1].trim().replace(" ", "");
-                    rP2time = Long.parseLong(raceP2time);
+                    // merge the times into one
+                    P2time = Integer.parseInt(split[1].trim().replace(" ", ""));
 
-                    String[] timeSplit = split[1].split(" ");
-                    for (String time : timeSplit) {
-                        if (time.equals("")) continue;
-                        times.add(Integer.parseInt(time.trim()));
+                    // store the times
+                    for (String time : split[1].split(" ")) {
+                        if (!time.isEmpty()) times.add(Integer.parseInt(time.trim()));
                     }
-                } else {
-                    String raceP2distance = split[1].trim().replace(" ", "");
-                    rP2distance = Long.parseLong(raceP2distance);
+                }
 
-                    String[] distanceSplit = split[1].trim().split(" ");
-                    for (String distance : distanceSplit) {
-                        if (distance.equals("")) continue;
-                        distances.add(Integer.parseInt(distance.trim()));
+                // Distance: ...
+                else {
+                    // merge the distances into one
+                    P2distance = Long.parseLong(split[1].trim().replace(" ", ""));
+
+                    // store the distances
+                    for (String distance : split[1].trim().split(" ")) {
+                        if (!distance.isEmpty()) distances.add(Integer.parseInt(distance.trim()));
                     }
                 }
             }
 
-            raceP2 = new Race(rP2time, rP2distance);
+            // Save the race details for part 2
+            raceP2 = new Race(P2time, P2distance);
 
+            // Save the races details for part 1
             for (int i = 0; i < times.size(); i++) {
                 races.add(new Race(times.get(i), distances.get(i)));
             }
@@ -75,35 +82,26 @@ public class Day6 implements Day {
         ArrayList<Integer> better = new ArrayList<>();
 
         for (Race race : races) {
-            better.add(evaluateRace(race));
+            better.add(countBetter(race));
         }
 
-        int result = 1;
-        for (int i = 0; i < better.size(); i++) {
-            result *= better.get(i);
-        }
-        return result;
+        return better.stream().reduce(1, (a, b) -> a * b);
     }
 
     @Override
     public long part2() {
-        long firstBetterIndex = evaluateRaceFirstBetterIndex(raceP2);
-        long lastBetterIndex = evaluateRaceLastBetterIndex(raceP2);
-
-        return lastBetterIndex - firstBetterIndex + 1;
+        return getLastBetterIndex(raceP2) - getFirstBetterIndex(raceP2) + 1;
     }
 
     private long distance(long t, long x) {
         return x * (t - x);
     }
 
-    private int evaluateRace(Race race) {
-        long totalTime = race.time;
+    private int countBetter(Race race) {
         int better = 0;
 
-        for (long i = 0; i < totalTime; i++) {
-            long distanceTraveled = distance(totalTime, i);
-            if (distanceTraveled > race.distance) {
+        for (int i = 0; i < race.time; i++) {
+            if (distance(race.time, i) > race.distance) {
                 better++;
             }
         }
@@ -111,29 +109,23 @@ public class Day6 implements Day {
         return better;
     }
 
-    private long evaluateRaceFirstBetterIndex(Race race) {
-        long totalTime = race.time;
-
-        for (int i = 0; i < totalTime; i++) {
-            long distanceTraveled = distance(totalTime, i);
-            if (distanceTraveled > race.distance) {
+    private long getFirstBetterIndex(Race race) {
+        for (int i = 0; i < race.time; i++) {
+            if (distance(race.time, i) > race.distance) {
                 return i;
             }
         }
 
-        return -1;
+        throw new RuntimeException("No better index found");
     }
 
-    private long evaluateRaceLastBetterIndex(Race race) {
-        long totalTime = race.time;
-
-        for (long i = totalTime; i > 0; i--) {
-            long distanceTraveled = distance(totalTime, i);
-            if (distanceTraveled > race.distance) {
+    private long getLastBetterIndex(Race race) {
+        for (long i = race.time; i > 0; i--) {
+            if (distance(race.time, i) > race.distance) {
                 return i;
             }
         }
 
-        return -1;
+        throw new RuntimeException("No better index found");
     }
 }
