@@ -1,31 +1,30 @@
-package Days.Day5;
+package Days.Day5.Problems;
 
-import General.Day;
 import General.Helper;
-import General.IntervalLong;
-import Days.Day5.Main.GA;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Scanner;
+import java.util.*;
 
-public class Day5 implements Day {
-    private final ArrayList<Long> seedIDs = new ArrayList<>();
-    private static final int DEST_RANGE_START = 0, SRC_RANGE_START = 1, RANGE_LENGTH = 2;
-    private static final int HARDCODED_ALL_MAPS = 7;
-    private final ArrayList<Map> maps = new ArrayList<>();
+public class AocDay5 {
+    private static final ArrayList<Long> seedIDs = new ArrayList<>();
 
-    public static void main(String[] args) {
-        Day5 day5 = new Day5();
-        day5.loadData(Helper.filename_test(5));
-        System.out.println(day5.part1());
-        System.out.println(day5.part2());
+    public record seedRange(long seedRangeStart, long seedRangeLength) {
     }
 
-    @Override
-    public void loadData(String filename) {
+    public static final ArrayList<seedRange> seedRanges = new ArrayList<>();
+    private static final int DEST_RANGE_START = 0, SRC_RANGE_START = 1, RANGE_LENGTH = 2;
+    private static final int HARDCODED_ALL_MAPS = 7;
+    public static final ArrayList<Map> maps = new ArrayList<>();
+    public static final String filename = Helper.filename(5);
+//    public static final String filename = "files/aocDay5Files/test_input.txt";
+
+    public static void main(String[] args) {
+        loadData(filename);
+        System.out.println(part1());
+        System.out.println(part2());
+    }
+
+    public static void loadData(String filename) {
         try {
             File input = new File(filename);
             Scanner scanner = new Scanner(input);
@@ -67,14 +66,24 @@ public class Day5 implements Day {
                 }
             }
 
+            populateSeedRanges();
+
             scanner.close();
         } catch (Exception e) {
             System.out.println("Error loading data: " + e.getMessage());
         }
     }
 
-    @Override
-    public long part1() {
+    private static void populateSeedRanges() {
+        for (int i = 0; i < seedIDs.size(); i++) {
+            long seedRangeStart = seedIDs.get(i);
+            long seedRangeLength = seedIDs.get(++i);
+
+            seedRanges.add(new seedRange(seedRangeStart, seedRangeLength));
+        }
+    }
+
+    public static long part1() {
         long min = Long.MAX_VALUE;
 
         for (long seedId : seedIDs) {
@@ -84,8 +93,7 @@ public class Day5 implements Day {
         return min;
     }
 
-    @Override
-    public long part2() {
+    public static long part2() {
         // This code doesn't work for the real input (too slow)
         /*
          * long min = Long.MAX_VALUE;
@@ -95,17 +103,29 @@ public class Day5 implements Day {
          *    long seedRangeLength = seedIDs.get(++i);
          *
          *    for (long seed = seedRangeStart; seed < seedRangeStart + seedRangeLength; seed++) {
-         *        min = Math.min(min, con+v*ertSeedToLocation(seed));
+         *        min = Math.min(min, convertSeedToLocation(seed));
          *    }
          * }
 
          * return min;
          */
 
-        return GA.part2();
+        long min = Long.MAX_VALUE;
+
+        for (int i = 0; i < seedIDs.size(); i++) {
+            long seedRangeStart = seedIDs.get(i);
+            long seedRangeLength = seedIDs.get(++i);
+            for (long seed = seedRangeStart; seed < seedRangeStart + seedRangeLength; seed++) {
+                min = Math.min(min, mapSeedToLocation(seed));
+            }
+        }
+
+        return min;
+
+//        return -1;
     }
 
-    private long mapSeedToLocation(long seedID) {
+    public static long mapSeedToLocation(long seedID) {
         long currentValue = seedID;
 
         // apply all mappings
@@ -116,7 +136,34 @@ public class Day5 implements Day {
         return currentValue;
     }
 
-    class Map {
+    public static long convertIntArrToLong(int[] arr) {
+        long result = 0;
+        for (int i = 0; i < arr.length; i++) {
+            result += arr[arr.length - 1 - i] * Math.pow(10, i);
+        }
+        return result;
+    }
+
+    // very inefficient, but I don't have time to fix it
+    public static int[] convertLongToIntArr(long l, int length) {
+        String s = String.valueOf(l);
+        int[] result = new int[length];
+        for (int i = 0; i < s.length(); i++) {
+            result[length - 1 - i] = Integer.parseInt(String.valueOf(s.charAt(i)));
+        }
+        return result;
+    }
+
+    public static boolean checkRangesContain(long l) {
+        for (seedRange range : seedRanges) {
+            if (range.seedRangeStart() <= l && l <= range.seedRangeStart() + range.seedRangeLength()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static class Map {
         ArrayList<Range> ranges = new ArrayList<>();
 
         public Map() {
@@ -141,7 +188,7 @@ public class Day5 implements Day {
         }
     }
 
-    class Range {
+    static class Range {
         IntervalLong destination;
         IntervalLong source;
         long length;
@@ -158,6 +205,57 @@ public class Day5 implements Day {
 
         long convertValue(long value) {
             return value + destination.left - source.left;
+        }
+    }
+
+    static class IntervalLong {
+        public final long left;
+        public final long right;
+
+        public IntervalLong(long x, long y) {
+            this.left = Math.min(x, y);
+            this.right = Math.max(x, y);
+        }
+
+        public boolean contains(long a) {
+            return left <= a && a <= right;
+        }
+
+        public boolean contains(IntervalLong a) {
+            return left <= a.left && a.right <= right;
+        }
+
+        public boolean overlaps(IntervalLong a) {
+            return overlapsLower(a) || overlapsUpper(a);
+        }
+
+        public boolean overlapsLower(IntervalLong a) {
+            return a.left <= left && left <= a.right && a.right <= right;
+        }
+
+        public boolean overlapsUpper(IntervalLong a) {
+            return left <= a.left && a.left <= right && right <= a.right;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            IntervalLong interval = (IntervalLong) o;
+            return left == interval.left && right == interval.right;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(left, right);
+        }
+
+        @Override
+        public String toString() {
+            return "Interval{" +
+                    "left=" + left +
+                    ", right=" + right +
+                    '}';
         }
     }
 }
