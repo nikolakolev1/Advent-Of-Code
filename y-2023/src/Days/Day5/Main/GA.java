@@ -1,9 +1,13 @@
 package Days.Day5.Main;
 
 import Days.Day5.Enums.*;
-import Days.Day5.Problems.*;
+import Days.Day5.Problems.AocDay5;
+import Days.Day5.Problems.FTTx;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 // Author: Nikola Kolev
@@ -97,7 +101,6 @@ public class GA {
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -117,7 +120,6 @@ public class GA {
             return (long) GA.fitness(GA.bestIndividual_EntireRun);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            e.printStackTrace();
         }
 
         return -1;
@@ -183,29 +185,8 @@ public class GA {
         GA.minOrMax = fitnessFunction.getMinMax();
 
         // variables that must be set, depending on the switches
-        if (fitnessFunction == FITNESS_FUNC.QuadEquationBoolArray) {
-            if (Equation.valuesAtPoints == null) Equation.populateValuesAtPoints();
-        } else if (fitnessFunc == FITNESS_FUNC.Tsp) {
-            if (TSP.costMatrix == null) {
-                if (TSP.filename != null) TSP.loadMatrix(TSP.filename);
-                else TSP.createMatrix();
-            }
-        } else if (fitnessFunc == FITNESS_FUNC.FTTxNVP) {
-            if (FTTx.households == null) {
-                if (FTTx.parametersFilename != null) {
-                    FTTx.loadParameters();
-                    FTTx.loadHouseholds();
-                } else {
-                    FTTx.defaultParams();
-                }
-            }
-        } else if (fitnessFunction == FITNESS_FUNC.SequentialCovering) {
-            if (SequentialCovering.filename == null) throw new Exception("Sequential Covering filename not set");
-            else SequentialCovering.setTrainingData();
-        } else if (fitnessFunction == FITNESS_FUNC.AocDay5) {
-            if (AocDay5.filename == null) throw new Exception("AocDay5 filename not set");
-            else AocDay5.loadData(AocDay5.filename);
-        }
+        if (AocDay5.filename == null) throw new Exception("AocDay5 filename not set");
+        else AocDay5.loadData(AocDay5.filename);
     }
 
     protected static void setSettings(int BITS,
@@ -237,76 +218,7 @@ public class GA {
         if (elitism) oldPopulationSorted = new ArrayList<>(); // keep track of the best parents if using elitism
     }
 
-    private static Individual[] randomPopulation() throws Exception {
-        switch (individualType) {
-            case boolArray, intArray -> {
-                return randPopulation_Normal();
-            }
-            case tspIntArray -> {
-                return randPopulation_Tsp();
-            }
-            case fttxIntArray -> {
-                return randPopulation_FTTx();
-            }
-            case aocIntArray -> {
-                return randPopulation_AOC();
-            }
-            default -> throw new Exception("Select a valid individual type");
-        }
-    }
-
-    private static Individual[] randPopulation_Normal() {
-        Individual[] population = new Individual[POPULATION_SIZE];
-
-        for (int i = 0; i < POPULATION_SIZE; i++) {
-            // create a random individual at index i
-            population[i] = new Individual(individualType, BITS);
-        }
-
-        return population;
-    }
-
-    private static Individual[] randPopulation_Tsp() {
-        Individual[] population = new Individual[POPULATION_SIZE];
-
-        for (int i = 0; i < POPULATION_SIZE; i++) {
-            // create an ArrayList with all the cities (in order)
-            ArrayList<Integer> individualI = new ArrayList<>();
-
-            int city = 0;
-            while (city < BITS) individualI.add(city++);
-
-            // shuffle the ArrayList
-            Collections.shuffle(individualI);
-
-            // convert the ArrayList to int[]
-            int[] individual = new int[BITS];
-            city = 0;
-            while (city < BITS) individual[city] = individualI.get(city++);
-
-            population[i] = new Individual(individual);
-        }
-
-        return population;
-    }
-
-    private static Individual[] randPopulation_FTTx() {
-        Individual[] population = new Individual[POPULATION_SIZE];
-
-        for (int i = 0; i < POPULATION_SIZE; i++) {
-            int[] individualI = new int[FTTx.noOfAreas];
-
-            for (int j = 0; j < individualI.length; j++) {
-                individualI[j] = (int) (Math.random() * (FTTx.maxRolloutPeriod + 1));
-            }
-
-            population[i] = new Individual(individualI);
-        }
-
-        return population;
-    }
-
-    private static Individual[] randPopulation_AOC() {
+    private static Individual[] randomPopulation() {
         Individual[] population = new Individual[POPULATION_SIZE];
 
         Random random = new Random();
@@ -341,96 +253,7 @@ public class GA {
     }
 
     protected static double fitness(Individual individual) throws Exception {
-        switch (fitnessFunc) {
-            case MostBitsOn -> {
-                return fitness_MostGenesOn(individual.individualB);
-            }
-            case LeastBitsOn -> {
-                return fitness_LeastGenesOn(individual.individualB);
-            }
-            case QuadEquationBoolArray -> {
-                return fitness_QuadraticEquation(individual.individualB);
-            }
-            case Tsp -> {
-                return fitness_Tsp(individual.individualI);
-            }
-            case FTTxNVP -> {
-                return fitness_FTTx(individual.individualI);
-            }
-            case SequentialCovering -> {
-                return fitness_SequentialCovering(individual.individualB);
-            }
-            case AocDay5 -> {
-                return fitness_AocDay5(individual.individualI);
-            }
-            default -> throw new Exception("Select a valid fitness function");
-        }
-    }
-
-    private static double fitness_MostGenesOn(boolean[] individual) {
-        double fitness = 0.0;
-
-        for (boolean bit : individual) {
-            if (bit) fitness++;
-        }
-
-        return fitness;
-    }
-
-    private static double fitness_LeastGenesOn(boolean[] individual) {
-        double fitness = 0.0;
-
-        for (boolean bit : individual) {
-            if (!bit) fitness++;
-        }
-
-        return fitness;
-    }
-
-    private static double fitness_QuadraticEquation(boolean[] individual) throws Exception {
-        if (!Equation.evaluateParameters())
-            throw new Exception("Set appropriate parameters for the quadratic equation");
-
-        int numberLengthBits = BITS / Equation.NUMBERS_TO_FIND.length;
-        int[] numbers = new int[Equation.NUMBERS_TO_FIND.length];
-
-        for (int i = 0; i < Equation.NUMBERS_TO_FIND.length; i++) {
-            int from = i * numberLengthBits;
-            int to = from + numberLengthBits;
-            numbers[i] = Equation.binaryToDecimal(Arrays.copyOfRange(individual, from, to));
-        }
-
-        double difference = 0.0;
-
-        HashMap<Double, Double> results = Equation.quadraticEquationSolver(numbers);
-        for (Double key : results.keySet()) {
-            difference += Math.abs(Equation.valuesAtPoints.get(key) - results.get(key));
-        }
-
-        return difference;
-    }
-
-    private static double fitness_Tsp(int[] individual) {
-        double fitness = 0.0;
-
-        for (int i = 0; i < individual.length - 1; i++) {
-            fitness += TSP.costMatrix[individual[i]][individual[i + 1]];
-        }
-        fitness += TSP.costMatrix[individual[individual.length - 1]][individual[0]];
-
-        return fitness;
-    }
-
-    private static double fitness_FTTx(int[] individual) {
-        return FTTx.npv(individual);
-    }
-
-    private static double fitness_SequentialCovering(boolean[] individual) {
-        return SequentialCovering.fitness(individual);
-    }
-
-    private static double fitness_AocDay5(int[] individual) {
-        long l = AocDay5.convertIntArrToLong(individual);
+        long l = AocDay5.convertIntArrToLong(individual.individualI);
 
         if (AocDay5.checkRangesContain(l)) return AocDay5.mapSeedToLocation(l);
         else return Double.MAX_VALUE;
@@ -465,32 +288,6 @@ public class GA {
 
     // ------------------------------------- Selection -------------------------------------
     private static Individual[] selection() throws Exception {
-        switch (selection) {
-            case Roulette -> {
-                rouletteSelect();
-                return population;
-            }
-            case Tournament -> {
-                return tournamentSelect();
-            }
-            default -> throw new Exception("Select a valid selection method");
-        }
-    }
-
-    // only works with positive fitness (and maximisation problems)
-    private static void rouletteSelect() throws Exception {
-        prejudice = new ArrayList<>();
-
-        double cumulative = 0.0;
-        double totalFitness = totalFitness();
-
-        for (Individual individual : population) {
-            cumulative += fitness(individual) / totalFitness;
-            prejudice.add(cumulative);
-        }
-    }
-
-    private static Individual[] tournamentSelect() {
         ArrayList<Individual> selectedIndividuals = new ArrayList<>();
 
         // create a shuffled array of indexes
@@ -514,7 +311,6 @@ public class GA {
         return selectedIndividuals.toArray(new Individual[0]);
     }
 
-    // using the fitness[] array
     private static Individual findBestIndividual(int from, int to) {
         int bestInd_index = from;
 
@@ -525,7 +321,6 @@ public class GA {
         return population[bestInd_index];
     }
 
-    // using the fitness[] array
     private static Individual findBestIndividual(int[] indexes) {
         int bestInd_index = indexes[0];
 
@@ -536,7 +331,6 @@ public class GA {
         return population[bestInd_index];
     }
 
-    // using the fitness[] array
     protected static Individual findBestIndividual() {
         return findBestIndividual(0, POPULATION_SIZE);
     }
@@ -650,247 +444,52 @@ public class GA {
         Individual p1copy = parent1.copyItself();
         Individual p2copy = parent2.copyItself();
 
-        switch (crossover) {
-            case SinglePoint_Simple -> {
-                return crossover_SinglePoint_Simple(p1copy, p2copy);
-            }
-            case nPoint_Simple -> {
-                return crossover_nPoint_Simple(p1copy, p2copy);
-            }
-            case Uniform_Simple -> {
-                return crossover_Uniform_Simple(p1copy, p2copy);
-            }
-            case PMX_Tsp -> {
-                return crossover_PartiallyMapped_Tsp(p1copy, p2copy);
-            }
-            case SinglePoint_FTTx -> {
-                return crossover_SinglePoint_FTTx(p1copy, p2copy);
-            }
-            default -> throw new Exception("Select a valid crossover method");
-        }
-    }
-
-    private static Individual[] crossover_SinglePoint_Simple(Individual parent1_Copy, Individual parent2_Copy) {
         if (Math.random() < CROSSOVER_PROBABILITY) {
             int crossoverPoint = (int) (Math.random() * BITS);
-            boolean[] temp = parent1_Copy.individualB.clone();
+            int[] temp = p1copy.individualI.clone();
 
-            System.arraycopy(parent2_Copy.individualB, crossoverPoint, parent1_Copy.individualB, crossoverPoint, BITS - crossoverPoint);
-            System.arraycopy(temp, crossoverPoint, parent2_Copy.individualB, crossoverPoint, BITS - crossoverPoint);
+            System.arraycopy(p2copy.individualI, crossoverPoint, p1copy.individualI, crossoverPoint, BITS - crossoverPoint);
+            System.arraycopy(temp, crossoverPoint, p2copy.individualI, crossoverPoint, BITS - crossoverPoint);
         }
 
-        return new Individual[]{parent1_Copy, parent2_Copy};
-    }
-
-    private static Individual[] crossover_nPoint_Simple(Individual parent1_Copy, Individual parent2_Copy) {
-        ArrayList<Integer> points = new ArrayList<>();
-        Random rand = new Random();
-
-        boolean[] parent1_array = parent1_Copy.individualB;
-        boolean[] parent2_array = parent2_Copy.individualB;
-        boolean[] temp = parent1_array.clone();
-
-        points.add(rand.nextInt(0, BITS));
-        while (points.size() < nPointCrossoverPoints) {
-            int randomPoint = rand.nextInt(0, BITS);
-            if (!points.contains(randomPoint)) points.add(randomPoint);
-        }
-
-        for (int point = 0; point < nPointCrossoverPoints; point++) {
-            int from = points.get(point);
-
-            if (point != nPointCrossoverPoints - 1) {
-                int to = points.get(point + 1);
-
-                System.arraycopy(parent2_array, from, parent1_array, from, (to - from));
-                System.arraycopy(temp, from, parent1_array, from, (to - from));
-            } else {
-                System.arraycopy(parent2_array, from, parent1_array, from, (BITS - from));
-                System.arraycopy(temp, from, parent1_array, from, (BITS - from));
-            }
-        }
-
-        return new Individual[]{parent1_Copy, parent2_Copy};
-    }
-
-    private static Individual[] crossover_Uniform_Simple(Individual parent1_Copy, Individual parent2_Copy) {
-        boolean[] parent1_array = parent1_Copy.individualB;
-        boolean[] parent2_array = parent2_Copy.individualB;
-        boolean[] temp = parent1_Copy.individualB.clone();
-
-        for (int bit = 0; bit < BITS; bit++) {
-            if (Math.random() < CROSSOVER_PROBABILITY) {
-                System.arraycopy(parent2_array, bit, parent1_array, bit, 1);
-                System.arraycopy(temp, bit, parent1_array, bit, 1);
-            }
-        }
-
-        return new Individual[]{parent1_Copy, parent2_Copy};
-    }
-
-    private static Individual[] crossover_PartiallyMapped_Tsp(Individual parent1_Copy, Individual parent2_Copy) {
-        int[] parent1 = parent1_Copy.individualI;
-        int[] parent2 = parent2_Copy.individualI;
-
-        int[] offspring1 = parent1.clone();
-        int[] offspring2 = parent2.clone();
-
-        int crossoverPoint1 = (int) (Math.random() * BITS);
-        int crossoverPoint2 = (int) (Math.random() * BITS);
-
-        // make sure crossoverPoint1 <= crossoverPoint2
-        if (crossoverPoint1 > crossoverPoint2) {
-            int temp = crossoverPoint1;
-            crossoverPoint1 = crossoverPoint2;
-            crossoverPoint2 = temp;
-        }
-
-        // record who is given what, to fix the duplicates later
-        ArrayList<Integer> parent1GaveOffspring2 = new ArrayList<>();
-        ArrayList<Integer> parent2GaveOffspring1 = new ArrayList<>();
-
-        // crossover
-        for (int i = crossoverPoint1; i < crossoverPoint2 + 1; i++) {
-            offspring1[i] = parent2[i];
-            offspring2[i] = parent1[i];
-
-            parent1GaveOffspring2.add(parent1[i]);
-            parent2GaveOffspring1.add(parent2[i]);
-        }
-
-        // fix duplicate genes
-        handleDuplicateGenes(offspring1, parent1GaveOffspring2, parent2GaveOffspring1, crossoverPoint1, crossoverPoint2);
-        handleDuplicateGenes(offspring2, parent2GaveOffspring1, parent1GaveOffspring2, crossoverPoint1, crossoverPoint2);
-
-        return new Individual[]{new Individual(offspring1), new Individual(offspring2)};
-    }
-
-    private static void handleDuplicateGenes(int[] offspring, ArrayList<Integer> youGave, ArrayList<Integer> youReceived, int from, int to) {
-        // fix duplicate genes in the beginning of the offspring DNA
-        for (int i = 0; i < from; i++) {
-            if (youReceived.contains(offspring[i])) {
-                offspring[i] = youGave.get(youReceived.indexOf(offspring[i]));
-                i = -1;
-            }
-        }
-
-        // fix duplicate genes after the second crossover point
-        for (int i = to + 1; i < offspring.length; i++) {
-            if (youReceived.contains(offspring[i])) {
-                offspring[i] = youGave.get(youReceived.indexOf(offspring[i]));
-                i = to;
-            }
-        }
-    }
-
-    private static Individual[] crossover_SinglePoint_FTTx(Individual parent1_Copy, Individual parent2_Copy) {
-        if (Math.random() < CROSSOVER_PROBABILITY) {
-            int crossoverPoint = (int) (Math.random() * BITS);
-            int[] temp = parent1_Copy.individualI.clone();
-
-            System.arraycopy(parent2_Copy.individualI, crossoverPoint, parent1_Copy.individualI, crossoverPoint, BITS - crossoverPoint);
-            System.arraycopy(temp, crossoverPoint, parent2_Copy.individualI, crossoverPoint, BITS - crossoverPoint);
-        }
-
-        return new Individual[]{parent1_Copy, parent2_Copy};
+        return new Individual[]{p1copy, p2copy};
     }
 
     private static void mutation(Individual[] offspringPopulation) {
         for (Individual individual : offspringPopulation) {
-            if (mutation == MUTATION.Uniform_Bool) mutateUniform(individual.individualB);
-            else if (Math.random() < MUTATION_PROBABILITY) {
-                switch (mutation) {
-                    case SinglePoint_Bool -> mutationSinglePoint(individual.individualB);
-                    case Exchange_Tsp -> mutateExchange(individual.individualI);
-                    case Inversion_Tsp -> mutateInversion(individual.individualI);
-                    case Arithmetic_FTTx -> mutateArithmeticFTTx(individual.individualI);
-                    default -> throw new IllegalStateException("Unexpected value: " + mutation);
-                }
-            }
-        }
-    }
-
-    // Simple mutation on a bit level - many bits in an individual may mutate (for boolean arrays)
-    private static void mutateUniform(boolean[] individualB) {
-        for (int bit = 0; bit < individualB.length; bit++) {
             if (Math.random() < MUTATION_PROBABILITY) {
-                individualB[bit] = !individualB[bit];
+                double randOperation = Math.random();
+                int randBitIndex = (int) (Math.random() * BITS);
+                int randBit = individual.individualI[randBitIndex];
+                int randNewPeriod = (int) (Math.random() * FTTx.maxRolloutPeriod);
+
+                double addition = 0.2;
+                double subtraction = 0.4;
+                double multiplication = 0.6;
+                double division = 0.8;
+
+                if (randOperation < addition) {
+                    if (randBit < FTTx.maxRolloutPeriod) randBit++;
+                    else randBit--;
+                } else if (randOperation < subtraction) {
+                    if (randBit > 0) randBit--;
+                    else randBit++;
+                } else if (randOperation < multiplication) {
+                    if (randBit == 0) randBit = 1;
+                    else if ((randBit * 2) <= FTTx.maxRolloutPeriod) randBit *= 2;
+                    else if (randBit != FTTx.maxRolloutPeriod) randBit += 1;
+                    else randBit = 0;
+                } else if (randOperation < division) {
+                    if (randBit == 0) randBit = FTTx.maxRolloutPeriod;
+                    else if (randBit > 0) randBit /= 2;
+                    else randBit = randNewPeriod;
+                } else { // random
+                    randBit = randNewPeriod;
+                }
+
+                individual.individualI[randBitIndex] = randBit;
             }
         }
-    }
-
-    // Simple mutation on an individual level - max 1 bit in an individual may mutate (for boolean arrays)
-    private static void mutationSinglePoint(boolean[] individualB) {
-        int mutationPoint = (int) (Math.random() * BITS);
-        individualB[mutationPoint] = !individualB[mutationPoint];
-    }
-
-    // (for Problems.TSP)
-    private static void mutateExchange(int[] individualI) {
-        // choose two random bits
-        int bit1 = (int) (Math.random() * BITS);
-        int bit2 = (int) (Math.random() * BITS);
-
-        // swap them
-        int temp = individualI[bit1];
-        individualI[bit1] = individualI[bit2];
-        individualI[bit2] = temp;
-    }
-
-    // (for Problems.TSP)
-    private static void mutateInversion(int[] individualI) {
-        // choose two random bits
-        int from = (int) (Math.random() * BITS);
-        int to = (int) (Math.random() * BITS);
-
-        // make sure from <= to
-        if (from > to) {
-            int temp = from;
-            from = to;
-            to = temp;
-        }
-
-        // extract the sub-array
-        int[] temp = new int[to - from];
-        System.arraycopy(individualI, from, temp, 0, to - from);
-
-        // insert the sub-array back, but in reverse order
-        for (int i = 0; i < temp.length; i++) {
-            individualI[from + i] = temp[(temp.length - 1) - i];
-        }
-    }
-
-    private static void mutateArithmeticFTTx(int[] individualI) {
-        double randOperation = Math.random();
-        int randBitIndex = (int) (Math.random() * BITS);
-        int randBit = individualI[randBitIndex];
-        int randNewPeriod = (int) (Math.random() * FTTx.maxRolloutPeriod);
-
-        double addition = 0.2;
-        double subtraction = 0.4;
-        double multiplication = 0.6;
-        double division = 0.8;
-
-        if (randOperation < addition) {
-            if (randBit < FTTx.maxRolloutPeriod) randBit++;
-            else randBit--;
-        } else if (randOperation < subtraction) {
-            if (randBit > 0) randBit--;
-            else randBit++;
-        } else if (randOperation < multiplication) {
-            if (randBit == 0) randBit = 1;
-            else if ((randBit * 2) <= FTTx.maxRolloutPeriod) randBit *= 2;
-            else if (randBit != FTTx.maxRolloutPeriod) randBit += 1;
-            else randBit = 0;
-        } else if (randOperation < division) {
-            if (randBit == 0) randBit = FTTx.maxRolloutPeriod;
-            else if (randBit > 0) randBit /= 2;
-            else randBit = randNewPeriod;
-        } else { // random
-            randBit = randNewPeriod;
-        }
-
-        individualI[randBitIndex] = randBit;
     }
 
 
@@ -950,7 +549,6 @@ public class GA {
     private static void resetGlobals() {
         population = null;
         fitness = null;
-        if (selection == SELECTION.Roulette) prejudice = null;
         bestIndividual_EntireRun = null;
 
         oldPopulationSorted = null;

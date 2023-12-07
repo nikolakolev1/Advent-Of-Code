@@ -1,9 +1,9 @@
 package Days.Day5;
 
+import Days.Day5.Main.GA;
 import General.Day;
 import General.Helper;
 import General.IntervalLong;
-import Days.Day5.Main.GA;
 
 import java.io.File;
 import java.util.ArrayList;
