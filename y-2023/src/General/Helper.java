@@ -22,7 +22,7 @@ public class Helper {
     }
 
     public static void solveAndPrint(int dayInt) {
-        long[] answers = solve(dayInt);
+        String[] answers = solve(dayInt);
         System.out.println("*** Day " + dayInt + " ***");
         printAnswer(1, answers[0]);
         printAnswer(2, answers[1]);
@@ -30,18 +30,18 @@ public class Helper {
     }
 
     public static void solveAndPrint_Time(int dayInt) {
-        long[] answers = solve_Time(dayInt);
+        String[] answers = solve_Time(dayInt);
         System.out.println("*** Day " + dayInt + " ***");
-        printAnswer(1, (int) answers[P1], answers[P1_TIME]);
-        printAnswer(2, (int) answers[P2], answers[P2_TIME]);
+        printAnswer(1, answers[P1], answers[P1_TIME]);
+        printAnswer(2, answers[P2], answers[P2_TIME]);
         System.out.println();
     }
 
-    public static void printAnswer(int part, long answer) {
+    public static void printAnswer(int part, String answer) {
         System.out.println("Part " + part + " : " + answer);
     }
 
-    public static void printAnswer(int part, int answer, long time) {
+    public static void printAnswer(int part, String answer, String time) {
         System.out.println("Part " + part + ": " + answer + " (" + time + "ms)");
     }
 
@@ -76,32 +76,29 @@ public class Helper {
         };
     }
 
-    private static long[] solve(int dayInt) {
+    private static String[] solve(int dayInt) {
         Day day = getDay(dayInt);
 
         day.loadData(filename(dayInt));
 
-        long p1_answer = day.part1();
-        long p2_answer = day.part2();
-
-        return new long[]{p1_answer, p2_answer};
+        return new String[]{day.part1(), day.part2()};
     }
 
-    private static long[] solve_Time(int dayInt) {
+    private static String[] solve_Time(int dayInt) {
         Day day = getDay(dayInt);
 
         day.loadData(filename(dayInt));
 
         long p1_start = System.nanoTime();
-        long p1_answer = day.part1();
+        String p1_answer = day.part1();
         long p1_end = System.nanoTime();
-        long p1_time_ms = (p1_end - p1_start) / 1000000;
+        String p1_time_ms = String.valueOf((p1_end - p1_start) / 1000000);
 
         long p2_start = System.nanoTime();
-        long p2_answer = day.part2();
+        String p2_answer = day.part2();
         long p2_end = System.nanoTime();
-        long p2_time_ms = (p2_end - p2_start) / 1000000;
+        String p2_time_ms = String.valueOf((p2_end - p2_start) / 1000000);
 
-        return new long[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
+        return new String[]{p1_answer, p2_answer, p1_time_ms, p2_time_ms};
     }
 }

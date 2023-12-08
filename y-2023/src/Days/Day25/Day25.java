@@ -27,13 +27,11 @@ public class Day25 {
         }
     }
 
-    public static int part1() {
-        Helper.printAnswer(1, -1);
-        return 0;
+    public static String part1() {
+        return "to be implemented";
     }
 
-    public static int part2() {
-        Helper.printAnswer(2, -1);
-        return 0;
+    public static String part2() {
+        return "to be implemented";
     }
 }

@@ -79,7 +79,7 @@ public class Day5_Part2 implements Day {
     }
 
     @Override
-    public long part1() {
+    public String part1() {
         Map seedToSoilMap = mergeAllMaps(maps);
 
         long min = Long.MAX_VALUE;
@@ -88,11 +88,11 @@ public class Day5_Part2 implements Day {
             min = Math.min(min, mapSeedToLocation(seedId, seedToSoilMap));
         }
 
-        return min;
+        return String.valueOf(min);
     }
 
     @Override
-    public long part2() {
+    public String part2() {
         Map seedToSoilMap = mergeAllMaps(maps);
 
         long min = Long.MAX_VALUE;
@@ -115,7 +115,7 @@ public class Day5_Part2 implements Day {
             }
         }
 
-        return min;
+        return String.valueOf(min);
     }
 
     private long mapSeedToLocation(long seedID, Map map) {

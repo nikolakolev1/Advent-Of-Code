@@ -47,7 +47,7 @@ public class Day3 implements Day {
      * - this doesn't work for numbers that are covered more than once by a symbol
      */
     @Override
-    public long part1() {
+    public String part1() {
         int sum = 0;
 
         List<Integer> nums = findAllNums();
@@ -55,11 +55,11 @@ public class Day3 implements Day {
             sum += num;
         }
 
-        return sum;
+        return String.valueOf(sum);
     }
 
     @Override
-    public long part2() {
+    public String part2() {
         int sum = 0;
 
         List<Integer> gears = findAllGears();
@@ -67,7 +67,7 @@ public class Day3 implements Day {
             sum += gear;
         }
 
-        return sum;
+        return String.valueOf(sum);
     }
 
     private List<Integer> findAllNums() {

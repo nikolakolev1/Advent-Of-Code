@@ -56,7 +56,7 @@ public class Day4 implements Day {
     }
 
     @Override
-    public long part1() {
+    public String part1() {
         int sum = 0;
 
         int scratchcards = winningNums.size(); // to avoid calling size() every iteration
@@ -69,11 +69,11 @@ public class Day4 implements Day {
             }
         }
 
-        return sum;
+        return String.valueOf(sum);
     }
 
     @Override
-    public long part2() {
+    public String part2() {
         int scratchcards = winningNums.size(); // to avoid calling size() every iteration
 
         for (int i = 0; i < scratchcards; i++) {
@@ -86,8 +86,8 @@ public class Day4 implements Day {
         }
 
         // return the sum of all copies
-        return copies.stream()
-                .reduce(0, Integer::sum);
+        return String.valueOf(copies.stream()
+                .reduce(0, Integer::sum));
     }
 
     private static int countMatches(HashSet<Integer> winningSet, ArrayList<Integer> yourList) {

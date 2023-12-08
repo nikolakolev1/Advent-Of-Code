@@ -6,7 +6,7 @@ import General.Helper;
 import java.io.File;
 import java.util.Scanner;
 
-public class Day9  implements Day {
+public class Day9 implements Day {
     public static void main(String[] args) {
         Day day9 = new Day9();
         day9.loadData(Helper.filename(9));
@@ -31,14 +31,12 @@ public class Day9  implements Day {
     }
 
     @Override
-    public long part1() {
-        Helper.printAnswer(1, -1);
-        return 0;
+    public String part1() {
+        return "to be implemented";
     }
 
     @Override
-    public long part2() {
-        Helper.printAnswer(2, -1);
-        return 0;
+    public String part2() {
+        return "to be implemented";
     }
 }

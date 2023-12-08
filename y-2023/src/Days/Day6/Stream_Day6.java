@@ -72,13 +72,13 @@ public class Stream_Day6 implements Day {
     }
 
     @Override
-    public long part1() {
-        return races.stream().map(this::countBetter).reduce(1, (a, b) -> a * b);
+    public String part1() {
+        return String.valueOf(races.stream().map(this::countBetter).reduce(1, (a, b) -> a * b));
     }
 
     @Override
-    public long part2() {
-        return getLastBetterIndex(raceP2) - getFirstBetterIndex(raceP2) + 1;
+    public String part2() {
+        return String.valueOf(getLastBetterIndex(raceP2) - getFirstBetterIndex(raceP2) + 1);
     }
 
     private long distance(long t, long x) {

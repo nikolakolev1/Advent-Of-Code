@@ -20,7 +20,7 @@ public class Other {
             int p1_answer = part1();
             long p1_end = System.nanoTime();
             long p1_time = (p1_end - p1_start) / 1000000;
-            Helper.printAnswer(1, p1_answer, p1_time);
+            Helper.printAnswer(1, String.valueOf(p1_answer), String.valueOf(p1_time));
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }

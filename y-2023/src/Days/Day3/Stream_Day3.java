@@ -42,17 +42,17 @@ public class Stream_Day3 implements Day {
     }
 
     @Override
-    public long part1() {
-        return findAllNumbers().stream()
+    public String part1() {
+        return String.valueOf(findAllNumbers().stream()
                 .mapToInt(Integer::intValue)
-                .sum();
+                .sum());
     }
 
     @Override
-    public long part2() {
-        return findAllGears().stream()
+    public String part2() {
+        return String.valueOf(findAllGears().stream()
                 .mapToInt(Integer::intValue)
-                .sum();
+                .sum());
     }
 
     private List<Integer> findAllNumbers() {

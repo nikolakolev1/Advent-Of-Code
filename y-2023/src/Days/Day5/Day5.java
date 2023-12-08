@@ -74,18 +74,18 @@ public class Day5 implements Day {
     }
 
     @Override
-    public long part1() {
+    public String part1() {
         long min = Long.MAX_VALUE;
 
         for (long seedId : seedIDs) {
             min = Math.min(min, mapSeedToLocation(seedId));
         }
 
-        return min;
+        return String.valueOf(min);
     }
 
     @Override
-    public long part2() {
+    public String part2() {
         // This code doesn't work for the real input (too slow)
         /*
          * long min = Long.MAX_VALUE;
@@ -102,7 +102,7 @@ public class Day5 implements Day {
          * return min;
          */
 
-        return GA.part2();
+        return String.valueOf(GA.part2());
     }
 
     private long mapSeedToLocation(long seedID) {

@@ -54,7 +54,7 @@ public class Day2 implements Day {
     }
 
     @Override
-    public long part1() {
+    public String part1() {
         int dataSize = data.size(); // avoid calling .size() every iteration
 
         int sum = 0;
@@ -66,11 +66,11 @@ public class Day2 implements Day {
             }
         }
 
-        return sum;
+        return String.valueOf(sum);
     }
 
     @Override
-    public long part2() {
+    public String part2() {
         int sum = 0;
 
         // for each game, add the product of the max values for each color
@@ -78,6 +78,6 @@ public class Day2 implements Day {
             sum += (rgbValues[RED_I] * rgbValues[GREEN_I] * rgbValues[BLUE_I]);
         }
 
-        return sum;
+        return String.valueOf(sum);
     }
 }

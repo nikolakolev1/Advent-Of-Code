@@ -69,18 +69,18 @@ public class Day7 implements Day {
     }
 
     @Override
-    public long part1() {
+    public String part1() {
         for (ArrayList<hand_bid> handsList_combination : handsByCombination) {
             handsList_combination.sort((o1, o2) -> myComparator.compare(o1.hand, o2.hand));
 
             hands.addAll(handsList_combination);
         }
 
-        return calcResult();
+        return String.valueOf(calcResult());
     }
 
     @Override
-    public long part2() {
+    public String part2() {
         hands = new ArrayList<>();
 
         for (ArrayList<hand_bid> hands_combination : handsByCombination_P2) {
@@ -89,7 +89,7 @@ public class Day7 implements Day {
             hands.addAll(hands_combination);
         }
 
-        return calcResult();
+        return String.valueOf(calcResult());
     }
 
     private void initialize() {

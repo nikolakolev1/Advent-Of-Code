@@ -78,19 +78,20 @@ public class Day6 implements Day {
     }
 
     @Override
-    public long part1() {
+    public String part1() {
         ArrayList<Integer> better = new ArrayList<>();
 
         for (Race race : races) {
             better.add(countBetter(race));
         }
 
-        return better.stream().reduce(1, (a, b) -> a * b);
+        return String.valueOf(better.stream()
+                .reduce(1, (a, b) -> a * b));
     }
 
     @Override
-    public long part2() {
-        return getLastBetterIndex(raceP2) - getFirstBetterIndex(raceP2) + 1;
+    public String part2() {
+        return String.valueOf(getLastBetterIndex(raceP2) - getFirstBetterIndex(raceP2) + 1);
     }
 
     private long distance(long t, long x) {
