@@ -169,7 +169,6 @@ public class Day8 implements Day {
             lcm = lcm.multiply(new BigInteger(String.valueOf(commonMultiple)));
         }
 
-        // finish this
         return lcm;
     }
 
