@@ -52,8 +52,8 @@ public record Coordinate(int x, int y, char tile) implements Comparable<Coordina
     }
 
     public boolean isInsidePolygon(List<Coordinate> polygon) {
-        int[] vertx = polygon.stream().map(c -> c.x()).mapToInt(x -> x).toArray();
-        int[] verty = polygon.stream().map(c -> c.y()).mapToInt(y -> y).toArray();
+        int[] vertx = polygon.stream().map(Coordinate::x).mapToInt(x -> x).toArray();
+        int[] verty = polygon.stream().map(Coordinate::y).mapToInt(y -> y).toArray();
         int nvert = polygon.size();
         int i, j;
         boolean c = false;
@@ -98,9 +98,7 @@ public record Coordinate(int x, int y, char tile) implements Comparable<Coordina
         Coordinate other = (Coordinate) obj;
         if (x != other.x)
             return false;
-        if (y != other.y)
-            return false;
-        return true;
+        return y == other.y;
     }
 
 }

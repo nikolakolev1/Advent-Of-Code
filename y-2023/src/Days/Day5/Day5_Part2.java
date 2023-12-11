@@ -211,7 +211,7 @@ public class Day5_Part2 implements Day {
     private Map mergeAllMaps(ArrayList<Map> allMaps) {
         Map mergedMap = new Map();
 
-        Map map1 = allMaps.get(0);
+        Map map1 = allMaps.getFirst();
         for (int i = 1; i < allMaps.size() - 1; i++) {
             Map map2 = allMaps.get(i);
 

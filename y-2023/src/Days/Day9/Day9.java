@@ -72,7 +72,7 @@ public class Day9 implements Day {
 
         List<Integer> nextSequence = new ArrayList<>();
 
-        for (int i = 1, num1 = sequence.get(0), size = sequence.size(); i < size; i++) {
+        for (int i = 1, num1 = sequence.getFirst(), size = sequence.size(); i < size; i++) {
             int num2 = sequence.get(i);
             nextSequence.add(num2 - num1);
             num1 = num2;
@@ -98,11 +98,11 @@ public class Day9 implements Day {
         children.add(sequence);
 
         do {
-            List<Integer> nextSequence = getNextSequence(children.get(children.size() - 1));
+            List<Integer> nextSequence = getNextSequence(children.getLast());
             children.add(nextSequence);
-        } while (notAllZeroes(children.get(children.size() - 1)));
+        } while (notAllZeroes(children.getLast()));
 
-        children.get(children.size() - 1).add(0);
+        children.getLast().add(0);
 
         for (int i = children.size() - 2; i >= 0; i--) {
             List<Integer> currentSequence = children.get(i);
@@ -110,11 +110,11 @@ public class Day9 implements Day {
             currentSequence.add(nextNumber);
         }
 
-        return children.get(0).get(children.get(0).size() - 1);
+        return children.getFirst().getLast();
     }
 
     private int getNextNumber(List<Integer> sequence, int difference) {
-        return sequence.get(sequence.size() - 1) + difference;
+        return sequence.getLast() + difference;
     }
 
     // ------------------- PART 2 ------------------- //
@@ -124,9 +124,9 @@ public class Day9 implements Day {
         children.add(sequence);
 
         do {
-            List<Integer> nextSequence = getNextSequence(children.get(children.size() - 1));
+            List<Integer> nextSequence = getNextSequence(children.getLast());
             children.add(nextSequence);
-        } while (notAllZeroes(children.get(children.size() - 1)));
+        } while (notAllZeroes(children.getLast()));
 
         int prevNumber = 0;
 
@@ -138,6 +138,6 @@ public class Day9 implements Day {
     }
 
     private int getPrevNumber(List<Integer> sequence, int difference) {
-        return sequence.get(0) - difference;
+        return sequence.getFirst() - difference;
     }
 }

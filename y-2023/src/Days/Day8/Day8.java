@@ -43,7 +43,7 @@ public class Day8 implements Day {
                 }
 
                 nodes.add(new Node(line.substring(0, 3)));
-                nodeMap.put(line.substring(0, 3), nodes.get(nodes.size() - 1));
+                nodeMap.put(line.substring(0, 3), nodes.getLast());
             }
 
             scanner = new Scanner(input);

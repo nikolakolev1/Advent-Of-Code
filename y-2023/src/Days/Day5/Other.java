@@ -64,7 +64,7 @@ public class Other {
         tstR.add(new Range(8, 11));
         tstR.add(new Range(19, 21));
         printRanges(tstR);
-        System.out.println("apply " + tst.maps.get(0));
+        System.out.println("apply " + tst.maps.getFirst());
         tstR = tst.map(tstR);
         printRanges(tstR);
     }
