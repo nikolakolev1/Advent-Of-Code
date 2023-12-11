@@ -65,7 +65,7 @@ public class Day10 implements Day {
 
     public String part2() {
         clearTubes();
-        map = new Boolean[tubes.size()][tubes.get(0).size()]; // (false -> outside the loop, true -> the loop border, null -> inside the loop)
+        map = new Boolean[tubes.size()][tubes.getFirst().size()]; // (false -> outside the loop, true -> the loop border, null -> inside the loop)
 
         for (Tube tube : loop) {
             int y = tube.y, x = tube.x;
@@ -144,7 +144,7 @@ public class Day10 implements Day {
     // Begging of part 2
     public void clearTubes() {
         for (int y = 0; y < tubes.size(); y++) {
-            for (int x = 0; x < tubes.get(0).size(); x++) {
+            for (int x = 0; x < tubes.getFirst().size(); x++) {
                 tubes.get(y).set(x, new Tube('.', x, y));
             }
         }
@@ -162,7 +162,7 @@ public class Day10 implements Day {
 
     public void printMap(Boolean[][] map) {
         for (int y = 0; y < tubes.size(); y++) {
-            for (int x = 0; x < tubes.get(0).size(); x++) {
+            for (int x = 0; x < tubes.getFirst().size(); x++) {
                 if (map[y][x] == null) {
                     System.out.print("I");
                 } else if (map[y][x]) {
@@ -182,7 +182,7 @@ public class Day10 implements Day {
         int x = tube.x;
         int y = tube.y;
 
-        int width = tubes.get(0).size();
+        int width = tubes.getFirst().size();
 
         // top row
         if (y > 0) {
@@ -213,7 +213,7 @@ public class Day10 implements Day {
         int count = 0;
 
         for (int i = 0; i < tubes.size(); i++) {
-            for (int j = 0; j < tubes.get(0).size(); j++) {
+            for (int j = 0; j < tubes.getFirst().size(); j++) {
                 if (map[i][j] == null && tubes.get(i).get(j).value == '.') {
                     count++;
                 }
@@ -261,7 +261,7 @@ public class Day10 implements Day {
 
     public Tube findTubeGoingClockwise() {
         for (int y = 0; y < tubes.size(); y++) {
-            for (int x = 0; x < tubes.get(0).size(); x++) {
+            for (int x = 0; x < tubes.getFirst().size(); x++) {
                 char val = get(y, x).value;
                 if (val == '-') {
                     return get(y, x);
@@ -305,7 +305,7 @@ public class Day10 implements Day {
                 if (y > 0) return get(y - 1, x);
             }
             case EAST -> {
-                if (x < tubes.get(0).size() - 1) return get(y, x + 1);
+                if (x < tubes.getFirst().size() - 1) return get(y, x + 1);
             }
             default -> throw new IllegalStateException("Unexpected value: " + LEFT);
         }
