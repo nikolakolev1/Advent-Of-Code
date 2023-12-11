@@ -115,9 +115,7 @@ public class Day8 implements Day {
             int stepsForNode = getStepsForNode_P2(node);
 
             steps.add(stepsForNode);
-//            System.out.print(stepsForNode + ", ");
         }
-//        System.out.println();
 
         return LCM(steps).toString();
     }
