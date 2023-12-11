@@ -16,6 +16,8 @@ public class Main {
             Helper.solveAndPrint_Time(7);
             Helper.solveAndPrint_Time(8);
             Helper.solveAndPrint_Time(9);
+            Helper.solveAndPrint_Time(10);
+            Helper.solveAndPrint_Time(11);
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
