@@ -1,13 +1,9 @@
 package Days.Day5.Main;
 
-import Days.Day5.Enums.*;
 import Days.Day5.Problems.AocDay5;
 import Days.Day5.Problems.FTTx;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.IntStream;
 
 // Author: Nikola Kolev
@@ -28,17 +24,8 @@ import java.util.stream.IntStream;
  * </ul>
  */
 public class GA {
-    // ------------------------------------- Switches -------------------------------------
-    protected static INDIVIDUAL_TYPE individualType;
-    protected static SELECTION selection;
-    protected static FITNESS_FUNC fitnessFunc;
-    protected static CROSSOVER crossover;
-    protected static MUTATION mutation;
-    protected static MIN_MAX minOrMax;
-
-
     // ------------------------------------- Elitism -------------------------------------
-    protected static boolean elitism;
+    protected static boolean elitism = true;
     private static ArrayList<Individual> oldPopulationSorted;
     private static final int eliteIndividualsCount = 2;
 
@@ -59,57 +46,23 @@ public class GA {
      * </ul>
      * MAX_GENERATION - number of generations the algorithm will run for
      */
-    public static int BITS;
-    protected static int POPULATION_SIZE;
-    protected static int TOURNAMENT_SIZE;
-    protected static int MAX_GENERATION;
-    protected static double CROSSOVER_PROBABILITY, MUTATION_PROBABILITY;
+    public static int BITS = 20;
+    protected static int POPULATION_SIZE = 10000;
+    protected static int TOURNAMENT_SIZE = 40;
+    protected static int MAX_GENERATION = 50;
+    protected static double CROSSOVER_PROBABILITY = 0.7, MUTATION_PROBABILITY = 0.3;
 
 
     // ------------------------------------- Global population -------------------------------------
     protected static Individual[] population;
     private static double[] fitness;
-    public static ArrayList<Double> prejudice;
     protected static Individual bestIndividual_EntireRun;
 
 
-    // ------------------------------------- Other -------------------------------------
-    private static int nPointCrossoverPoints;
-    private static final double terminationConditionFitness = -1;
-
-
     // ------------------------------------- Methods -------------------------------------
-    public static void main(String[] args) {
-        try {
-            for (int testNo = 0; testNo < 1; testNo++) {
-                // Set all the switches and settings for the Main.GA to run
-                // (I suggest using presets or the setSwitches() and setSettings() methods)
-                Presets.preset("AocTorAocFtxAriEltAoc"); // BolTorMboSinUnfEltMed | BolTorLboSinUnfEltMed | BolTorQdeSinUnfEltQde | TspTorTspPmxInvEltTsp | FtxTorNvpFtxAriEltFtx
-
-                // Main.Check if everything is set correctly
-                Check.checkEverything();
-
-                // The main algorithm
-                initialise();
-                evaluate();
-
-                runGA();
-
-                // Must do this at the end of each test
-                Print.shortStats(testNo + 1);
-                resetGlobals();
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     public static long part2() {
         try {
-            Presets.preset("AocTorAocFtxAriEltAoc"); // BolTorMboSinUnfEltMed | BolTorLboSinUnfEltMed | BolTorQdeSinUnfEltQde | TspTorTspPmxInvEltTsp | FtxTorNvpFtxAriEltFtx
-
-            // Main.Check if everything is set correctly
-            Check.checkEverything();
+            AocDay5.loadData(AocDay5.filename);
 
             // The main algorithm
             initialise();
@@ -147,60 +100,9 @@ public class GA {
             recordBestIndividual_EntireRun();
 //            Print.generationStats(gen + 1); // if (fitnessFunc != FITNESS_FUNC.Problems.SequentialCovering) Main.Print.generationStats(gen + 1);
 
-            // Termination condition
-            if (terminationConditionMet()) break;
-
             // PLAYING AROUND: decrease the crossover and mutation probabilities
 //            changeCrossoverMutationProbability(gen);
         }
-    }
-
-    // For debugging purposes
-    private static void test() throws Exception {
-        Presets.preset("FtxTorNvpFtxAriEltMaxFtx");
-
-        double fitness1 = FTTx.npv(new int[]{1, 1, 3, 2, 2, 2, 1, 2, 3, 3, 1, 1, 2, 3, 1, 2, 3, 2, 2, 2, 2, 1, 1, 2, 2, 1, 2, 2, 2, 0, 2, 3, 0, 1, 3, 2, 1, 0, 1, 1, 0, 2, 2, 2, 2, 1, 0, 1, 2, 2, 1, 2, 1, 2, 2, 2, 2, 0, 1, 2, 3, 2, 2, 1, 3, 0, 2, 1, 2, 2, 2, 2, 2, 0, 2, 1, 1, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1, 2, 2, 2, 2, 1, 2, 0, 1, 2, 1, 2, 2, 2, 2, 1, 2, 0, 2, 2, 1, 2, 2, 2, 1, 1, 0, 1, 1, 1, 2, 2, 2, 2, 1, 0, 0, 2, 2, 1, 1, 2, 2, 2, 1, 1, 2, 1, 2, 2, 1, 15, 2, 1, 2, 2, 2, 0, 1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 1, 0, 1, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 0, 1, 2, 2, 2, 1, 1, 2, 1, 2, 2, 2, 2, 2, 2, 0, 1, 2, 2, 2, 2, 2, 2, 2, 1, 0, 2, 0, 1, 0, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 2, 2, 2, 1, 0, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 1, 1, 0, 2, 1, 0, 2, 2, 1, 1, 2, 2, 1, 2, 1, 1, 1, 2, 2, 2, 1, 0, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 1, 1, 2, 2, 0, 2, 2, 1, 2, 0, 1, 1, 2, 2, 2, 0, 0, 2, 2, 1, 2, 2, 0, 1, 1, 2});
-        double fitness2 = FTTx.npv(new int[]{1, 1, 3, 2, 2, 2, 1, 2, 3, 3, 1, 1, 2, 3, 1, 2, 3, 2, 2, 2, 2, 1, 1, 2, 2, 1, 2, 2, 2, 0, 2, 3, 0, 1, 3, 2, 1, 0, 1, 1, 0, 2, 2, 2, 2, 1, 0, 1, 2, 2, 1, 2, 1, 2, 2, 2, 2, 0, 1, 2, 3, 2, 2, 1, 3, 0, 2, 1, 2, 2, 2, 2, 2, 0, 2, 1, 1, 2, 2, 1, 2, 1, 2, 1, 1, 1, 1, 2, 2, 2, 2, 1, 2, 0, 1, 2, 1, 2, 2, 2, 2, 1, 2, 0, 2, 2, 1, 2, 2, 2, 1, 1, 0, 1, 1, 1, 2, 2, 2, 2, 1, 0, 0, 2, 2, 1, 1, 2, 2, 2, 1, 1, 2, 1, 2, 2, 1, 0, 2, 1, 2, 2, 2, 0, 1, 2, 2, 2, 1, 2, 1, 1, 1, 1, 1, 0, 1, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 0, 1, 2, 2, 2, 1, 1, 2, 1, 2, 2, 2, 2, 2, 2, 0, 1, 2, 2, 2, 2, 2, 2, 2, 1, 0, 2, 0, 1, 0, 2, 1, 2, 1, 2, 1, 1, 1, 2, 1, 2, 2, 2, 1, 0, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 2, 1, 2, 1, 1, 0, 2, 1, 0, 2, 2, 1, 1, 2, 2, 1, 2, 1, 1, 1, 2, 2, 2, 1, 0, 1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 1, 1, 1, 2, 2, 0, 2, 2, 1, 2, 0, 1, 1, 2, 2, 2, 0, 0, 2, 2, 1, 2, 2, 0, 1, 1, 2});
-        double fitness3 = FTTx.npv(new int[]{1, 1, 2, 1, 1, 2, 2, 2, 2, 2, 1, 1, 2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 1, 2, 2, 1, 2, 2, 1, 0, 2, 2, 0, 1, 2, 1, 1, 0, 1, 2, 0, 2, 2, 2, 2, 1, 0, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 0, 1, 1, 2, 2, 1, 1, 2, 0, 2, 1, 2, 2, 2, 2, 1, 0, 2, 2, 1, 2, 1, 1, 2, 1, 2, 2, 1, 1, 2, 1, 2, 1, 2, 1, 2, 0, 1, 2, 1, 2, 2, 1, 2, 1, 2, 0, 3, 2, 1, 2, 1, 1, 2, 2, 0, 2, 1, 1, 2, 2, 2, 2, 1, 0, 0, 2, 2, 1, 2, 1, 2, 2, 1, 2, 2, 1, 1, 2, 1, 0, 2, 1, 3, 2, 2, 0, 1, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 0, 1, 3, 2, 1, 2, 1, 1, 2, 2, 1, 2, 1, 2, 2, 1, 2, 2, 6, 1, 2, 2, 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 0, 1, 2, 2, 2, 2, 2, 2, 1, 1, 0, 2, 0, 1, 7, 2, 1, 2, 1, 2, 1, 1, 2, 2, 1, 2, 2, 2, 1, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 0, 2, 1, 0, 2, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 0, 1, 2, 2, 2, 1, 2, 2, 1, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 2, 0, 2, 1, 2, 2, 0, 1, 1, 2, 2, 1, 0, 0, 2, 2, 2, 2, 2, 0, 1, 1, 2});
-        double fitness4 = FTTx.npv(new int[]{1, 1, 2, 1, 1, 2, 2, 2, 2, 2, 1, 1, 2, 3, 1, 2, 2, 2, 1, 2, 2, 1, 1, 2, 2, 1, 2, 2, 2, 11, 1, 2, 0, 1, 2, 1, 1, 12, 1, 2, 0, 2, 2, 2, 2, 1, 13, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 0, 1, 1, 2, 2, 1, 1, 2, 0, 2, 1, 2, 2, 2, 2, 1, 0, 2, 1, 1, 2, 2, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 1, 2, 14, 1, 2, 1, 2, 1, 1, 2, 1, 2, 0, 3, 1, 1, 2, 2, 2, 2, 2, 12, 2, 2, 1, 2, 2, 1, 2, 1, 0, 14, 2, 5, 1, 1, 1, 2, 2, 1, 2, 2, 1, 1, 2, 1, 14, 2, 1, 12, 1, 2, 6, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 11, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 3, 1, 2, 2, 7, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 0, 1, 2, 2, 2, 2, 2, 2, 1, 1, 0, 2, 0, 1, 6, 2, 1, 2, 1, 2, 1, 1, 2, 2, 1, 2, 2, 3, 1, 0, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 1, 10, 2, 1, 0, 2, 2, 1, 1, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 0, 2, 2, 2, 1, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1, 2, 2, 13, 2, 1, 2, 2, 0, 1, 1, 2, 2, 1, 12, 11, 2, 2, 2, 2, 2, 15, 2, 1, 2});
-        double fitness5 = FTTx.npv(new int[]{1, 1, 2, 1, 1, 2, 2, 2, 2, 2, 1, 1, 2, 3, 1, 2, 2, 2, 1, 2, 2, 1, 1, 2, 2, 1, 2, 2, 2, 0, 1, 2, 0, 1, 2, 1, 1, 0, 1, 2, 0, 2, 2, 2, 2, 1, 0, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 0, 1, 1, 2, 2, 1, 1, 2, 0, 2, 1, 2, 2, 2, 2, 1, 0, 2, 1, 1, 2, 2, 1, 2, 1, 2, 2, 1, 1, 2, 2, 2, 1, 2, 1, 2, 0, 1, 2, 1, 2, 1, 1, 2, 1, 2, 0, 3, 1, 1, 2, 2, 2, 2, 2, 0, 2, 2, 1, 2, 2, 1, 2, 1, 0, 0, 2, 5, 1, 1, 1, 2, 2, 1, 2, 2, 1, 1, 2, 1, 0, 2, 1, 0, 1, 2, 6, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1, 1, 0, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1, 2, 1, 2, 3, 1, 2, 2, 7, 1, 2, 2, 2, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 0, 1, 2, 2, 2, 2, 2, 2, 1, 1, 0, 2, 0, 1, 6, 2, 1, 2, 1, 2, 1, 1, 2, 2, 1, 2, 2, 3, 1, 0, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 1, 0, 2, 1, 0, 2, 2, 1, 1, 2, 2, 1, 2, 1, 1, 1, 1, 2, 2, 1, 0, 2, 2, 2, 1, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2, 2, 1, 2, 2, 0, 2, 1, 2, 2, 0, 1, 1, 2, 2, 1, 0, 0, 2, 2, 2, 2, 2, 0, 2, 1, 2});
-
-        System.out.println(fitness1 + "\n" + fitness2 + "\n" + fitness3 + "\n" + fitness4 + "\n" + fitness5);
-    }
-
-
-    // ------------------------------------- Switches and settings -------------------------------------
-    protected static void setSwitches(INDIVIDUAL_TYPE individualType,
-                                      SELECTION selection,
-                                      FITNESS_FUNC fitnessFunction,
-                                      CROSSOVER crossover,
-                                      MUTATION mutation,
-                                      boolean elitism) throws Exception {
-        GA.individualType = individualType;
-        GA.selection = selection;
-        GA.fitnessFunc = fitnessFunction;
-        GA.crossover = crossover;
-        GA.mutation = mutation;
-        GA.elitism = elitism;
-        GA.minOrMax = fitnessFunction.getMinMax();
-
-        // variables that must be set, depending on the switches
-        if (AocDay5.filename == null) throw new Exception("AocDay5 filename not set");
-        else AocDay5.loadData(AocDay5.filename);
-    }
-
-    protected static void setSettings(int BITS,
-                                      int POPULATION_SIZE,
-                                      int TOURNAMENT_SIZE,
-                                      int MAX_GENERATION,
-                                      double CROSSOVER_PROBABILITY,
-                                      double MUTATION_PROBABILITY) {
-        GA.BITS = BITS;
-        GA.POPULATION_SIZE = POPULATION_SIZE;
-        GA.TOURNAMENT_SIZE = TOURNAMENT_SIZE;
-        GA.MAX_GENERATION = MAX_GENERATION;
-        GA.CROSSOVER_PROBABILITY = CROSSOVER_PROBABILITY;
-        GA.MUTATION_PROBABILITY = MUTATION_PROBABILITY;
     }
 
 
@@ -209,7 +111,7 @@ public class GA {
     /**
      * Initialise the population with random individuals and record the best individual in it
      */
-    private static void initialise() throws Exception {
+    private static void initialise() {
         population = randomPopulation(); // create a random population
         fitness = new double[POPULATION_SIZE]; // initialise the fitness array
 
@@ -252,7 +154,7 @@ public class GA {
         if (elitism) recordElite();
     }
 
-    protected static double fitness(Individual individual) throws Exception {
+    protected static double fitness(Individual individual) {
         long l = AocDay5.convertIntArrToLong(individual.individualI);
 
         if (AocDay5.checkRangesContain(l)) return AocDay5.mapSeedToLocation(l);
@@ -287,7 +189,7 @@ public class GA {
 
 
     // ------------------------------------- Selection -------------------------------------
-    private static Individual[] selection() throws Exception {
+    private static Individual[] selection() {
         ArrayList<Individual> selectedIndividuals = new ArrayList<>();
 
         // create a shuffled array of indexes
@@ -341,7 +243,7 @@ public class GA {
     /**
      * Crossover and mutation
      */
-    private static Individual[] evolution(Individual[] parentPopulation) throws Exception {
+    private static Individual[] evolution(Individual[] parentPopulation) {
         Individual[] newPopulation = crossover(parentPopulation);
         mutation(newPopulation);
 
@@ -351,12 +253,9 @@ public class GA {
     /**
      * The getParent() method returns a parent based on a prejudice
      */
-    private static Individual getParent(Individual[] parentPopulation) throws Exception {
-        if (selection == SELECTION.Tournament) {
-            return getParent_TournamentSel(parentPopulation);
-        } else {
-            return getParent_Prejudice(parentPopulation);
-        }
+    private static Individual getParent(Individual[] parentPopulation) {
+        return getParent_TournamentSel(parentPopulation);
+
     }
 
     private static Individual getParent_TournamentSel(Individual[] parentPopulation) {
@@ -404,18 +303,7 @@ public class GA {
         return -1; // if the index is out of bounds
     }
 
-    private static Individual getParent_Prejudice(Individual[] parentPopulation) throws Exception {
-        double rand = Math.random();
-        for (int i = 0; i < POPULATION_SIZE; i++) {
-            if (rand < prejudice.get(i)) {
-                return parentPopulation[i];
-            }
-        }
-
-        throw new Exception("This line should not be reached, check for errors");
-    }
-
-    private static Individual[] crossover(Individual[] parentPopulation) throws Exception {
+    private static Individual[] crossover(Individual[] parentPopulation) {
         Individual[] newPopulation = new Individual[POPULATION_SIZE];
 
         for (int i = 0; i < POPULATION_SIZE; i++) {
@@ -431,16 +319,14 @@ public class GA {
             newPopulation[++i] = offsprings[1];
         }
 
-        // reset the parents HashSet if using tournament selection
-        if (SELECTION.Tournament == selection) {
-            everyoneWasParent = false;
-            parents = new HashSet<>();
-        }
+        // reset the parents HashSet
+        everyoneWasParent = false;
+        parents = new HashSet<>();
 
         return newPopulation;
     }
 
-    private static Individual[] crossoverIndividuals(Individual parent1, Individual parent2) throws Exception {
+    private static Individual[] crossoverIndividuals(Individual parent1, Individual parent2) {
         Individual p1copy = parent1.copyItself();
         Individual p2copy = parent2.copyItself();
 
@@ -498,16 +384,10 @@ public class GA {
         if (population[0].fitness == null) throw new Exception("Fitness not calculated");
 
         oldPopulationSorted = new ArrayList<>(Arrays.asList(population));
-        oldPopulationSorted.sort((o1, o2) -> {
-            if (minOrMax == MIN_MAX.Min) {
-                return Double.compare(o1.fitness, o2.fitness);
-            } else {
-                return Double.compare(o2.fitness, o1.fitness);
-            }
-        });
+        oldPopulationSorted.sort(Comparator.comparingDouble(o -> o.fitness));
     }
 
-    private static void reintroduceElite() throws Exception {
+    private static void reintroduceElite() {
         for (int i = 0; i < eliteIndividualsCount; i++) {
             // choose a random individual from the new population
             int index = (int) (Math.random() * POPULATION_SIZE);
@@ -518,55 +398,26 @@ public class GA {
     }
 
     // returns the better individual (NOT using the fitness[] array)
-    private static Individual compareIndividuals(Individual individual1, Individual individual2) throws Exception {
-        if (minOrMax == MIN_MAX.Min) {
-            return fitness(individual1) < fitness(individual2) ? individual1 : individual2;
-        } else {
-            return fitness(individual1) > fitness(individual2) ? individual1 : individual2;
-        }
+    private static Individual compareIndividuals(Individual individual1, Individual individual2) {
+        return fitness(individual1) < fitness(individual2) ? individual1 : individual2;
     }
 
     // returns the index of the better individual (using the fitness[] array)
     private static int compareIndividuals(int ind1_index, int ind2_index) {
-        if (minOrMax == MIN_MAX.Min) {
-            return fitness[ind1_index] < fitness[ind2_index] ? ind1_index : ind2_index;
-        } else {
-            return fitness[ind1_index] > fitness[ind2_index] ? ind1_index : ind2_index;
-        }
+        return fitness[ind1_index] < fitness[ind2_index] ? ind1_index : ind2_index;
     }
 
     // returns true if the contender is better than the current
     private static boolean compareFitness(double current, double contender) {
-        if (minOrMax == MIN_MAX.Min) {
-            return contender < current;
-        } else {
-            return contender > current;
-        }
+        return contender < current;
     }
 
 
     // ------------------------------------- Other -------------------------------------
-    private static void resetGlobals() {
-        population = null;
-        fitness = null;
-        bestIndividual_EntireRun = null;
-
-        oldPopulationSorted = null;
-        if (selection == SELECTION.Tournament) everyoneWasParent = false;
-        parents = new HashSet<>();
-    }
-
-    private static void recordBestIndividual_EntireRun() throws Exception {
+    private static void recordBestIndividual_EntireRun() {
         Individual bestInGeneration = findBestIndividual();
 
         bestIndividual_EntireRun = compareIndividuals(bestIndividual_EntireRun, bestInGeneration.copyItself());
-    }
-
-    private static boolean terminationConditionMet() {
-        if (populationBestFitness() == terminationConditionFitness) {
-            System.out.println("Termination condition met");
-            return true;
-        } else return false;
     }
 
     private static void changeCrossoverMutationProbability(int gen) {

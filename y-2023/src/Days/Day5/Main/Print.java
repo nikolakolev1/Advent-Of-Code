@@ -18,11 +18,4 @@ public class Print {
         shortStats();
         System.out.println();
     }
-
-    // Main.Print the settings of a particular run
-    public static void settings() {
-        System.out.print("This was a Main.GA using " + GA.selection + " selection and the '" + GA.fitnessFunc + "' fitness function");
-        if (GA.elitism) System.out.println(", with Elitism turned on.");
-        else System.out.println(".");
-    }
 }
