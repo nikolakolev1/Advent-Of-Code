@@ -13,7 +13,7 @@ public class Day10 implements Day {
     private int[] loopStart; // y, x
     private Boolean[][] map;
     private final int SOUTH = 0, WEST = 1, NORTH = 2, EAST = 3;
-    private int LEFT = SOUTH, RIGHT = NORTH;
+    private int LEFT = SOUTH;
 
     public record Tube(char value, int x, int y) {
     }
@@ -74,16 +74,7 @@ public class Day10 implements Day {
             map[y][x] = true;          // Mark the loop on the Boolean map
         }
 
-        printMap();
-        printMap(map);
-
-        // Fill from the edges of the map to the border of the loop (false -> outside the loop)
-        // doesn't get all the cases
-        floodFromOutside();
-//        printMap(map);
-
         goClockwiseAndFloodLeft();
-//        goAnticlockwiseAndFloodRight();
         printMap(map);
 
         return String.valueOf(countNulls());
@@ -159,10 +150,6 @@ public class Day10 implements Day {
         }
     }
 
-    public boolean coordinatesNextToExit(int y, int x) {
-        return y == 0 || y == tubes.size() - 1 || x == 0 || x == tubes.get(0).size() - 1;
-    }
-
     public void printMap() {
         for (ArrayList<Tube> row : tubes) {
             for (Tube tube : row) {
@@ -236,16 +223,6 @@ public class Day10 implements Day {
         return count;
     }
 
-    public void floodFromOutside() {
-        for (int y = 0; y < tubes.size(); y++) {
-            for (int x = 0; x < tubes.get(0).size(); x++) {
-                if (map[y][x] == null && coordinatesNextToExit(y, x)) {
-                    flood(y, x);
-                }
-            }
-        }
-    }
-
     public void goClockwiseAndFloodLeft() {
         Tube start = findTubeGoingClockwise();
 
@@ -259,33 +236,16 @@ public class Day10 implements Day {
                 flood(inner.y, inner.x);
             }
 
-            Tube[] adjacent = getAdjacent(current);
-            if (adjacent[0] != previous) {
-                previous = current;
-                current = adjacent[0];
-            } else {
-                previous = current;
-                current = adjacent[1];
-            }
-
             char val = current.value;
             if (val == 'L' || val == 'J' || val == '7' || val == 'F') {
                 changeDirection(current, previous.x);
-            }
-        } while (current != start);
-    }
 
-    public void goAnticlockwiseAndFloodRight() {
-        Tube start = findTubeGoingClockwise();
+                // -------------------------------- //
+                Tube inner2 = getAdjacent(current, LEFT);
 
-        Tube previous = get(start.y, start.x + 1);
-        Tube current = start;
-
-        do {
-            Tube inner = getAdjacent(current, RIGHT);
-
-            if (inner != null && inner.value == '.' && map[inner.y][inner.x] == null) {
-                flood(inner.y, inner.x);
+                if (inner2 != null && inner2.value == '.' && map[inner2.y][inner2.x] == null) {
+                    flood(inner2.y, inner2.x);
+                }
             }
 
             Tube[] adjacent = getAdjacent(current);
@@ -295,11 +255,6 @@ public class Day10 implements Day {
             } else {
                 previous = current;
                 current = adjacent[1];
-            }
-
-            char val = current.value;
-            if (val == 'L' || val == 'J' || val == '7' || val == 'F') {
-                changeDirection(current, previous.x);
             }
         } while (current != start);
     }
@@ -309,19 +264,6 @@ public class Day10 implements Day {
             for (int x = 0; x < tubes.get(0).size(); x++) {
                 char val = get(y, x).value;
                 if (val == '-') {
-                    return get(y, x);
-                }
-            }
-        }
-
-        throw new IllegalStateException("No tube going right found");
-    }
-
-    public Tube findTubeGoingAnticlockwise() {
-        for (int y = 1; y < tubes.size(); y++) {
-            for (int x = 0; x < tubes.get(0).size(); x++) {
-                char val = get(y, x).value;
-                if (val == '-' && map[y - 1][x] == null) {
                     return get(y, x);
                 }
             }
@@ -373,57 +315,11 @@ public class Day10 implements Day {
 
     public void changeDirection(Tube tube, int prevX) {
         switch (tube.value) {
-            // correct
-            case ('F') -> {
+            case ('F'), ('J') -> {
                 if (prevX == tube.x) LEFT++;
                 else LEFT--;
             }
-
-            // correct
-            case ('J') -> {
-                if (prevX == tube.x) LEFT++;
-                else LEFT--;
-            }
-
-            // correct
-            case ('7') -> {
-                if (prevX == tube.x) LEFT--;
-                else LEFT++;
-            }
-
-            // correct
-            case ('L') -> {
-                if (prevX == tube.x) LEFT--;
-                else LEFT++;
-            }
-        }
-
-        if (LEFT == 4) LEFT = 0;
-        else if (LEFT == -1) LEFT = 3;
-    }
-
-    public void changeDirection2(Tube tube, int prevX) {
-        switch (tube.value) {
-            // correct
-            case ('F') -> {
-                if (prevX == tube.x) LEFT++;
-                else LEFT--;
-            }
-
-            // correct
-            case ('J') -> {
-                if (prevX == tube.x) LEFT++;
-                else LEFT--;
-            }
-
-            // correct
-            case ('7') -> {
-                if (prevX == tube.x) LEFT--;
-                else LEFT++;
-            }
-
-            // correct
-            case ('L') -> {
+            case ('7'), ('L') -> {
                 if (prevX == tube.x) LEFT--;
                 else LEFT++;
             }
