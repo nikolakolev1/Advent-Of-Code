@@ -18,7 +18,7 @@ public class Helper {
     }
 
     public static String filename_test(int day) {
-        return "data/day" + day + "/test_input.txt";
+        return "data/day" + day + "/input_test.txt";
     }
 
     public static void solveAndPrint(int dayInt) {
