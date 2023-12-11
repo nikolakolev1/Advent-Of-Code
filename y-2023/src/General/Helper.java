@@ -1,6 +1,8 @@
 package General;
 
 import Days.Day1.Day1;
+import Days.Day10.Day10;
+import Days.Day11.Day11;
 import Days.Day2.Day2;
 import Days.Day3.Day3;
 import Days.Day4.Day4;
@@ -56,22 +58,22 @@ public class Helper {
             case 7 -> new Day7();
             case 8 -> new Day8();
             case 9 -> new Day9();
-//            case 10 -> new Days.Day10();
-//            case 11 -> new Days.Day11();
-//            case 12 -> new Days.Day12();
-//            case 13 -> new Days.Day13();
-//            case 14 -> new Days.Day14();
-//            case 15 -> new Days.Day15();
-//            case 16 -> new Days.Day16();
-//            case 17 -> new Days.Day17();
-//            case 18 -> new Days.Day18();
-//            case 19 -> new Days.Day19();
-//            case 20 -> new Days.Day20();
-//            case 21 -> new Days.Day21();
-//            case 22 -> new Days.Day22();
-//            case 23 -> new Days.Day23();
-//            case 24 -> new Days.Day24();
-//            case 25 -> new Days.Day25();
+            case 10 -> new Day10();
+            case 11 -> new Day11();
+//            case 12 -> new Day12();
+//            case 13 -> new Day13();
+//            case 14 -> new Day14();
+//            case 15 -> new Day15();
+//            case 16 -> new Day16();
+//            case 17 -> new Day17();
+//            case 18 -> new Day18();
+//            case 19 -> new Day19();
+//            case 20 -> new Day20();
+//            case 21 -> new Day21();
+//            case 22 -> new Day22();
+//            case 23 -> new Day23();
+//            case 24 -> new Day24();
+//            case 25 -> new Day25();
             default -> throw new IllegalStateException("Invalid day: " + day);
         };
     }
