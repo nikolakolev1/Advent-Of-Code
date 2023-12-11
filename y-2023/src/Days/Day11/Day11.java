@@ -4,7 +4,6 @@ import General.Day;
 import General.Helper;
 
 import java.io.File;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -14,9 +13,9 @@ public class Day11 implements Day {
     private record Coordinates(int y, int x) {
     }
 
-    private ArrayList<Coordinates> galaxyCoords = new ArrayList<>();
-    private ArrayList<Coordinates> expandedGalaxyCoords = new ArrayList<>();
-    private static final long RATE_OF_EXPANSION = 1000000L;
+    private final ArrayList<Coordinates> galaxies = new ArrayList<>();
+    private final ArrayList<Coordinates> galaxies_expanded = new ArrayList<>();
+    private static final long RATE_OF_EXPANSION = 1000000L; // hardcoded (part 2)
 
     public static void main(String[] args) {
         Day day11 = new Day11();
@@ -45,7 +44,7 @@ public class Day11 implements Day {
                 for (int col = 0; col < length; col++) {
                     if (line.charAt(col) == '#') {
                         cosmos[row][col] = true;
-                        galaxyCoords.add(new Coordinates(row, col));
+                        galaxies.add(new Coordinates(row, col));
                     }
                 }
 
@@ -64,16 +63,16 @@ public class Day11 implements Day {
         for (int row = 0; row < expandedCosmos.length; row++) {
             for (int col = 0; col < expandedCosmos[0].length; col++) {
                 if (expandedCosmos[row][col]) {
-                    expandedGalaxyCoords.add(new Coordinates(row, col));
+                    galaxies_expanded.add(new Coordinates(row, col));
                 }
             }
         }
 
         int sum = 0;
 
-        for (int galaxy1 = 0; galaxy1 <= expandedGalaxyCoords.size() - 2; galaxy1++) {
-            for (int galaxy2 = galaxy1 + 1; galaxy2 <= expandedGalaxyCoords.size() - 1; galaxy2++) {
-                sum += manhattanDistance(expandedGalaxyCoords.get(galaxy1), expandedGalaxyCoords.get(galaxy2));
+        for (int galaxy1 = 0; galaxy1 <= galaxies_expanded.size() - 2; galaxy1++) {
+            for (int galaxy2 = galaxy1 + 1; galaxy2 <= galaxies_expanded.size() - 1; galaxy2++) {
+                sum += manhattanDistance(galaxies_expanded.get(galaxy1), galaxies_expanded.get(galaxy2));
             }
         }
 
@@ -85,11 +84,11 @@ public class Day11 implements Day {
         ArrayList<Integer> emptyRows = emptyRows(cosmos);
         ArrayList<Integer> emptyCols = emptyCols(cosmos);
 
-        BigInteger sum = BigInteger.ZERO;
+        long sum = 0;
 
-        for (int galaxy1 = 0; galaxy1 <= galaxyCoords.size() - 2; galaxy1++) {
-            for (int galaxy2 = galaxy1 + 1; galaxy2 <= galaxyCoords.size() - 1; galaxy2++) {
-                sum = sum.add(new BigInteger(String.valueOf(manhattanDistance(galaxyCoords.get(galaxy1), galaxyCoords.get(galaxy2), emptyRows, emptyCols, RATE_OF_EXPANSION))));
+        for (int galaxy1 = 0; galaxy1 <= galaxies.size() - 2; galaxy1++) {
+            for (int galaxy2 = galaxy1 + 1; galaxy2 <= galaxies.size() - 1; galaxy2++) {
+                sum += manhattanDistance(galaxies.get(galaxy1), galaxies.get(galaxy2), emptyRows, emptyCols);
             }
         }
 
@@ -110,7 +109,6 @@ public class Day11 implements Day {
                 if (emptyRows.contains(row)) {
                     newUniverse[newRow] = new boolean[x];
                     newUniverse[++newRow] = new boolean[x];
-
                     break;
                 } else if (emptyCols.contains(col)) {
                     newUniverse[newRow][newCol] = false;
@@ -162,7 +160,7 @@ public class Day11 implements Day {
         return Math.abs(c1.x - c2.x) + Math.abs(c1.y - c2.y);
     }
 
-    private long manhattanDistance(Coordinates c1, Coordinates c2, ArrayList<Integer> emptyRows, ArrayList<Integer> emptyCols, long rateOfExpansion) {
+    private long manhattanDistance(Coordinates c1, Coordinates c2, ArrayList<Integer> emptyRows, ArrayList<Integer> emptyCols) {
         int y1 = c1.y;
         int x1 = c1.x;
         int y2 = c2.y;
@@ -176,7 +174,7 @@ public class Day11 implements Day {
         int expandedRows = countExpanded(minY, maxY, emptyRows);
         int expandedCols = countExpanded(minX, maxX, emptyCols);
 
-        return Math.abs(x1 - x2) + Math.abs(y1 - y2) + ((rateOfExpansion - 1) * (expandedRows + expandedCols));
+        return Math.abs(x1 - x2) + Math.abs(y1 - y2) + ((RATE_OF_EXPANSION - 1) * (expandedRows + expandedCols));
     }
 
     private int countExpanded(int a, int b, ArrayList<Integer> empty) {

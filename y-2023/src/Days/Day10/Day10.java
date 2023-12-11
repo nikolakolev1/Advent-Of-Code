@@ -75,7 +75,7 @@ public class Day10 implements Day {
         }
 
         goClockwiseAndFloodLeft();
-        printMap(map);
+//        printMap(map);
 
         return String.valueOf(countNulls());
     }

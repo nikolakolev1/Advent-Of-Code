@@ -1,4 +1,4 @@
-package Days.Day10;
+package Days.Day10.Other;
 
 import java.util.ArrayList;
 import java.util.List;
