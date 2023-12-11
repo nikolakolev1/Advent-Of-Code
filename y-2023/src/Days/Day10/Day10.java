@@ -57,14 +57,19 @@ public class Day10 implements Day {
         }
     }
 
+    // Find the loop and divide its length by 2
     public String part1() {
-        generateLoop();
-
-        return String.valueOf(loop.size() / 2);
+        return String.valueOf(findLoop().size() / 2);
     }
 
+    /*
+     * Create a Boolean[][] map
+     * Identify the loop on the map
+     * Go clockwise and flood left (mark the outside of the loop)
+     * Count what's left (nulls)
+     */
     public String part2() {
-        clearTubes();
+        clearTubes(); // Clear the tubes to make a map with only the loop
         map = new Boolean[tubes.size()][tubes.getFirst().size()]; // (false -> outside the loop, true -> the loop border, null -> inside the loop)
 
         for (Tube tube : loop) {
@@ -75,23 +80,26 @@ public class Day10 implements Day {
         }
 
         goClockwiseAndFloodLeft();
-//        printMap(map);
+        // The map looks cool when printed, find a way to implement that in the future
+        // printMap(map);
 
         return String.valueOf(countNulls());
     }
 
-    public void generateLoop() {
+    // Identify the loop, knowing the starting point
+    public ArrayList<Tube> findLoop() {
         Tube start = get(loopStart[0], loopStart[1]);
 
         loop.add(start);
 
         Tube previous = start;
-        Tube current = getAdjacent(start)[1];
+        Tube current = getConnectedTubes(start)[1];
 
         while (current != start) {
             loop.add(current);
 
-            Tube[] adjacent = getAdjacent(current);
+            // Get the next tube (make sure it's not the previous one)
+            Tube[] adjacent = getConnectedTubes(current);
             if (adjacent[0] != previous) {
                 previous = current;
                 current = adjacent[0];
@@ -100,9 +108,12 @@ public class Day10 implements Day {
                 current = adjacent[1];
             }
         }
+
+        return loop;
     }
 
-    public Tube[] getAdjacent(Tube tube) {
+    // Get the tubes connected to the given tube
+    public Tube[] getConnectedTubes(Tube tube) {
         Tube[] adjacent = new Tube[2];
 
         int x = tube.x;
@@ -176,6 +187,7 @@ public class Day10 implements Day {
         System.out.println();
     }
 
+    // Get the tiles surrounding the given tile
     public ArrayList<Tube> getSurroundingSpace(Tube tube) {
         ArrayList<Tube> surrounding = new ArrayList<>();
 
@@ -205,10 +217,12 @@ public class Day10 implements Day {
         return surrounding;
     }
 
+    // Get the tile at the given coordinates
     public Tube get(int y, int x) {
         return tubes.get(y).get(x);
     }
 
+    // Count the nulls in the map (for part 2 - after flooding)
     public int countNulls() {
         int count = 0;
 
@@ -223,24 +237,34 @@ public class Day10 implements Day {
         return count;
     }
 
+    /*
+     * Main method for part 2
+     * Find a starting point
+     * Start going clockwise
+     * If you find a space to the left, flood it
+     */
     public void goClockwiseAndFloodLeft() {
         Tube start = findTubeGoingClockwise();
 
+        // Start going clockwise
         Tube previous = get(start.y, start.x - 1);
         Tube current = start;
 
         do {
+            // Get the tile to the left
             Tube inner = getAdjacent(current, LEFT);
 
+            // If it's a space, and it's not flooded, flood it
             if (inner != null && inner.value == '.' && map[inner.y][inner.x] == null) {
                 flood(inner.y, inner.x);
             }
 
             char val = current.value;
+            // If you find a corner, change direction
             if (val == 'L' || val == 'J' || val == '7' || val == 'F') {
                 changeDirection(current, previous.x);
 
-                // -------------------------------- //
+                // Flood both sides of the corner
                 Tube inner2 = getAdjacent(current, LEFT);
 
                 if (inner2 != null && inner2.value == '.' && map[inner2.y][inner2.x] == null) {
@@ -248,7 +272,8 @@ public class Day10 implements Day {
                 }
             }
 
-            Tube[] adjacent = getAdjacent(current);
+            // Continue going clockwise
+            Tube[] adjacent = getConnectedTubes(current);
             if (adjacent[0] != previous) {
                 previous = current;
                 current = adjacent[0];
@@ -259,6 +284,7 @@ public class Day10 implements Day {
         } while (current != start);
     }
 
+    // Find a starting point for part 2
     public Tube findTubeGoingClockwise() {
         for (int y = 0; y < tubes.size(); y++) {
             for (int x = 0; x < tubes.getFirst().size(); x++) {
@@ -272,6 +298,7 @@ public class Day10 implements Day {
         throw new IllegalStateException("No tube going right found");
     }
 
+    // Flood the space (and all the connected spaces) at the given coordinates
     public void flood(int y, int x) {
         Queue<Tube> queue = new java.util.LinkedList<>();
         queue.add(get(y, x));
