@@ -6,6 +6,7 @@ import General.Helper;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Day14 implements Day {
@@ -29,8 +30,7 @@ public class Day14 implements Day {
             Scanner scanner = new Scanner(input);
 
             while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String[] split = line.split("");
+                String[] split = scanner.nextLine().split("");
 
                 List<Integer> row = new ArrayList<>();
                 for (String s : split) {
@@ -57,40 +57,22 @@ public class Day14 implements Day {
 
     @Override
     public String part2() {
-        List<List<Integer>> landscape = this.landscape;
-        List<List<Integer>> compare = this.landscape;
+        int cycles = (CYCLES - 100) % cycleDetection();
 
-        int hardcodedCycleDetection = (CYCLES - 100) % 22;
-
-
-        for (int cycle = 1; cycle <= 100 + hardcodedCycleDetection; cycle++) {
-            for (int i = 0; i < 4; i++) {
+        for (int cycle = 1; cycle <= cycles; cycle++) {
+            for (direction = 0; direction < 4; direction++) {
                 landscape = tilt(landscape);
-                direction = (direction + 1) % 4;
-
-//                printLandscape();
             }
-
-//            if (cycle == 100) compare = landscape;
-
-//            else if (compareLandscape(compare, landscape)) {
-//                System.out.println("Cycle " + cycle + " is the same as the compare landscape");
-//            }
-
-//            printLandscape();
         }
-
-//        for (int i = -756; i < hardcodedCycleDetection; i++) {
-//            compare = tilt(compare);
-//        }
 
         return String.valueOf(calculate(landscape));
     }
 
+    // Print the current global landscape
     private void printLandscape() {
         for (List<Integer> row : landscape) {
-            for (Integer i : row) {
-                switch (i) {
+            for (Integer tile : row) {
+                switch (tile) {
                     case 0 -> System.out.print(".");
                     case 1 -> System.out.print("O");
                     case 2 -> System.out.print("#");
@@ -103,10 +85,11 @@ public class Day14 implements Day {
         System.out.println();
     }
 
+    // Print the given landscape
     private void printLandscape(List<List<Integer>> landscape) {
         for (List<Integer> row : landscape) {
-            for (Integer i : row) {
-                switch (i) {
+            for (Integer tile : row) {
+                switch (tile) {
                     case 0 -> System.out.print(".");
                     case 1 -> System.out.print("O");
                     case 2 -> System.out.print("#");
@@ -119,86 +102,70 @@ public class Day14 implements Day {
         System.out.println();
     }
 
+    // Tilt the landscape in the given direction
     private List<List<Integer>> tilt(List<List<Integer>> landscape) {
-        int height = landscape.size();
-        int width = landscape.getFirst().size();
-
-        List<List<Integer>> newLandscape = emptyLandscape(width, height);
+        List<List<Integer>> newLandscape = emptyLandscape(landscape.getFirst().size(), landscape.size());
         populateWithTrees(newLandscape, landscape);
 
         switch (direction) {
-            case NORTH, WEST -> {
-                for (int y = 0; y < height; y++) {
-                    for (int x = 0; x < width; x++) {
-                        int current = landscape.get(y).get(x);
-                        if (current == 1) {
-                            switch (direction) {
-                                case NORTH -> {
-                                    int newY = getBoundInColumn(x, y, newLandscape, direction);
-                                    newLandscape.get(newY).set(x, 1);
-                                }
-                                case WEST -> {
-                                    int newX = getBoundInRow(x, y, newLandscape, direction);
-                                    newLandscape.get(y).set(newX, 1);
-                                }
-                                default -> throw new IllegalArgumentException("Invalid direction");
-                            }
-
-                        }
-                    }
-                }
-            }
-            case SOUTH, EAST -> {
-                for (int y = height - 1; y >= 0; y--) {
-                    for (int x = width - 1; x >= 0; x--) {
-                        int current = landscape.get(y).get(x);
-                        if (current == 1) {
-                            switch (direction) {
-                                case SOUTH -> {
-                                    int newY = getBoundInColumn(x, y, newLandscape, direction);
-                                    newLandscape.get(newY).set(x, 1);
-                                }
-                                case EAST -> {
-                                    int newX = getBoundInRow(x, y, newLandscape, direction);
-                                    newLandscape.get(y).set(newX, 1);
-                                }
-                                default -> throw new IllegalArgumentException("Invalid direction");
-                            }
-
-                        }
-                    }
-                }
-            }
+            case NORTH, WEST -> tiltNorthOrWest(newLandscape);
+            case SOUTH, EAST -> tiltSouthOrEast(newLandscape);
         }
-
-//        for (int y = 0; y < height; y++) {
-//            for (int x = 0; x < width; x++) {
-//                int current = landscape.get(y).get(x);
-//                if (current == 1) {
-//                    switch (direction) {
-//                        case NORTH, SOUTH -> {
-//                            int newY = getBoundInColumn(x, y, newLandscape, direction);
-//                            newLandscape.get(newY).set(x, 1);
-//                        }
-//                        case WEST, EAST -> {
-//                            int newX = getBoundInRow(x, y, newLandscape, direction);
-//                            newLandscape.get(y).set(newX, 1);
-//                        }
-//                    }
-//
-//                }
-//            }
-//        }
 
         return newLandscape;
     }
 
+    // Tilt the landscape in the given direction (north or west)
+    private void tiltNorthOrWest(List<List<Integer>> newLandscape) {
+        int height = landscape.size();
+        int width = landscape.getFirst().size();
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                // if there is a rolling rock at this position -> move it
+                if (landscape.get(y).get(x) == 1) {
+                    moveRock(x, y, newLandscape);
+                }
+            }
+        }
+    }
+
+    // Tilt the landscape in the given direction (south or east)
+    private void tiltSouthOrEast(List<List<Integer>> newLandscape) {
+        int height = landscape.size();
+        int width = landscape.getFirst().size();
+
+        for (int y = height - 1; y >= 0; y--) {
+            for (int x = width - 1; x >= 0; x--) {
+                // if there is a rolling rock at this position -> move it
+                if (landscape.get(y).get(x) == 1) {
+                    moveRock(x, y, newLandscape);
+                }
+            }
+        }
+    }
+
+    // Move the rock at the given position in the given direction
+    private void moveRock(int x, int y, List<List<Integer>> newLandscape) {
+        switch (direction) {
+            case NORTH, SOUTH -> {
+                int newY = getBoundInColumn(x, y, newLandscape, direction);
+                newLandscape.get(newY).set(x, 1);
+            }
+            case WEST, EAST -> {
+                int newX = getBoundInRow(x, y, newLandscape, direction);
+                newLandscape.get(y).set(newX, 1);
+            }
+        }
+    }
+
+    // Create an empty landscape with the given width and height
     private List<List<Integer>> emptyLandscape(int width, int height) {
         List<List<Integer>> landscape = new ArrayList<>();
 
-        for (int i = 0; i < height; i++) {
+        for (int y = 0; y < height; y++) {
             List<Integer> row = new ArrayList<>();
-            for (int j = 0; j < width; j++) {
+            for (int x = 0; x < width; x++) {
                 row.add(0);
             }
             landscape.add(row);
@@ -207,6 +174,7 @@ public class Day14 implements Day {
         return landscape;
     }
 
+    // Populate the new landscape with the trees from the original landscape
     private void populateWithTrees(List<List<Integer>> newLandscape, List<List<Integer>> originalLandscape) {
         int height = originalLandscape.size();
         int width = originalLandscape.getFirst().size();
@@ -221,6 +189,7 @@ public class Day14 implements Day {
         }
     }
 
+    // Get the first block in the column, depending on the direction of the tilt
     private int getBoundInColumn(int x, int y, List<List<Integer>> landscape, int direction) {
         int bound = direction == NORTH ? 0 : landscape.size() - 1;
 
@@ -246,6 +215,7 @@ public class Day14 implements Day {
         return bound;
     }
 
+    // Get the first block in the row, depending on the direction of the tilt
     private int getBoundInRow(int x, int y, List<List<Integer>> landscape, int direction) {
         int bound = direction == WEST ? 0 : landscape.getFirst().size() - 1;
 
@@ -290,15 +260,43 @@ public class Day14 implements Day {
         return load;
     }
 
-//    private int cycleDetection()
+    // detect cycle (in this case it is 22)
+    private int cycleDetection() {
+        for (int cycle = 1; cycle <= 100; cycle++) {
+            for (direction = 0; direction < 4; direction++) {
+                landscape = tilt(landscape);
+            }
+        }
 
-    private boolean compareLandscape(List<List<Integer>> landscape1, List<List<Integer>> landscape2) {
-        int height = landscape1.size();
-        int width = landscape1.getFirst().size();
+        // compare = a copy of landscape at cycle 100
+        List<List<Integer>> compare = new ArrayList<>();
+        for (List<Integer> row : landscape) {
+            compare.add(new ArrayList<>(row));
+        }
 
+        // for each cycle, compare landscape to the 100th cycle
+        for (int cycle = 101; cycle <= 1000; cycle++) {
+            for (direction = 0; direction < 4; direction++) {
+                landscape = tilt(landscape);
+            }
+
+            if (compareLandscape(compare, landscape)) {
+                return cycle;
+            }
+        }
+
+        throw new IllegalArgumentException("No cycle detected");
+    }
+
+    // compare two landscapes (return true if equal)
+    private boolean compareLandscape(List<List<Integer>> l1, List<List<Integer>> l2) {
+        int height = l1.size();
+        int width = l1.getFirst().size();
+
+        // compare each tile
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                if (landscape1.get(y).get(x) != landscape2.get(y).get(x)) {
+                if (!Objects.equals(l1.get(y).get(x), l2.get(y).get(x))) {
                     return false;
                 }
             }
