@@ -1,18 +1,20 @@
 package Days.Day19;
 
+import General.Day;
 import General.Helper;
 
 import java.io.File;
 import java.util.Scanner;
 
-public class Day19 {
+public class Day19 implements Day {
     public static void main(String[] args) {
-//        loadData("data.txt");
-        part1();
-        part2();
+        Day day19 = new Day19();
+        day19.loadData(Helper.filename(19));
+        System.out.println(day19.part1());
+        System.out.println(day19.part2());
     }
 
-    public static void loadData(String filename) {
+    public void loadData(String filename) {
         try {
             File input = new File(filename);
             Scanner scanner = new Scanner(input);
@@ -27,11 +29,11 @@ public class Day19 {
         }
     }
 
-    public static String part1() {
+    public String part1() {
         return "to be implemented";
     }
 
-    public static String part2() {
+    public String part2() {
         return "to be implemented";
     }
 }
