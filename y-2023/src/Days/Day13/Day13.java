@@ -75,17 +75,17 @@ public class Day13 implements Day {
             int mirrorRow = getMirrorIndex_row(map);
             int mirrorCol = getMirrorIndex_col(map);
 
-            if (mirrorRow == -1 && mirrorCol == 9 && sum > 18000) {
-                printMap(map);
-            }
+//            if (mirrorRow == -1 && mirrorCol == 9 && sum > 18000) {
+//                printMap(map);
+//            }
 
             int mirrorRowP2 = getMirrorIndex_row_P2(map);
             int mirrorColP2 = getMirrorIndex_col_P2(map);
 
-            // TODO: Remove this when done
-            if (mirrorRow == mirrorRowP2 && mirrorCol == mirrorColP2) {
-                System.out.println("Reached here, something is wrong!");
-            }
+//            // TODO: Remove this when done
+//            if (mirrorRow == mirrorRowP2 && mirrorCol == mirrorColP2) {
+//                System.out.println("Reached here, something is wrong!");
+//            }
 
             /*
              * The mirror index for part 2 must be different from the mirror index for part 1.
@@ -113,10 +113,10 @@ public class Day13 implements Day {
                 }
             }
 
-            // TODO: Remove this when done
-            if (mirrorRow == mirrorRowP2 && mirrorCol == mirrorColP2) {
-                System.out.println("Reached here AGAIN, something is wrong!");
-            }
+//            // TODO: Remove this when done
+//            if (mirrorRow == mirrorRowP2 && mirrorCol == mirrorColP2) {
+//                System.out.println("Reached here AGAIN, something is wrong!");
+//            }
 
             sum += mirrorRowP2 != -1 ? (mirrorRowP2 + 1) * 100 : mirrorColP2 + 1;
         }
