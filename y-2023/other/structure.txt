@@ -1,0 +1,51 @@
+/data
+    /dayX
+        /input.txt
+        /input_test.txt
+
+/other
+    /something.txt
+
+/resources
+    /config.txt
+    /last_request.txt
+
+/src
+    /Days
+        /DayX
+            /DayX.java
+            /Stream_DayX.java
+            /Other.java
+    /General
+        /Day.java
+        /DailySetup.java
+        /Helper.java
+        /... (other general classes)
+    /Main.java
+
+
+// ----------------------------------------------------------------------------------------------- //
+
+
+Legend:
+    X = day number
+
+    /data = folder for data
+        input.txt = input file for the day
+        input_test.txt = test input file for the day
+
+    /other = folder for other stuff
+        something.txt = notes to myself, useful links, etc.
+
+    /resources = folder for resources
+
+    /src = folder for source code
+
+        /Days = folder for daily classes
+            DayX.java = class for the day
+            Stream_DayX.java = class for the day using streams
+            Other.java = other person's beautiful solution to the daily problem
+
+        /General = folder for general classes
+
+        Main.java = main class to run the program
