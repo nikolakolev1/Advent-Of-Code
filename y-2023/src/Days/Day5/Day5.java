@@ -3,7 +3,6 @@ package Days.Day5;
 import Days.Day5.Main.GA;
 import General.Day;
 import General.Helper;
-import General.IntervalLong;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -142,13 +141,13 @@ public class Day5 implements Day {
     }
 
     class Range {
-        IntervalLong destination;
-        IntervalLong source;
+        Utils.Range destination;
+        Utils.Range source;
         long length;
 
         public Range(long destinationRangeStart, long sourceRangeStart, long length) {
-            destination = new IntervalLong(destinationRangeStart, destinationRangeStart + length - 1);
-            source = new IntervalLong(sourceRangeStart, sourceRangeStart + length - 1);
+            destination = new Utils.Range(destinationRangeStart, destinationRangeStart + length - 1);
+            source = new Utils.Range(sourceRangeStart, sourceRangeStart + length - 1);
             this.length = length;
         }
 

@@ -1,12 +1,12 @@
-package General;
+package Utils;
 
 import java.util.Objects;
 
-public class IntervalLong {
+public class Range {
     public final long left;
     public final long right;
 
-    public IntervalLong(long x, long y) {
+    public Range(long x, long y) {
         this.left = Math.min(x, y);
         this.right = Math.max(x, y);
     }
@@ -15,19 +15,19 @@ public class IntervalLong {
         return left <= a && a <= right;
     }
 
-    public boolean contains(IntervalLong a) {
+    public boolean contains(Range a) {
         return left <= a.left && a.right <= right;
     }
 
-    public boolean overlaps(IntervalLong a) {
+    public boolean overlaps(Range a) {
         return overlapsLower(a) || overlapsUpper(a);
     }
 
-    public boolean overlapsLower(IntervalLong a) {
+    public boolean overlapsLower(Range a) {
         return a.left <= left && left <= a.right && a.right <= right;
     }
 
-    public boolean overlapsUpper(IntervalLong a) {
+    public boolean overlapsUpper(Range a) {
         return left <= a.left && a.left <= right && right <= a.right;
     }
 
@@ -35,8 +35,8 @@ public class IntervalLong {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IntervalLong interval = (IntervalLong) o;
-        return left == interval.left && right == interval.right;
+        Range range = (Range) o;
+        return left == range.left && right == range.right;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class IntervalLong {
 
     @Override
     public String toString() {
-        return "Interval{" +
+        return "Range{" +
                 "left=" + left +
                 ", right=" + right +
                 '}';
