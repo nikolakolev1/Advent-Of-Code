@@ -1,6 +1,7 @@
 package Days.Day19;
 
 import General.Day;
+import General.Helper;
 
 import java.io.File;
 import java.util.*;
@@ -64,7 +65,7 @@ public class Day19 implements Day {
 
     public static void main(String[] args) {
         Day day19 = new Day19();
-        day19.loadData(Day.filename(19));
+        day19.loadData(Helper.filename(19));
         System.out.println(day19.part1());
         System.out.println(day19.part2());
     }

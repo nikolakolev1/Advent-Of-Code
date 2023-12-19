@@ -4,26 +4,21 @@ public class Main {
     static String warning = "solveAndPrint_Time() is not the most accurate way to measure the time of a program, because some days do part of the computation during the loadData() method\n";
 
     public static void main(String[] args) {
+        solveAll_Time();
+//        solveAll();
+    }
+
+    private static void solveAll_Time() {
         System.out.println(warning);
 
-        try {
-            Helper.solveAndPrint_Time(1);
-            Helper.solveAndPrint_Time(2);
-            Helper.solveAndPrint_Time(3);
-            Helper.solveAndPrint_Time(4);
-            Helper.solveAndPrint_Time(5);
-            Helper.solveAndPrint_Time(6);
-            Helper.solveAndPrint_Time(7);
-            Helper.solveAndPrint_Time(8);
-            Helper.solveAndPrint_Time(9);
-            Helper.solveAndPrint_Time(10);
-            Helper.solveAndPrint_Time(11);
-            Helper.solveAndPrint_Time(12);
-            Helper.solveAndPrint_Time(13);
-            Helper.solveAndPrint_Time(14);
-            Helper.solveAndPrint_Time(15);
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+        for (int i = 1; i <= 19; i++) {
+            Helper.solveAndPrint_Time(i);
+        }
+    }
+
+    private static void solveAll() {
+        for (int i = 1; i <= 19; i++) {
+            Helper.solveAndPrint(i);
         }
     }
 }
