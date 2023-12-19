@@ -1,0 +1,5 @@
+in{x<1000:aaa,bbb}
+aaa{m<1000:A,R}
+bbb{m>2000:A,R}
+
+{x=1,m=1,a=1,s=1}
