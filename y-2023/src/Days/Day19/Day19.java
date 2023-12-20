@@ -29,7 +29,7 @@ public class Day19 implements Day {
         int value;
         String doIfHolds;
 
-        // Workflow, Condition or Boolean (True = accept, False = reject)
+        // Condition or Boolean (True = accept, False = reject)
         Object cond1, cond2; // For part 2
 
         Condition(char attribute, char operator, int value, String doIfHolds) {

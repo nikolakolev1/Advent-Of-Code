@@ -12,6 +12,7 @@ import Days.Day17.Day17;
 import Days.Day18.Day18;
 import Days.Day19.Day19;
 import Days.Day2.Day2;
+import Days.Day20.Day20;
 import Days.Day3.Day3;
 import Days.Day4.Day4;
 import Days.Day5.Day5;
@@ -76,7 +77,7 @@ public class Helper {
             case 17 -> new Day17();
             case 18 -> new Day18();
             case 19 -> new Day19();
-//            case 20 -> new Day20();
+            case 20 -> new Day20();
 //            case 21 -> new Day21();
 //            case 22 -> new Day22();
 //            case 23 -> new Day23();
