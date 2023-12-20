@@ -2,9 +2,9 @@ package Days.Day8;
 
 import General.Day;
 import General.Helper;
+import Utils.LCM;
 
 import java.io.File;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -117,7 +117,7 @@ public class Day8 implements Day {
             steps.add(stepsForNode);
         }
 
-        return LCM(steps).toString();
+        return LCM.findLCM(steps).toString();
     }
 
     private int getStepsForNode_P2(Node node) {
@@ -141,73 +141,6 @@ public class Day8 implements Day {
             }
         }
         return stepsForNode;
-    }
-
-    private BigInteger LCM(List<Integer> denominators) {
-        ArrayList<Integer> commonMultiples = new ArrayList<>();
-        int currentPrime = 2;
-
-        while (!allAreOnes(denominators)) {
-            if (anyIsDivisibleBy(denominators, currentPrime)) {
-                commonMultiples.add(currentPrime);
-
-                for (int i = 0; i < denominators.size(); i++) {
-                    int dividend = denominators.get(i);
-                    if (isDivisibleBy(dividend, currentPrime)) {
-                        denominators.set(i, (dividend / currentPrime));
-                    }
-                }
-            } else {
-                currentPrime = getNextPrime(currentPrime);
-            }
-        }
-
-        BigInteger lcm = new BigInteger("1");
-        for (Integer commonMultiple : commonMultiples) {
-            lcm = lcm.multiply(new BigInteger(String.valueOf(commonMultiple)));
-        }
-
-        return lcm;
-    }
-
-    private int getNextPrime(int currentPrime) {
-        int num = currentPrime + 1;
-
-        while (!isPrime(num)) num++;
-
-        return num;
-    }
-
-    private boolean isPrime(int num) {
-        if (num <= 1) {
-            return false;
-        }
-
-        for (int i = 2; i <= num / 2; i++) {
-            if ((num % i) == 0)
-                return false;
-        }
-        return true;
-    }
-
-    private boolean allAreOnes(List<Integer> list) {
-        for (Integer i : list) {
-            if (i != 1) return false;
-        }
-
-        return true;
-    }
-
-    private boolean isDivisibleBy(int dividend, int divisor) {
-        return dividend % divisor == 0;
-    }
-
-    private boolean anyIsDivisibleBy(List<Integer> list, int divisor) {
-        for (Integer i : list) {
-            if (isDivisibleBy(i, divisor)) return true;
-        }
-
-        return false;
     }
 
     static class Node {
