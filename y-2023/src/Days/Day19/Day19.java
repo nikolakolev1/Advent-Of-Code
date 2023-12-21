@@ -70,6 +70,7 @@ public class Day19 implements Day {
         System.out.println(day19.part2());
     }
 
+    @Override
     public void loadData(String filename) {
         try {
             File input = new File(filename);
@@ -147,12 +148,14 @@ public class Day19 implements Day {
         }
     }
 
+    @Override
     public String part1() {
         organizeParts();
 
         return String.valueOf(acceptedParts.stream().mapToInt(Part::value).sum());
     }
 
+    @Override
     public String part2() {
         connectConditions(workflows.get("in"));
 

@@ -99,7 +99,6 @@ public class Day11 implements Day {
         return String.valueOf(sum);
     }
 
-    // ------------------- HELPER METHODS ------------------- //
     // Expand the universe by a factor of RATE_OF_EXPANSION (part 1 only, part 2 does that dynamically on calculation)
     private boolean[][] expandUniverse(boolean[][] universe) {
         ArrayList<Integer> emptyRows = emptyRows(universe);

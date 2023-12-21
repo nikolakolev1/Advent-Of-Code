@@ -68,40 +68,6 @@ public class Day14 implements Day {
         return String.valueOf(calculate(landscape));
     }
 
-    // Print the current global landscape
-    private void printLandscape() {
-        for (List<Integer> row : landscape) {
-            for (Integer tile : row) {
-                switch (tile) {
-                    case 0 -> System.out.print(".");
-                    case 1 -> System.out.print("O");
-                    case 2 -> System.out.print("#");
-                    default -> System.out.print("?");
-                }
-            }
-            System.out.println();
-        }
-
-        System.out.println();
-    }
-
-    // Print the given landscape
-    private void printLandscape(List<List<Integer>> landscape) {
-        for (List<Integer> row : landscape) {
-            for (Integer tile : row) {
-                switch (tile) {
-                    case 0 -> System.out.print(".");
-                    case 1 -> System.out.print("O");
-                    case 2 -> System.out.print("#");
-                    default -> System.out.print("?");
-                }
-            }
-            System.out.println();
-        }
-
-        System.out.println();
-    }
-
     // Tilt the landscape in the given direction
     private List<List<Integer>> tilt(List<List<Integer>> landscape) {
         List<List<Integer>> newLandscape = emptyLandscape(landscape.getFirst().size(), landscape.size());
@@ -303,5 +269,39 @@ public class Day14 implements Day {
         }
 
         return true;
+    }
+
+    // Print the current global landscape
+    private void printLandscape() {
+        for (List<Integer> row : landscape) {
+            for (Integer tile : row) {
+                switch (tile) {
+                    case 0 -> System.out.print(".");
+                    case 1 -> System.out.print("O");
+                    case 2 -> System.out.print("#");
+                    default -> System.out.print("?");
+                }
+            }
+            System.out.println();
+        }
+
+        System.out.println();
+    }
+
+    // Print the given landscape
+    private void printLandscape(List<List<Integer>> landscape) {
+        for (List<Integer> row : landscape) {
+            for (Integer tile : row) {
+                switch (tile) {
+                    case 0 -> System.out.print(".");
+                    case 1 -> System.out.print("O");
+                    case 2 -> System.out.print("#");
+                    default -> System.out.print("?");
+                }
+            }
+            System.out.println();
+        }
+
+        System.out.println();
     }
 }

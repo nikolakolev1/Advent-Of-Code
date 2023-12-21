@@ -118,22 +118,6 @@ public class Day16 implements Day {
         return String.valueOf(max);
     }
 
-    // prints the contraption to the console
-    private void printContraption() {
-        for (List<Integer> row : contraption) {
-            for (Integer i : row) {
-                switch (i) {
-                    case 0 -> System.out.print(" ");
-                    case 1 -> System.out.print("/");
-                    case 2 -> System.out.print("\\");
-                    case 3 -> System.out.print("|");
-                    case 4 -> System.out.print("-");
-                }
-            }
-            System.out.println();
-        }
-    }
-
     // Initializes the energized ArrayList (or resets it)
     private void initEnergized() {
         energized = new ArrayList<>();
@@ -240,5 +224,21 @@ public class Day16 implements Day {
             }
         }
         return sum;
+    }
+
+    // prints the contraption to the console
+    private void printContraption() {
+        for (List<Integer> row : contraption) {
+            for (Integer i : row) {
+                switch (i) {
+                    case 0 -> System.out.print(" ");
+                    case 1 -> System.out.print("/");
+                    case 2 -> System.out.print("\\");
+                    case 3 -> System.out.print("|");
+                    case 4 -> System.out.print("-");
+                }
+            }
+            System.out.println();
+        }
     }
 }

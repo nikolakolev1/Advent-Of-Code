@@ -25,6 +25,7 @@ public class Day10 implements Day {
         System.out.println(day10.part2());
     }
 
+    @Override
     public void loadData(String filename) {
         try {
             File input = new File(filename);
@@ -58,6 +59,7 @@ public class Day10 implements Day {
     }
 
     // Find the loop and divide its length by 2
+    @Override
     public String part1() {
         return String.valueOf(findLoop().size() / 2);
     }
@@ -68,7 +70,9 @@ public class Day10 implements Day {
      * Go clockwise and flood left (mark the outside of the loop)
      * Count what's left (nulls)
      */
+    @Override
     public String part2() {
+        part1();
         clearTubes(); // Clear the tubes to make a map with only the loop
         map = new Boolean[tubes.size()][tubes.getFirst().size()]; // (false -> outside the loop, true -> the loop border, null -> inside the loop)
 
