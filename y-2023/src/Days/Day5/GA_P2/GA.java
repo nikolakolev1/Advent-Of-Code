@@ -1,7 +1,4 @@
-package Days.Day5.Main;
-
-import Days.Day5.Problems.AocDay5;
-import Days.Day5.Problems.FTTx;
+package Days.Day5.GA_P2;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -438,5 +435,21 @@ public class GA {
                 MUTATION_PROBABILITY = (MUTATION_PROBABILITY + 0.1 <= 1) ? (MUTATION_PROBABILITY + 0.1) : 1;
             }
         }
+    }
+}
+
+/**
+ * The individual class is the representation of a single individual in the population.
+ */
+class Individual {
+    public int[] individualI;
+    public Double fitness;
+
+    public Individual(int[] individual) {
+        individualI = individual;
+    }
+
+    public Individual copyItself() {
+        return new Individual(individualI.clone());
     }
 }

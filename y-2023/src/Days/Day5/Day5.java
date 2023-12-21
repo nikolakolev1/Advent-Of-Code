@@ -1,6 +1,6 @@
 package Days.Day5;
 
-import Days.Day5.Main.GA;
+import Days.Day5.GA_P2.GA;
 import General.Day;
 import General.Helper;
 

@@ -1,4 +1,4 @@
-package Days.Day5.Problems;
+package Days.Day5.GA_P2;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
