@@ -2,8 +2,20 @@ Day5 (Part 2)
 - Improve day5 part 2 GA solution (better crossover, mutation, etc.)
 - Check that out when trying to figure out how to manipulate the ranges - https://gist.github.com/royvanrijn/facc44de776bf87594c054b302a9520c
 
+Day 12 (Part 2)
+- Do it
+
 Day13 (Part 2)
 - Fix it
 
+Day 17 (Both Parts)
+- Do them
+
+Day 18 (Part 2)
+- Do it
+
 Day Interface
 - implement (if possible) a pretty print method that some of the days will have to print beautiful output
+
+Main and Helper
+- Find a way to print the time it took to load and parse the input as well
