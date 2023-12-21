@@ -3,6 +3,7 @@ package Days.Day8;
 import General.Day;
 import General.Helper;
 import Utils.LCM;
+import Utils.Node_LR;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,8 +13,8 @@ import java.util.Scanner;
 
 public class Day8 implements Day {
     private String[] instructions;
-    private final ArrayList<Node> nodes = new ArrayList<>();
-    private final HashMap<String, Node> nodeMap = new HashMap<>();
+    private final ArrayList<Node_LR> nodes = new ArrayList<>();
+    private final HashMap<String, Node_LR> nodeMap = new HashMap<>();
 
     public static void main(String[] args) {
         Day day8 = new Day8();
@@ -42,7 +43,7 @@ public class Day8 implements Day {
                     continue;
                 }
 
-                nodes.add(new Node(line.substring(0, 3)));
+                nodes.add(new Node_LR(line.substring(0, 3)));
                 nodeMap.put(line.substring(0, 3), nodes.getLast());
             }
 
@@ -56,7 +57,7 @@ public class Day8 implements Day {
 
                 String[] split = line.split("=")[1].split(",");
 
-                Node node = nodes.get(i);
+                Node_LR node = nodes.get(i);
 
                 String leftStr = split[0].trim().substring(1);
                 String rightStr = split[1].trim().substring(0, 3);
@@ -75,7 +76,7 @@ public class Day8 implements Day {
 
     @Override
     public String part1() {
-        Node current = nodeMap.get("AAA");
+        Node_LR current = nodeMap.get("AAA");
 
         int steps = 0;
 
@@ -101,9 +102,9 @@ public class Day8 implements Day {
 
     @Override
     public String part2() {
-        List<Node> nodes_LastCharA = new ArrayList<>();
+        List<Node_LR> nodes_LastCharA = new ArrayList<>();
 
-        for (Node node : nodes) {
+        for (Node_LR node : nodes) {
             if (node.value.charAt(2) == 'A') {
                 nodes_LastCharA.add(node);
             }
@@ -111,7 +112,7 @@ public class Day8 implements Day {
 
         List<Integer> steps = new ArrayList<>();
 
-        for (Node node : nodes_LastCharA) {
+        for (Node_LR node : nodes_LastCharA) {
             int stepsForNode = getStepsForNode_P2(node);
 
             steps.add(stepsForNode);
@@ -120,10 +121,10 @@ public class Day8 implements Day {
         return LCM.findLCM(steps).toString();
     }
 
-    private int getStepsForNode_P2(Node node) {
+    private int getStepsForNode_P2(Node_LR node) {
         int stepsForNode = 0;
 
-        Node current = node;
+        Node_LR current = node;
         int instructionPointer = 0;
         while (!(current.value.charAt(2) == 'Z')) {
             stepsForNode++;
@@ -141,23 +142,5 @@ public class Day8 implements Day {
             }
         }
         return stepsForNode;
-    }
-
-    static class Node {
-        public Node left;
-        public Node right;
-        public String value;
-
-        public Node(String value) {
-            this.value = value;
-        }
-
-        public void addLeft(Node node) {
-            this.left = node;
-        }
-
-        public void addRight(Node node) {
-            this.right = node;
-        }
     }
 }

@@ -9,11 +9,11 @@ import java.util.Scanner;
 import java.util.stream.IntStream;
 
 public class Stream_Day6 implements Day {
-    private record Race(int time, long distance) {
-    }
-
     private final ArrayList<Race> races = new ArrayList<>();
     private Race raceP2;
+
+    private record Race(int time, long distance) {
+    }
 
     public static void main(String[] args) {
         Day day6 = new Day6();

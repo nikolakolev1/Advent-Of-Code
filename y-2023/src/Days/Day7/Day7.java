@@ -7,12 +7,6 @@ import java.io.File;
 import java.util.*;
 
 public class Day7 implements Day {
-    private record hand_bid(int[] hand, int bid) {
-    }
-
-    private record card_count(int card, int count) {
-    }
-
     private static final HashMap<Character, Integer> mapCardToInt = new HashMap<>(), mapCardToInt_P2 = new HashMap<>();
     private List<hand_bid> hands = new ArrayList<>();
     private final List<ArrayList<hand_bid>> handsByCombination = new ArrayList<>(), handsByCombination_P2 = new ArrayList<>();
@@ -20,6 +14,12 @@ public class Day7 implements Day {
     private static final int handI = 0, bidI = 1; // for parsing the data
     private static final int handLength = 5; // hardcoded
     private static final int highCard = 0, onePair = 1, twoPairs = 2, threeOfAKind = 3, fullHouse = 4, fourOfAKind = 5, fiveOfAKind = 6;
+
+    private record hand_bid(int[] hand, int bid) {
+    }
+
+    private record card_count(int card, int count) {
+    }
 
     public static void main(String[] args) {
         Day day7 = new Day7();
