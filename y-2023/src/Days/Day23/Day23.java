@@ -1,18 +1,21 @@
 package Days.Day23;
 
+import General.Day;
 import General.Helper;
 
 import java.io.File;
 import java.util.Scanner;
 
-public class Day23 {
+public class Day23 implements Day {
     public static void main(String[] args) {
-//        loadData("data.txt");
-        part1();
-        part2();
+        Day day23 = new Day23();
+        day23.loadData(Helper.filename(23));
+        System.out.println(day23.part1());
+        System.out.println(day23.part2());
     }
 
-    public static void loadData(String filename) {
+    @Override
+    public void loadData(String filename) {
         try {
             File input = new File(filename);
             Scanner scanner = new Scanner(input);
@@ -27,11 +30,13 @@ public class Day23 {
         }
     }
 
-    public static String part1() {
+    @Override
+    public String part1() {
         return "to be implemented";
     }
 
-    public static String part2() {
+    @Override
+    public String part2() {
         return "to be implemented";
     }
 }
