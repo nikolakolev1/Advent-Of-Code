@@ -14,6 +14,9 @@ Day 17 (Both Parts)
 Day 18 (Part 2)
 - Do it
 
+Day 21 (Part 2)
+- Do it
+
 Day Interface
 - implement (if possible) a pretty print method that some of the days will have to print beautiful output
 
