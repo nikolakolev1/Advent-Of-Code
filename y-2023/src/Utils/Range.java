@@ -6,9 +6,9 @@ public class Range {
     public final long left;
     public final long right;
 
-    public Range(long x, long y) {
-        this.left = Math.min(x, y);
-        this.right = Math.max(x, y);
+    public Range(long a, long b) {
+        this.left = Math.min(a, b);
+        this.right = Math.max(a, b);
     }
 
     public boolean contains(long a) {
