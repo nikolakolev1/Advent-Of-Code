@@ -225,7 +225,7 @@ public class Day20 implements Day {
     }
 
     // For part 2
-    private void reset() {
+    public void reset() {
         modules.clear();
         moduleMap.clear();
 
