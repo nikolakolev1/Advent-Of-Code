@@ -3,12 +3,17 @@ package Utils;
 import java.util.Objects;
 
 public class Range {
-    public final long left;
-    public final long right;
+    public long left, right;
+    public double leftD, rightD;
 
     public Range(long a, long b) {
         this.left = Math.min(a, b);
         this.right = Math.max(a, b);
+    }
+
+    public Range(double a, double b) {
+        this.leftD = Math.min(a, b);
+        this.rightD = Math.max(a, b);
     }
 
     public boolean contains(long a) {
