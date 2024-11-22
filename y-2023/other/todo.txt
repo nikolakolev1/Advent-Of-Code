@@ -9,7 +9,7 @@ Day13 (Part 2)
 - Fix it
 
 Day 17 (Both Parts)
-- Do them
+- Done, but with another person's code
 
 Day 18 (Part 2)
 - Do it
@@ -17,8 +17,11 @@ Day 18 (Part 2)
 Day 21 (Part 2)
 - Do it
 
-Day Interface
-- implement (if possible) a pretty print method that some of the days will have to print beautiful output
+Day 24 (Both Parts)
+- Do them
+
+Day 25 (Both Parts)
+- Do them
 
 Main and Helper
 - Find a way to print the time it took to load and parse the input as well
