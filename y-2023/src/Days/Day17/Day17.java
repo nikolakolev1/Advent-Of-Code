@@ -8,35 +8,56 @@ import java.util.*;
 
 public class Day17 implements Day {
     // A 2D int array -> each number represents the cost of moving to that position
-    private int[][] map;
+    private int[][] costMap;
 
     // A 4D int array -> each number represents the least amount of steps to get to that position (considering direction and straight moves left)
     private int[][][][] visited;
 
     // A global list of the states to be visited by the search algorithm
-    private final List<state> states = new ArrayList<>();
+    private final Stack<State> states = new Stack<>();
 
     // Directions
     private final int EAST = 0, SOUTH = 1, WEST = 2, NORTH = 3;
 
     // Max number of straight moves in a row
-    private final int MAX_STRAIGHT = 2; // 3, but we start at 0 => 2
+    private final int MAX_STRAIGHT = 3;
 
     // Least amount of steps to reach the goal found so far
-    private int leastSteps = Integer.MAX_VALUE;
+    private int leastSteps;
 
-    // A state is a position on the map, with a direction and a number of straight moves in a row, reached by a certain number of steps
-    private record state(int y, int x, int straightMoves, int direction, int steps) {
+    // A State is a position on the map, with a direction and a number of straight moves in a row, reached by a certain number of steps
+    private record State(Coordinates coordinates, int direction, int straightMoves, int steps) {
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+
+            if (obj == this) {
+                return true;
+            }
+
+            if (!(obj instanceof State)) {
+                return false;
+            }
+
+            State state = (State) obj;
+
+            return coordinates.equals(state.coordinates) && direction == state.direction && straightMoves == state.straightMoves && steps == state.steps;
+        }
+    }
+
+    private record Coordinates(int x, int y) {
     }
 
     public static void main(String[] args) {
         Day day17 = new Day17();
-//        day17.loadData(Helper.filename_test(17));
+        day17.loadData(Helper.filename_test(17));
 //        day17.loadData(Helper.filename(17));
 //        day17.loadData("data/day17/test.txt");
-        day17.loadData("data/day17/test2.txt");
+//        day17.loadData("data/day17/test2.txt");
         System.out.println(day17.part1());
-        System.out.println(day17.part2());
+//        System.out.println(day17.part2());
     }
 
     @Override
@@ -51,13 +72,13 @@ public class Day17 implements Day {
                 String row = scanner.nextLine();
 
                 // Initialize map (if not already)
-                if (map == null) {
-                    map = new int[row.length()][row.length()];
+                if (costMap == null) {
+                    costMap = new int[row.length()][row.length()];
                 }
 
                 // Fill map (row by row)
                 for (int x = 0; x < row.length(); x++) {
-                    map[y][x] = row.charAt(x) - 48;
+                    costMap[y][x] = row.charAt(x) - 48;
                 }
 
                 y++;
@@ -72,15 +93,18 @@ public class Day17 implements Day {
     // Part 1: Find the shortest path from the top left corner to the bottom right corner
     @Override
     public String part1() {
-//        initLeastSteps();
-//        initVisited();
-//
+        initLeastSteps();
+        initVisited();
+
 //        long startTime = System.nanoTime();
 //
-//        state start = new state(0, 0, 0, EAST, 0);
-//        states.add(start);
-//        search();
-//        System.out.println(leastSteps);
+        State start1 = new State(new Coordinates(0, 0), EAST, 0, 0);
+        State start2 = new State(new Coordinates(0, 0), SOUTH, 0, 0);
+        states.push(start1);
+        states.push(start2);
+
+        search();
+        System.out.println(leastSteps);
 //
 //        long endTime = System.nanoTime();
 //        long timeElapsed = endTime - startTime;
@@ -96,27 +120,44 @@ public class Day17 implements Day {
 
     // Assign leastSteps to the sum of the first and second row and the last column
     private void initLeastSteps() {
-        int firstRowSum = Arrays.stream(map[0]).sum();
-        int secondRowSum = Arrays.stream(map[1]).sum();
+        int x = 0;
+        int y = 0;
 
-        int[] lastCol = new int[map.length];
-        for (int i = 0; i < lastCol.length; i++) {
-            lastCol[i] = map[i][map.length - 1];
+        leastSteps += costMap[y][x];
+
+        while (x < costMap.length - 1) {
+            for (int forward = 0; forward < 3; forward++) {
+                leastSteps += costMap[y][++x];
+
+                if (x == costMap.length - 1) {
+                    break;
+                }
+            }
+
+            leastSteps += y == 0 ? costMap[++y][x] : costMap[--y][x];
         }
 
-        int lastColSum = Arrays.stream(lastCol).sum();
+        while (y < costMap.length - 1) {
+            for (int forward = 0; forward <= 3; forward++) {
+                leastSteps += costMap[y++][x];
 
-        leastSteps = firstRowSum + secondRowSum + lastColSum;
+                if (y == costMap.length - 1) {
+                    break;
+                }
+            }
+
+            leastSteps += x == costMap.length - 1 ? costMap[y][x--] : costMap[y][x++];
+        }
     }
 
     // Initialize visited array with max values
     private void initVisited() {
-        visited = new int[4][3][map.length][map.length];
+        visited = new int[costMap.length][costMap.length][4][4];
 
-        for (int[][][] direction : visited) {
-            for (int[][] straightMoves : direction) {
-                for (int[] row : straightMoves) {
-                    Arrays.fill(row, Integer.MAX_VALUE);
+        for (int[][][] x : visited) {
+            for (int[][] y : x) {
+                for (int[] row : y) {
+                    Arrays.fill(row, leastSteps);
                 }
             }
         }
@@ -124,139 +165,170 @@ public class Day17 implements Day {
 
     // Search for the shortest path
     private void search() {
-        int debug = 100;
+        int iterations = 0;
 
         while (!states.isEmpty()) {
-            if (debug-- == 0) {
-//                System.out.println(states.size());
-                debug = 100;
+            iterations++;
+            if (iterations % 10000 == 0) {
+                System.out.println("Iterations: " + iterations);
+                System.out.println("Least steps " + leastSteps);
+            }
+            if (iterations % 10000000 == 0) {
+                System.out.println("Least steps " + leastSteps);
             }
 
-            state current = states.getFirst();
-            states.removeFirst();
+            State currentState = states.pop();
 
-            // If we are at the exit, update leastSteps
-            if (current.y == map.length - 1 && current.x == map.length - 1) {
-                if (current.steps < leastSteps) {
-                    leastSteps = current.steps;
-
-                    states.removeIf(next -> next.steps >= leastSteps);
-                }
-
+            if (currentState == null) {
                 continue;
             }
 
-            // If we have already found a path with fewer steps, skip this state
-            for (state move : possibleMoves(current)) {
-                if (move.steps >= leastSteps) {
-                    continue;
-                } else if (visited(move)) {
-                    continue;
-                }
+            // If we have already found a path with fewer steps, skip this State
+            if (currentState.steps >= leastSteps) {
+                continue;
+            }
 
-                insert(move);
+            // If we are at the exit (with fewer steps), update leastSteps
+            if (currentState.coordinates.y == costMap.length - 1 && currentState.coordinates.x == costMap.length - 1) {
+                leastSteps = currentState.steps;
+                continue;
+            }
+
+            // If we have already visited this State with fewer steps, skip it
+            if (getStepsFromVisited(currentState) < currentState.steps) {
+                continue;
+            } else {
+                addStepsToVisited(currentState);
+            }
+
+            // Add possible moves to the stack
+            List<State> moves = possibleMoves(currentState);
+            for (State move : moves) {
+                states.push(move);
+            }
+
+            List<State> nextStates = nextStatesSameDirection(currentState);
+            for (State nextState : nextStates) {
+                if (states.contains(nextState)) {
+//                    System.out.println("Already contains");
+                } else {
+                    states.push(nextState);
+                }
             }
         }
+
+        System.out.println("Iterations: " + iterations);
     }
 
-    // Return possible moves from current state
-    private List<state> possibleMoves(state current) {
-        List<state> moves = new ArrayList<>();
+    // Return a sorted list of possible moves from current State
+    private List<State> possibleMoves(State currentState) {
 
-        // May turn left, right or continue straight (if not at max straight moves)
-        int[] directions = possibleDirections(current);
+        List<State> moves = new LinkedList<>();
+
+        if (currentState.straightMoves == 0) return moves;
+
+        // May turn left or right
+        int[] directions = directionsAfterTurn(currentState.direction);
 
         for (int direction : directions) {
-            int newStraightMoves = (current.direction == direction) ? current.straightMoves + 1 : 0;
-
-            switch (direction) {
-                case EAST -> {
-                    if (current.x + 1 < map.length) {
-                        moves.add(new state(current.y, current.x + 1, newStraightMoves, EAST, current.steps + map[current.y][current.x + 1]));
-                    }
-                }
-                case SOUTH -> {
-                    if (current.y + 1 < map.length) {
-                        moves.add(new state(current.y + 1, current.x, newStraightMoves, SOUTH, current.steps + map[current.y + 1][current.x]));
-                    }
-                }
-                case WEST -> {
-                    if (current.x - 1 >= 0) {
-                        moves.add(new state(current.y, current.x - 1, newStraightMoves, WEST, current.steps + map[current.y][current.x - 1]));
-                    }
-                }
-                case NORTH -> {
-                    if (current.y - 1 >= 0) {
-                        moves.add(new state(current.y - 1, current.x, newStraightMoves, NORTH, current.steps + map[current.y - 1][current.x]));
-                    }
-                }
+            if (direction == EAST && currentState.coordinates.x == costMap.length - 1 ||
+                    direction == SOUTH && currentState.coordinates.y == costMap.length - 1 ||
+                    direction == WEST && currentState.coordinates.x == 0 ||
+                    direction == NORTH && currentState.coordinates.y == 0) {
+                continue;
             }
+
+            State newState = new State(new Coordinates(currentState.coordinates.x, currentState.coordinates.y), direction, 0, currentState.steps);
+            moves.add(newState);
         }
 
+        // Sort the moves by the cost of the move
+//        moves.sort(Comparator.comparingInt(state -> (state.coordinates.x + state.coordinates.y)));
+        moves.sort(Comparator.comparingInt(state -> state.coordinates.x * state.coordinates.y));
+        Collections.reverse(moves);
         return moves;
     }
 
     // Return possible directions (left, right, straight)
-    private int[] possibleDirections(state state) {
-        // If we are at max straight moves, we can only turn left or right
-        if (state.straightMoves == MAX_STRAIGHT) {
-            int left = state.direction - 1;
-            int right = state.direction + 1;
-
-            if (left < 0) left = 3;
-            if (right > 3) right = 0;
-
-            return new int[]{left, right};
-        }
-
+    private int[] directionsAfterTurn(int direction) {
         // Else we can turn left, right or continue straight
-        switch (state.direction) {
-            case EAST -> {
-                return new int[]{EAST, SOUTH, NORTH};
+        switch (direction) {
+            case WEST, EAST -> {
+                return new int[]{SOUTH, NORTH};
             }
-            case SOUTH -> {
-                return new int[]{SOUTH, WEST, EAST};
+            case SOUTH, NORTH -> {
+                return new int[]{WEST, EAST};
             }
-            case WEST -> {
-                return new int[]{WEST, NORTH, SOUTH};
-            }
-            case NORTH -> {
-                return new int[]{NORTH, EAST, WEST};
-            }
+            default -> throw new RuntimeException("Invalid State");
         }
-
-        // Should never reach this
-        throw new RuntimeException("Invalid state");
     }
 
-    // Insert state into states list, sorted by manhattan distance to the goal
-    private void insert(state state) {
-        for (int i = state.straightMoves; i < 3; i++) {
-            int temp = visited[state.direction][i][state.y][state.x];
-            visited[state.direction][i][state.y][state.x] = Math.min(temp, state.steps);
+    private State nextStateSameDirection(State currentState) {
+        int x = currentState.coordinates.x;
+        int y = currentState.coordinates.y;
 
-            for (int dir = 1; dir < 4; dir++) {
-                int temp2 = visited[(state.direction + dir) % 4][i][state.y][state.x];
-                visited[(state.direction + dir) % 4][i][state.y][state.x] = Math.min(temp2, state.steps + 1);
-            }
-
-//            visited[state.direction][i][state.y][state.x] = state.steps;
+        switch (currentState.direction) {
+            case EAST -> x++;
+            case SOUTH -> y++;
+            case WEST -> x--;
+            case NORTH -> y--;
         }
 
-//        Comparator<state> comparator = Comparator.comparingInt(s -> - s.y - s.x);
-        Comparator<state> comparator = Comparator.comparingInt(s -> s.y + s.x + s.steps);
-        int index = Collections.binarySearch(states, state, comparator);
-
-        // I don't know why that happens (https://stackoverflow.com/questions/16764007/insert-into-an-already-sorted-list)
-        if (index < 0) {
-            index = -index - 1;
+        if (x < 0 || x >= costMap.length || y < 0 || y >= costMap.length) {
+            return null;
+        } else {
+            return new State(new Coordinates(x, y), currentState.direction, currentState.straightMoves + 1, currentState.steps + costMap[y][x]);
         }
 
-        states.add(index, state);
     }
 
-    // Check if we have already visited this state (with fewer steps, considering direction and straight moves)
-    private boolean visited(state state) {
-        return visited[state.direction][state.straightMoves][state.y][state.x] < state.steps;
+    private List<State> nextStatesSameDirection(State current) {
+        List<State> nextStates = new LinkedList<>();
+        State state = new State(new Coordinates(current.coordinates.x, current.coordinates.y), current.direction, current.straightMoves, current.steps);
+
+        for (int i = current.straightMoves + 1; i <= MAX_STRAIGHT; i++) {
+            if (state != null) {
+                state = nextStateSameDirection(state);
+                nextStates.add(state);
+            }
+        }
+
+        return nextStates;
+    }
+
+    private int getStepsFromVisited(State state) {
+        return visited[state.coordinates.x][state.coordinates.y][state.direction][state.straightMoves];
+    }
+
+    private void addStepsToVisited(State state) {
+        if (getStepsFromVisited(state) > state.steps) {
+            for (int i = state.straightMoves; i <= MAX_STRAIGHT; i++) {
+                visited[state.coordinates.x][state.coordinates.y][state.direction][i] = state.steps;
+            }
+
+//            for (int i = 0; i < 4; i++) {
+//                if (i != state.direction) {
+//                    visited[state.coordinates.x][state.coordinates.y][i][0] = state.steps;
+//                }
+//            }
+//            if (state.straightMoves < MAX_STRAIGHT) {
+//                State nextState = nextStateSameDirection(state);
+//                if (nextState != null) addStepsToVisited_ifLess(nextState);
+//            }
+        }
+    }
+
+//     Get the values of the surrounding cells
+    private ArrayList<Integer> getSurroundingCellsValues(Coordinates coordinates) {
+        int surroundingCell1_value = ((coordinates.x - 1 >= 0) && (coordinates.y - 1 >= 0)) ? costMap[coordinates.y - 1][coordinates.x - 1] : -1; // top left
+        int surroundingCell2_value = (coordinates.y - 1 >= 0) ? costMap[coordinates.y - 1][coordinates.x] : -1; // top
+        int surroundingCell3_value = ((coordinates.x + 1 < costMap.length) && (coordinates.y - 1 >= 0)) ? costMap[coordinates.y - 1][coordinates.x + 1] : -1; // top right
+        int surroundingCell4_value = (coordinates.x - 1 >= 0) ? costMap[coordinates.y][coordinates.x - 1] : -1; // left
+        int surroundingCell5_value = (coordinates.x + 1 < costMap.length) ? costMap[coordinates.y][coordinates.x + 1] : -1; // right
+        int surroundingCell6_value = ((coordinates.x - 1 >= 0) && (coordinates.y + 1 < costMap.length)) ? costMap[coordinates.y + 1][coordinates.x - 1] : -1; // bottom left
+        int surroundingCell7_value = (coordinates.y + 1 < costMap.length) ? costMap[coordinates.y + 1][coordinates.x] : -1; // bottom
+        int surroundingCell8_value = ((coordinates.x + 1 < costMap.length) && (coordinates.y + 1 < costMap.length)) ? costMap[coordinates.y + 1][coordinates.x + 1] : -1; // bottom right
+
+        return new ArrayList<>(Arrays.asList(surroundingCell1_value, surroundingCell2_value, surroundingCell3_value, surroundingCell4_value, surroundingCell5_value, surroundingCell6_value, surroundingCell7_value, surroundingCell8_value));
     }
 }
