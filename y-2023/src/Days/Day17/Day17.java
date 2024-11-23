@@ -103,9 +103,9 @@ public class Day17 implements Day {
         states.push(start1);
         states.push(start2);
 
-        search();
-        System.out.println(leastSteps);
-//
+//        search();
+//        System.out.println(leastSteps);
+
 //        long endTime = System.nanoTime();
 //        long timeElapsed = endTime - startTime;
 //        System.out.println("Execution time in milliseconds: " + timeElapsed / 1000000 + "ms\n");
