@@ -2,7 +2,6 @@ package Days.Day24;
 
 import General.Day;
 import General.Helper;
-import Utils.RangeD;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -29,19 +28,21 @@ public class Day24 implements Day {
         }
     }
 
+    // Direction and speed
     private record Velocity(long x, long y, long z) {
         @Override
         public String toString() {
             return x + ", " + y + ", " + z;
         }
-    } // Direction and speed
+    }
 
-    private static final long TEST_MIN_X = 7, TEST_MAX_X = 27, TEST_MIN_Y = 7, TEST_MAX_Y = 27;
+    private static final long TEST_MIN_X = 200000000000000L, TEST_MAX_X = 400000000000000L, TEST_MIN_Y = 200000000000000L, TEST_MAX_Y = 400000000000000L;
     private final List<Hailstone> hailstones = new ArrayList<>();
 
     public static void main(String[] args) {
         Day day24 = new Day24();
-        day24.loadData(Helper.filename_test(24));
+//        day24.loadData(Helper.filename_test(24));
+        day24.loadData(Helper.filename(24));
         System.out.println(day24.part1());
         System.out.println(day24.part2());
     }
@@ -95,23 +96,24 @@ public class Day24 implements Day {
 
     @Override
     public String part1() {
-        printHailstones();
-        System.out.println();
-
-//        System.out.println(crossInsideTestArea_XY(hailstones.get(0), hailstones.get(3)));
+        boolean print = false;
 
         int count = 0;
         for (int i = 0; i < hailstones.size() - 1; i++) {
             for (int j = i + 1; j < hailstones.size(); j++) {
-                System.out.println(crossInsideTestArea_XY(hailstones.get(i), hailstones.get(j)));
-//                if (crossInsideTestArea_XY(hailstones.get(i), hailstones.get(j))) {
-//                    count++;
-//                }
+                if (print) System.out.print(i + " & " + j + ") ");
+
+                if (crossInsideTestArea_XY(hailstones.get(i), hailstones.get(j))) {
+                    if (print) System.out.println("Cross");
+                    count++;
+                } else {
+                    if (print) System.out.println("No cross");
+                }
             }
         }
 
-//        return String.valueOf(count);
-        return "to be implemented";
+        if (print) System.out.println("Count: " + count);
+        return String.valueOf(count);
     }
 
     @Override
@@ -120,39 +122,38 @@ public class Day24 implements Day {
     }
 
     private boolean crossInsideTestArea_XY(Hailstone h1, Hailstone h2) {
-        double yWhenMinX_h1 = h1.getYWhenX(TEST_MIN_X);
-        double yWhenMaxX_h1 = h1.getYWhenX(TEST_MAX_X);
-        double yWhenMinX_h2 = h2.getYWhenX(TEST_MIN_X);
-        double yWhenMaxX_h2 = h2.getYWhenX(TEST_MAX_X);
+        // Calculate the slopes of the hailstones
+        double slope1 = (double) h1.velocity().y / h1.velocity().x;
+        double slope2 = (double) h2.velocity().y / h2.velocity().x;
 
-        System.out.println(yWhenMinX_h1 + " " + yWhenMaxX_h1 + " " + yWhenMinX_h2 + " " + yWhenMaxX_h2);
-
-        // Parallel
-        if (yWhenMinX_h1 - yWhenMaxX_h1 == yWhenMinX_h2 - yWhenMaxX_h2) {
+        // If the slopes are equal, the hailstones are parallel => no cross
+        if (slope1 == slope2) {
             return false;
         }
 
-//        RangeD range_h1 = new RangeD(yWhenMinX_h1, yWhenMaxX_h1);
-//        RangeD range_h2 = new RangeD(yWhenMinX_h2, yWhenMaxX_h2);
+        /*
+         * The y-intercepts are the points where the hailstones' paths intersect the y-axis. In other words,
+         * they are the y-coordinates of the points where the paths cross the y-axis (where x = 0).
+         */
+        // Calculate the y-intercepts of the hailstones
+        double intercept1 = h1.position().y - slope1 * h1.position().x;
+        double intercept2 = h2.position().y - slope2 * h2.position().x;
 
-//        return range_h1.overlaps(range_h2);
+        // Calculate the x-coordinate of the intersection point
+        double xIntersection = (intercept2 - intercept1) / (slope1 - slope2);
 
-        if (Math.max(yWhenMinX_h1, yWhenMaxX_h1) < Math.min(yWhenMinX_h2, yWhenMaxX_h2)) {
-            return false;
-        } else if (Math.max(yWhenMinX_h2, yWhenMaxX_h2) < Math.min(yWhenMinX_h1, yWhenMaxX_h1)) {
-            return false;
-        }
+        // Calculate the y-coordinate of the intersection point using the first hailstone's equation
+        double yIntersection = slope1 * xIntersection + intercept1;
 
-        if (yWhenMinX_h1 < yWhenMaxX_h1) {
-            return yWhenMinX_h2 < yWhenMaxX_h1;
+        // Check if the intersection point is within the test area boundaries
+        if (xIntersection >= TEST_MIN_X && xIntersection <= TEST_MAX_X && yIntersection >= TEST_MIN_Y && yIntersection <= TEST_MAX_Y) {
+            // Ensure the intersection point is in the future for both hailstones
+            boolean isFutureForH1 = (xIntersection - h1.position().x) / h1.velocity().x >= 0;
+            boolean isFutureForH2 = (xIntersection - h2.position().x) / h2.velocity().x >= 0;
+
+            return isFutureForH1 && isFutureForH2; // The hailstones cross within the test area in the future
         } else {
-            return yWhenMinX_h1 < yWhenMaxX_h2;
-        }
-    }
-
-    private void printHailstones() {
-        for (Hailstone hailstone : hailstones) {
-            System.out.println(hailstone);
+            return false; // The hailstones do not cross within the test area
         }
     }
 }
