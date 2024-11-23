@@ -12,7 +12,7 @@ public class Main {
     private static void solveAll_Time() {
         System.out.println("1) " + warning + "2) " + warning2);
 
-        for (int i = 1; i <= 20; i++) {
+        for (int i = 1; i <= 24; i++) {
             Helper.solveAndPrint_Time(i);
         }
     }
