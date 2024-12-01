@@ -9,3 +9,6 @@ However, I am not a programmer, nor do I have exceptional knowledge in the spher
 # 2023
 - 10.11.2023 : I am already waiting for AoC. However, this year it will be very challenging to find time for it consistently, having to focus on last year of Uni, work @ Hippo, and Asya's back surgery...
 - 07.11.2023 : Операцията на Ася мина успешно днес. Покрай напрежението, стреса и авантюрата с полетите, обаче, почти не съм спал последните дни и мозъкът ми не функционира на пълни обороти. Решенията ми на пъзелите са хаотични и не мога да се фокусирам добре. Ден-два сън и всичко ще се върне по старому.
+
+# 2024
+- 01.12.2024 : AoC is fun, as always. However, this year I will not have time to do it regularly.
