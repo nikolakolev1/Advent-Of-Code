@@ -3,14 +3,11 @@ package Days.Day1;
 import General.Day;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Scanner;
+import java.util.*;
 
 public class Day1 implements Day {
-    private static ArrayList<Integer> left = new ArrayList<>();
-    private static ArrayList<Integer> right = new ArrayList<>();
+    private static final List<Integer> left = new ArrayList<>();
+    private static final List<Integer> right = new ArrayList<>();
 
     public static void main(String[] args) {
         Day1 day1 = new Day1();
@@ -21,10 +18,7 @@ public class Day1 implements Day {
 
     @Override
     public void loadData(String filename) {
-        try {
-            File input = new File(filename);
-            Scanner scanner = new Scanner(input);
-
+        try (Scanner scanner = new Scanner(new File(filename))) {
             while (scanner.hasNextLine()) {
                 String[] line = scanner.nextLine().split(" {3}");
                 left.add(Integer.parseInt(line[0]));
@@ -50,34 +44,20 @@ public class Day1 implements Day {
 
     @Override
     public String part2() {
-        HashMap<Integer, Integer> leftMap = new HashMap<>();
-        HashMap<Integer, Integer> rightMap = new HashMap<>();
+        Map<Integer, Integer> leftMap = new HashMap<>();
+        Map<Integer, Integer> rightMap = new HashMap<>();
 
         for (int i = 0; i < left.size(); i++) {
-            // Left list
-            // if already in the map, increment the value
-            if (leftMap.containsKey(left.get(i))) {
-                leftMap.put(left.get(i), leftMap.get(left.get(i)) + 1);
-            } else {
-                leftMap.put(left.get(i), 1);
-            }
-
-            // Right list
-            // if already in the map, increment the value
-            if (rightMap.containsKey(right.get(i))) {
-                rightMap.put(right.get(i), rightMap.get(right.get(i)) + 1);
-            } else {
-                rightMap.put(right.get(i), 1);
-            }
+            leftMap.merge(left.get(i), 1, Integer::sum);
+            rightMap.merge(right.get(i), 1, Integer::sum);
         }
 
-        // Calculate the sum
         int sum = 0;
-        HashSet<Integer> leftSet = new HashSet<>(leftMap.keySet());
-        for (int key : leftSet) {
-            if (rightMap.get(key) != null) {
-                sum += key * rightMap.get(key);
-            }
+        for (Map.Entry<Integer, Integer> entry : leftMap.entrySet()) {
+            int key = entry.getKey();
+            int leftCount = entry.getValue();
+            int rightCount = rightMap.getOrDefault(key, 0);
+            sum += key * leftCount * rightCount;
         }
 
         return String.valueOf(sum);
