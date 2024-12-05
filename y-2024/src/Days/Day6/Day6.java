@@ -26,11 +26,19 @@ public class Day6 implements Day {
 
     @Override
     public String part1() {
-        return "Part 1";
+        int sum = 0;
+
+        // TODO: Implement part 1
+
+        return String.valueOf(sum);
     }
 
     @Override
     public String part2() {
-        return "Part 2";
+        int sum = 0;
+
+        // TODO: Implement part 2
+
+        return String.valueOf(sum);
     }
 }
