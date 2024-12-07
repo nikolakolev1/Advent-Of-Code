@@ -22,14 +22,12 @@ public class Day7 implements Day {
     public void loadData(String filename) {
         try (Scanner scanner = new Scanner(new File(filename))) {
             while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String[] split = line.split(":");
+                String[] split = scanner.nextLine().split(":");
 
                 long testValue = Long.parseLong(split[0].trim());
                 String[] numbers = split[1].trim().split(" ");
 
-                Equation equation = new Equation(testValue, Arrays.stream(numbers).mapToInt(Integer::parseInt).toArray());
-                equations.add(equation);
+                equations.add(new Equation(testValue, Arrays.stream(numbers).mapToInt(Integer::parseInt).toArray()));
             }
         } catch (Exception e) {
             System.out.println("Error loading data: " + e.getMessage());
@@ -38,24 +36,16 @@ public class Day7 implements Day {
 
     @Override
     public String part1() {
-        long sum = 0;
-
-        for (Equation equation : equations) {
-            sum += bruteForceEquation(equation, false);
-        }
-
-        return String.valueOf(sum);
+        return String.valueOf(equations.stream()
+                .mapToLong(e -> bruteForceEquation(e, false))
+                .sum());
     }
 
     @Override
     public String part2() {
-        long sum = 0;
-
-        for (Equation equation : equations) {
-            sum += bruteForceEquation(equation, true);
-        }
-
-        return String.valueOf(sum);
+        return String.valueOf(equations.stream()
+                .mapToLong(e -> bruteForceEquation(e, true))
+                .sum());
     }
 
     // Tries all possible permutations of the numbers in the equation (+ or * in between each number)
@@ -74,22 +64,17 @@ public class Day7 implements Day {
             for (int j = 0; j < iterations; j++) {
                 long currentValue = results.poll();
 
-                if (i == numbers.length) {
-                    if (currentValue == testValue) {
-                        return currentValue;
-                    }
-                } else {
-                    if (currentValue * numbers[i] <= testValue) {
-                        results.add(currentValue * numbers[i]);
-                    }
+                if (i != numbers.length) {
+                    long product = currentValue * numbers[i];
+                    if (product <= testValue) results.add(product);
 
-                    if (currentValue + numbers[i] <= testValue) {
-                        results.add(currentValue + numbers[i]);
-                    }
+                    long sum = currentValue + numbers[i];
+                    if (sum <= testValue) results.add(sum);
 
-                    if (part2 && Long.parseLong(currentValue + "" + numbers[i]) <= testValue) {
-                        results.add(Long.parseLong(currentValue + "" + numbers[i]));
-                    }
+                    long concat = Long.parseLong(currentValue + "" + numbers[i]);
+                    if (part2 && concat <= testValue) results.add(concat);
+                } else if (currentValue == testValue) {
+                    return currentValue;
                 }
             }
         }
