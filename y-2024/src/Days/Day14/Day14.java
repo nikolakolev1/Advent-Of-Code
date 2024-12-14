@@ -68,11 +68,21 @@ public class Day14 implements Day {
 
     @Override
     public String part2() {
-        int sum = 0;
+        boolean prettyPrint = false;
 
-        // TODO: Implement part 2
+        robots.clear();
+        loadData("data/day14/input.txt");
 
-        return String.valueOf(sum);
+        for (int i = 0; i < 10000; i++) {
+            moveRobots(1);
+
+            if (checkMap()) {
+                if (prettyPrint) System.out.println(getMap(true));
+                return (i + 1) + "";
+            }
+        }
+
+        return String.valueOf(-1);
     }
 
     private void moveRobots(int seconds) {
@@ -125,19 +135,50 @@ public class Day14 implements Day {
         }
     }
 
-    private void printMap() {
+    private void printMap(boolean visualizeNumberOfRobots) {
         int[][] map = new int[maxY][maxX];
-
-        for (Robot r : robots) {
-            map[r.y][r.x]++;
-        }
+        for (Robot r : robots) map[r.y][r.x]++;
 
         for (int y = 0; y < maxY; y++) {
             for (int x = 0; x < maxX; x++) {
-                if (map[y][x] != 0) System.out.print(map[y][x]);
-                else System.out.print(".");
+                if (map[y][x] != 0) {
+                    if (visualizeNumberOfRobots) System.out.print(map[y][x]);
+                    else System.out.print("#");
+                } else System.out.print(".");
             }
             System.out.println();
         }
+    }
+
+    private String getMap(boolean visualizeNumberOfRobots) {
+        StringBuilder sb = new StringBuilder();
+
+        int[][] map = new int[maxY][maxX];
+        for (Robot r : robots) map[r.y][r.x]++;
+
+        for (int y = 0; y < maxY; y++) {
+            for (int x = 0; x < maxX; x++) {
+                if (map[y][x] != 0) {
+                    if (visualizeNumberOfRobots) sb.append(map[y][x]);
+                    else sb.append("#");
+                } else sb.append(".");
+            }
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
+
+    private boolean checkMap() {
+        int[][] map = new int[maxY][maxX];
+        for (Robot r : robots) map[r.y][r.x]++;
+
+        for (int y = 0; y < maxY; y++) {
+            for (int x = 0; x < maxX; x++) {
+                if (map[y][x] > 1) return false;
+            }
+        }
+
+        return true;
     }
 }
