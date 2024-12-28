@@ -6,6 +6,12 @@ import java.io.File;
 import java.util.Scanner;
 
 public class Day20 implements Day {
+    private record Coordinate(int x, int y) {}
+
+    // The maze where -1 is a wall, 0 is the end point and every other number is the distance from that node to the end point
+    private int[][] map;
+    private Coordinate start, end;
+
     public static void main(String[] args) {
         Day day20 = new Day20();
         day20.loadData("data/day20/input_test.txt");
@@ -17,7 +23,7 @@ public class Day20 implements Day {
     public void loadData(String filename) {
         try (Scanner scanner = new Scanner(new File(filename))) {
             while (scanner.hasNextLine()) {
-                // TODO: Load data
+                
             }
         } catch (Exception e) {
             System.out.println("Error loading data: " + e.getMessage());
