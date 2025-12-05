@@ -8,16 +8,15 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Day1 implements Day {
-    private int startX = 50;
-    private int currX = startX;
-    private int maxX = 99;
-    private int minX = 0;
+    private final int startX = 50;
+    private final int maxX = 99;
+    private final int minX = 0;
 
-    private List<Rotaton> rotations = new ArrayList<>();
+    private final List<Rotation> rotations = new ArrayList<>();
 
     public static void main(String[] args) {
-        Day day1= new Day1();
-        day1.loadData("data/day1/input_test.txt");
+        Day day1 = new Day1();
+        day1.loadData("data/day1/input.txt");
         System.out.println(day1.part1());
         System.out.println(day1.part2());
     }
@@ -30,7 +29,7 @@ public class Day1 implements Day {
                 String direction = line.substring(0, 1);
                 int distance = Integer.parseInt(line.substring(1));
 
-                rotations.add(new Rotaton(direction, distance));
+                rotations.add(new Rotation(direction, distance));
             }
         } catch (Exception e) {
             System.out.println("Error loading data: " + e.getMessage());
@@ -39,25 +38,28 @@ public class Day1 implements Day {
 
     @Override
     public String part1() {
+        // Initialize starting position
+        int currX = startX;
         int sum = 0;
 
-        for (Rotaton rotation : rotations) {
+        for (Rotation rotation : rotations) {
+            // Extract rotation info
             String direction = rotation.direction;
             int distance = rotation.distance;
 
+            // Update current position based on rotation
             if (direction.equals("R")) {
                 currX += distance;
             } else if (direction.equals("L")) {
                 currX -= distance;
             }
 
+            // Wrap around the dial
             currX %= 100;
             if (currX < 0) currX = 100 + currX;
 
+            // Check if we landed on 0
             if (currX == 0) sum++;
-
-            // debug
-//            System.out.println("The dial is rotated " + direction + distance + " to point at " + currX);
         }
 
         return String.valueOf(sum);
@@ -65,54 +67,69 @@ public class Day1 implements Day {
 
     @Override
     public String part2() {
-        currX = 50;
-
+        // Initialize starting position
+        int currX = startX;
         int sum = 0;
-
         boolean lastWas0 = false;
 
-        for (Rotaton rotation : rotations) {
+        for (Rotation rotation : rotations) {
+            // Extract rotation info
             String direction = rotation.direction;
             int distance = rotation.distance;
 
+            // Update current position based on rotation step by step to count passing 0
             if (direction.equals("R")) {
-                currX += distance;
+                for (int i = 0; i < distance; i++) {
+                    currX++;
+                    if (currX > maxX) currX = minX;
+                    if (currX == 0) sum++;
+                }
             } else if (direction.equals("L")) {
-                currX -= distance;
+                for (int i = 0; i < distance; i++) {
+                    currX--;
+                    if (currX < minX) currX = maxX;
+                    if (currX == 0) sum++;
+                }
             }
 
-            if (currX > maxX + 1) {
-                int over = currX - maxX;
-                System.out.print("During this rotation the dial points at 0: " + ((over / maxX) + 1) + " ");
-                sum += (over / maxX) + 1;
-
-                if (lastWas0) sum--;
-            } else if (currX < minX) {
-                int under = -currX;
-                System.out.print("During this rotation the dial points at 0: " + ((under / maxX) + 1) + " ");
-                sum += (under / maxX) + 1;
-
-                if (lastWas0) sum--;
-            }
-
-            currX %= 100;
-            if (currX < 0) currX = 100 + currX;
-
-            if (currX == 0) {
-                sum++;
-                lastWas0 = true;
-            } else {
-                lastWas0 = false;
-            }
-
-            // debug
-            System.out.println("The dial is rotated " + direction + distance + " to point at " + currX);
+//            // Check for passing 0
+//            int passedZero = 0;
+//            if (currX > maxX) {
+//                int over = currX - maxX;
+//                passedZero = (over / 100) + 1;
+//                if (currX % 100 == 0) passedZero--;
+//
+//                System.out.print("During this rotation the dial points at 0: " + passedZero + " ");
+//            } else if (currX < minX) {
+//                int under = -currX;
+//                passedZero = (under / 100) + 1;
+//                if (lastWas0) passedZero--;
+//                if (currX % 100 == 0) passedZero--;
+//
+//                System.out.print("During this rotation the dial points at 0: " + passedZero + " ");
+//            }
+//            sum += passedZero;
+//
+//            // Wrap around the dial
+//            currX %= 100;
+//            if (currX < 0) currX = 100 + currX;
+//
+//            // Check if we landed on 0 and update lastWas0
+//            if (currX == 0) {
+//                sum++;
+//                lastWas0 = true;
+//            } else {
+//                lastWas0 = false;
+//            }
+//
+//            // debug
+//            System.out.println("The dial is rotated " + direction + distance + " to point at " + currX);
         }
 
         return String.valueOf(sum);
     }
 
-    private record Rotaton(String direction, int distance) {
+    private record Rotation(String direction, int distance) {
 
     }
 }
