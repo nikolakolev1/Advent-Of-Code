@@ -77,7 +77,7 @@ public class Day1 implements Day {
             String direction = rotation.direction;
             int distance = rotation.distance;
 
-            // Update current position based on rotation step by step to count passing 0
+            // Update current position based on rotation step by step to count passing 0 (brute force)
             if (direction.equals("R")) {
                 for (int i = 0; i < distance; i++) {
                     currX++;
@@ -91,39 +91,6 @@ public class Day1 implements Day {
                     if (currX == 0) sum++;
                 }
             }
-
-//            // Check for passing 0
-//            int passedZero = 0;
-//            if (currX > maxX) {
-//                int over = currX - maxX;
-//                passedZero = (over / 100) + 1;
-//                if (currX % 100 == 0) passedZero--;
-//
-//                System.out.print("During this rotation the dial points at 0: " + passedZero + " ");
-//            } else if (currX < minX) {
-//                int under = -currX;
-//                passedZero = (under / 100) + 1;
-//                if (lastWas0) passedZero--;
-//                if (currX % 100 == 0) passedZero--;
-//
-//                System.out.print("During this rotation the dial points at 0: " + passedZero + " ");
-//            }
-//            sum += passedZero;
-//
-//            // Wrap around the dial
-//            currX %= 100;
-//            if (currX < 0) currX = 100 + currX;
-//
-//            // Check if we landed on 0 and update lastWas0
-//            if (currX == 0) {
-//                sum++;
-//                lastWas0 = true;
-//            } else {
-//                lastWas0 = false;
-//            }
-//
-//            // debug
-//            System.out.println("The dial is rotated " + direction + distance + " to point at " + currX);
         }
 
         return String.valueOf(sum);
