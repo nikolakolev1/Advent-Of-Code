@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Day5 implements Day {
-    private ArrayList<Range> ranges = new ArrayList<>();
-    private ArrayList<Long> ingredientIDs = new ArrayList<>();
+    private final ArrayList<Range> ranges = new ArrayList<>();
+    private final ArrayList<Long> ingredientIDs = new ArrayList<>();
 
     public static void main(String[] args) {
         Day day5 = new Day5();
@@ -63,16 +63,60 @@ public class Day5 implements Day {
 
     @Override
     public String part2() {
-        int sum = 0;
+        ArrayList<Range> finalRanges = new ArrayList<>();
+        finalRanges.add(ranges.getFirst());
 
-        // TODO: Implement part 2
+        for (int i = 1; i < ranges.size(); i++) {
+            Range currentRange = ranges.get(i);
 
+            boolean overlapped = false;
+            for (int j = 0; j < finalRanges.size(); j++) {
+                Range compareRange = finalRanges.get(j);
+
+                if (currentRange.overlaps(compareRange)) {
+                    Range mergedRange = currentRange.merge(compareRange);
+                    currentRange = mergedRange;
+                    finalRanges.remove(j);
+                    j = -1; // Restart checking from the beginning
+                    overlapped = true;
+                }
+            }
+
+            finalRanges.add(currentRange);
+        }
+
+        long sum = 0;
+        for (Range range : finalRanges) {
+            sum += range.size();
+        }
         return String.valueOf(sum);
     }
 
     private record Range(long start, long end) {
         boolean contains(long number) {
             return number >= start && number <= end;
+        }
+
+        long size() {
+            return end - start + 1;
+        }
+
+        boolean isContainedIn(Range other) {
+            return this.start >= other.start && this.end <= other.end;
+        }
+
+        boolean containsRange(Range other) {
+            return this.start <= other.start && this.end >= other.end;
+        }
+
+        boolean overlaps(Range other) {
+            return this.start <= other.end && other.start <= this.end;
+        }
+
+        Range merge(Range other) {
+            long newStart = Math.min(this.start, other.start);
+            long newEnd = Math.max(this.end, other.end);
+            return new Range(newStart, newEnd);
         }
     }
 }
